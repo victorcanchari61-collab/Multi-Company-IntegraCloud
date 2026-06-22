@@ -1,0 +1,12 @@
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\bin\Debug\net10.0\Backend.SharedKernel.deps.json
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\bin\Debug\net10.0\Backend.SharedKernel.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\bin\Debug\net10.0\Backend.SharedKernel.pdb
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.GeneratedMSBuildEditorConfig.editorconfig
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.AssemblyInfoInputs.cache
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.AssemblyInfo.cs
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.csproj.CoreCompileInputs.cache
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.sourcelink.json
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\refint\Backend.SharedKernel.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\Backend.SharedKernel.pdb
+D:\Multi-Company-IntegraCloud\Backend\Backend-SharedKernel\obj\Debug\net10.0\ref\Backend.SharedKernel.dll

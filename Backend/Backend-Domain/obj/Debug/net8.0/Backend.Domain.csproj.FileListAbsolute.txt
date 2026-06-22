@@ -1,0 +1,16 @@
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\bin\Debug\net8.0\Backend.Domain.deps.json
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\bin\Debug\net8.0\Backend.Domain.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\bin\Debug\net8.0\Backend.Domain.pdb
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\bin\Debug\net8.0\Backend.SharedKernel.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\bin\Debug\net8.0\Backend.SharedKernel.pdb
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.csproj.AssemblyReference.cache
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.AssemblyInfoInputs.cache
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.AssemblyInfo.cs
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.csproj.CoreCompileInputs.cache
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.sourcelink.json
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend..8FB02094.Up2Date
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\refint\Backend.Domain.dll
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\Backend.Domain.pdb
+D:\Multi-Company-IntegraCloud\Backend\Backend-Domain\obj\Debug\net8.0\ref\Backend.Domain.dll

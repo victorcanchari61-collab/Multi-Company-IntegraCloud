@@ -67,61 +67,6 @@ public sealed class LoginCommandHandler(
 
     private async Task CacheUserPermissions(Guid userId, Guid? companyId, CancellationToken ct)
     {
-        // Permissions will be computed and cached on first /me/permissions request.
-        // For now, this is a placeholder for future implementation.
         await Task.CompletedTask;
-    }
-}
-
-public sealed record RefreshTokenCommand(string RefreshToken) : IRequest<Result<AuthTokensDto>>;
-
-public sealed class RefreshTokenCommandHandler(
-    IRefreshTokenRepository refreshTokenRepository,
-    IUserRepository userRepository,
-    ITokenService tokenService,
-    IRoleRepository roleRepository)
-    : IRequestHandler<RefreshTokenCommand, Result<AuthTokensDto>>
-{
-    public async Task<Result<AuthTokensDto>> Handle(RefreshTokenCommand request, CancellationToken ct)
-    {
-        var token = await refreshTokenRepository.GetByTokenHashAsync(request.RefreshToken, ct);
-
-        if (token is null || !token.IsActive)
-            return Result<AuthTokensDto>.Failure(
-                Error.Unauthorized("auth.invalid_token", "Invalid or expired refresh token."));
-
-        token.Revoke();
-
-        var user = await userRepository.GetByIdAsync(token.UserId, ct);
-        if (user is null || user.Status != 1)
-            return Result<AuthTokensDto>.Failure(
-                Error.Unauthorized("auth.user_inactive", "User is inactive."));
-
-        var roles = await roleRepository.GetByCompanyIdAsync(user.CompanyId ?? Guid.Empty, ct);
-        var roleNames = roles.Select(r => r.Name).ToList();
-
-        var accessToken = tokenService.GenerateAccessToken(user.Id, user.CompanyId, user.IsOwner, roleNames);
-        var newRefreshToken = tokenService.GenerateRefreshToken();
-
-        var expiresAt = DateTime.UtcNow.AddHours(8);
-        return Result<AuthTokensDto>.Success(new AuthTokensDto(accessToken, newRefreshToken, expiresAt));
-    }
-}
-
-public sealed record LogoutCommand(string RefreshToken) : IRequest<Result>;
-
-public sealed class LogoutCommandHandler(IRefreshTokenRepository refreshTokenRepository)
-    : IRequestHandler<LogoutCommand, Result>
-{
-    public async Task<Result> Handle(LogoutCommand request, CancellationToken ct)
-    {
-        var token = await refreshTokenRepository.GetByTokenHashAsync(request.RefreshToken, ct);
-
-        if (token is not null)
-        {
-            token.Revoke();
-        }
-
-        return Result.Success();
     }
 }

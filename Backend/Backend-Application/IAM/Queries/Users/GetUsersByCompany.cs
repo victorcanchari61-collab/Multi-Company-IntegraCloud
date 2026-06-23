@@ -33,16 +33,3 @@ public sealed class GetUsersByCompanyQueryHandler(IUserRepository userRepository
             new PagedResult<UserDto>(paged, filtered.Count, request.Page, request.Size));
     }
 }
-
-public sealed record GetRolesByCompanyQuery(Guid CompanyId) : IRequest<Result<List<RoleDto>>>;
-
-public sealed class GetRolesByCompanyQueryHandler(IRoleRepository roleRepository)
-    : IRequestHandler<GetRolesByCompanyQuery, Result<List<RoleDto>>>
-{
-    public async Task<Result<List<RoleDto>>> Handle(GetRolesByCompanyQuery request, CancellationToken ct)
-    {
-        var roles = await roleRepository.GetByCompanyIdAsync(request.CompanyId, ct);
-        var dtos = roles.Select(r => new RoleDto(r.Id, r.Name, r.Description)).ToList();
-        return Result<List<RoleDto>>.Success(dtos);
-    }
-}

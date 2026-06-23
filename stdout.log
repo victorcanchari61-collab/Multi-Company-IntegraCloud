@@ -1,0 +1,445 @@
+Usando la configuración de inicio de Backend-API\Properties\launchSettings.json...
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10622]
+      Entity 'User' has a global query filter defined and is the required end of a relationship with the entity 'RefreshToken'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10622]
+      Entity 'Role' has a global query filter defined and is the required end of a relationship with the entity 'RolePermission'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+warn: Microsoft.EntityFrameworkCore.Model.Validation[10622]
+      Entity 'Role' has a global query filter defined and is the required end of a relationship with the entity 'UserRole'. This may lead to unexpected results when the required entity is filtered out. Either configure the navigation as optional, or define matching query filters for both entities in the navigation. See https://go.microsoft.com/fwlink/?linkid=2131316 for more information.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (18ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (8ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      CREATE TABLE IF NOT EXISTS "__EFMigrationsHistory" (
+          "MigrationId" character varying(150) NOT NULL,
+          "ProductVersion" character varying(32) NOT NULL,
+          CONSTRAINT "PK___EFMigrationsHistory" PRIMARY KEY ("MigrationId")
+      );
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      LOCK TABLE "__EFMigrationsHistory" IN ACCESS EXCLUSIVE MODE
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT "MigrationId", "ProductVersion"
+      FROM "__EFMigrationsHistory"
+      ORDER BY "MigrationId";
+info: Microsoft.EntityFrameworkCore.Migrations[20405]
+      No migrations were applied. The database is already up to date.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM users AS u
+          WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.is_owner)
+info: Program[0]
+      Seed: Starting data seed...
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM actions AS a)
+info: Program[0]
+      Seed: Added actions
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT EXISTS (
+          SELECT 1
+          FROM systems AS s)
+info: Program[0]
+      Seed: Added systems and modules
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (20ms) [Parameters=[@p0='?', @p1='?', @p2='?', @p3='?', @p4='?', @p5='?', @p6='?', @p7='?', @p8='?', @p9='?', @p10='?', @p11='?', @p12='?' (DbType = Guid), @p13='?', @p14='?' (DbType = DateTime), @p15='?', @p16='?', @p17='?' (DbType = Guid), @p18='?', @p19='?' (DbType = DateTime), @p20='?', @p21='?', @p22='?' (DbType = Guid), @p23='?', @p24='?' (DbType = DateTime), @p25='?', @p26='?', @p27='?' (DbType = Guid), @p28='?', @p29='?' (DbType = DateTime), @p30='?', @p31='?', @p32='?' (DbType = Guid), @p33='?', @p34='?' (DbType = DateTime), @p35='?', @p36='?', @p37='?' (DbType = Guid), @p38='?', @p39='?' (DbType = DateTime), @p40='?', @p41='?' (DbType = Guid), @p42='?' (DbType = Guid), @p43='?', @p44='?' (DbType = DateTime), @p45='?', @p46='?' (DbType = Guid), @p47='?' (DbType = Guid), @p48='?', @p49='?' (DbType = DateTime), @p50='?', @p51='?' (DbType = Guid), @p52='?' (DbType = Guid), @p53='?', @p54='?' (DbType = DateTime), @p55='?', @p56='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO actions (code, name)
+      VALUES (@p0, @p1);
+      INSERT INTO actions (code, name)
+      VALUES (@p2, @p3);
+      INSERT INTO actions (code, name)
+      VALUES (@p4, @p5);
+      INSERT INTO actions (code, name)
+      VALUES (@p6, @p7);
+      INSERT INTO actions (code, name)
+      VALUES (@p8, @p9);
+      INSERT INTO actions (code, name)
+      VALUES (@p10, @p11);
+      INSERT INTO systems ("Id", code, created_at, description, name)
+      VALUES (@p12, @p13, @p14, @p15, @p16)
+      RETURNING is_active;
+      INSERT INTO systems ("Id", code, created_at, description, name)
+      VALUES (@p17, @p18, @p19, @p20, @p21)
+      RETURNING is_active;
+      INSERT INTO systems ("Id", code, created_at, description, name)
+      VALUES (@p22, @p23, @p24, @p25, @p26)
+      RETURNING is_active;
+      INSERT INTO systems ("Id", code, created_at, description, name)
+      VALUES (@p27, @p28, @p29, @p30, @p31)
+      RETURNING is_active;
+      INSERT INTO systems ("Id", code, created_at, description, name)
+      VALUES (@p32, @p33, @p34, @p35, @p36)
+      RETURNING is_active;
+      INSERT INTO modules ("Id", code, created_at, name, system_id)
+      VALUES (@p37, @p38, @p39, @p40, @p41)
+      RETURNING is_active;
+      INSERT INTO modules ("Id", code, created_at, name, system_id)
+      VALUES (@p42, @p43, @p44, @p45, @p46)
+      RETURNING is_active;
+      INSERT INTO modules ("Id", code, created_at, name, system_id)
+      VALUES (@p47, @p48, @p49, @p50, @p51)
+      RETURNING is_active;
+      INSERT INTO modules ("Id", code, created_at, name, system_id)
+      VALUES (@p52, @p53, @p54, @p55, @p56)
+      RETURNING is_active;
+info: Program[0]
+      Seed: Owner created with hash length 60
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@p0='?' (DbType = Guid), @p1='?' (DbType = Guid), @p2='?' (DbType = DateTime), @p3='?', @p4='?', @p5='?' (DbType = Boolean), @p6='?', @p7='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+      INSERT INTO users ("Id", company_id, created_at, email, full_name, is_owner, password_hash, status)
+      VALUES (@p0, @p1, @p2, @p3, @p4, @p5, @p6, @p7);
+info: Program[0]
+      Seed: Completed successfully.
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5033
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Multi-Company-IntegraCloud\Backend\Backend-API
+warn: Microsoft.AspNetCore.HttpsPolicy.HttpsRedirectionMiddleware[3]
+      Failed to determine the https port for redirect.
+warn: LuckyPennySoftware.MediatR.License[0]
+      You do not have a valid license key for the Lucky Penny software MediatR. This is allowed for development and testing scenarios. If you are running in production you are required to have a licensed version. Please visit https://luckypennysoftware.com to obtain a valid license.
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@email='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.company_id IS NULL AND u.email = @email
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (6ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c.accounting_required, c.address, c.created_at, c.created_by, c.economic_activity, c.email, c.legal_name, c.logo_url, c.name, c.phone, c.settlement_currency, c.slug, c.status, c.tax_address, c.tax_id, c.taxpayer_type, c.website
+      FROM companies AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@tokenHash='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.created_at, r.expires_at, r.revoked_at, r.token_hash, r.user_id
+      FROM refresh_tokens AS r
+      WHERE r.token_hash = @tokenHash
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@email='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.company_id IS NULL AND u.email = @email
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (2ms) [Parameters=[@tokenHash='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.created_at, r.expires_at, r.revoked_at, r.token_hash, r.user_id
+      FROM refresh_tokens AS r
+      WHERE r.token_hash = @tokenHash
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@email='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.company_id IS NULL AND u.email = @email
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@tokenHash='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.created_at, r.expires_at, r.revoked_at, r.token_hash, r.user_id
+      FROM refresh_tokens AS r
+      WHERE r.token_hash = @tokenHash
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (5ms) [Parameters=[@email='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.company_id IS NULL AND u.email = @email
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (7ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@tokenHash='?'], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.created_at, r.expires_at, r.revoked_at, r.token_hash, r.user_id
+      FROM refresh_tokens AS r
+      WHERE r.token_hash = @tokenHash
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@email='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.company_id IS NULL AND u.email = @email
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@p='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u."Id" = @p
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
+      FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (0ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId

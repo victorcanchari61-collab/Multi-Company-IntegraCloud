@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { toast } from 'sonner'
 import { ApiError } from '@/lib/api'
 import { Can } from '@/features/auth/components/Can'
+import { DataTable } from '@/components/data-table/DataTable'
 import { useActiveCompanyId } from '../hooks/useActiveCompanyId'
 import { useUsers, useDeactivateUser } from '../queries/useUsers'
-import { UserTable } from '../components/UserTable'
+import { getUserColumns } from '../components/users.columns'
 import { UserFormDialog } from '../components/UserFormDialog'
 import { AssignRolesDialog } from '../components/AssignRolesDialog'
 import type { User } from '../types/iam'
@@ -41,26 +42,36 @@ function UsersContent({
         toast.error(error instanceof ApiError ? error.message : 'No se pudo desactivar'),
     })
 
+  const columns = useMemo(
+    () =>
+      getUserColumns({
+        pending: deactivate.isPending,
+        onDeactivate,
+        onAssignRoles: setRolesFor,
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [deactivate.isPending],
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Usuarios</h1>
-          <p className="text-sm text-muted-foreground">
-            Usuarios de tu empresa y sus roles.
-          </p>
+          <p className="text-sm text-muted-foreground">Usuarios de tu empresa y sus roles.</p>
         </div>
         <Can permission="iam.users.create">
           <UserFormDialog companyId={companyId} />
         </Can>
       </div>
 
-      <UserTable
+      <DataTable
+        columns={columns}
         data={data?.items ?? []}
         loading={isLoading}
-        pending={deactivate.isPending}
-        onDeactivate={onDeactivate}
-        onAssignRoles={setRolesFor}
+        getRowId={(u) => u.id}
+        mobileTitle={(u) => u.fullName}
+        emptyMessage="No hay usuarios en esta empresa."
       />
 
       <AssignRolesDialog

@@ -1,9 +1,11 @@
+import { useMemo } from 'react'
 import { toast } from 'sonner'
 import { ApiError } from '@/lib/api'
 import { ENTITY_STATUS } from '@/lib/constants'
 import { Can } from '@/features/auth/components/Can'
+import { DataTable } from '@/components/data-table/DataTable'
 import { useCompanies, useSetCompanyStatus } from '../queries/useCompanies'
-import { CompanyTable } from '../components/CompanyTable'
+import { getCompanyColumns } from '../components/companies.columns'
 import { CompanyFormDialog } from '../components/CompanyFormDialog'
 import type { Company } from '../types/iam'
 
@@ -20,6 +22,12 @@ export default function CompaniesPage() {
       },
     )
 
+  const columns = useMemo(
+    () => getCompanyColumns({ pending: setStatus.isPending, onToggleStatus }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [setStatus.isPending],
+  )
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -34,11 +42,13 @@ export default function CompaniesPage() {
         </Can>
       </div>
 
-      <CompanyTable
+      <DataTable
+        columns={columns}
         data={data?.items ?? []}
         loading={isLoading}
-        pending={setStatus.isPending}
-        onToggleStatus={onToggleStatus}
+        getRowId={(c) => c.id}
+        mobileTitle={(c) => c.name}
+        emptyMessage="No hay empresas registradas."
       />
     </div>
   )

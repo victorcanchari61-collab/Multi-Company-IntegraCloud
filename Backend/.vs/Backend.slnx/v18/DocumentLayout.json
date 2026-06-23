@@ -3,6 +3,58 @@
   "WorkspaceRootPath": "D:\\Multi-Company-IntegraCloud\\Backend\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|d:\\multi-company-integracloud\\backend\\backend-api\\controllers\\iam\\companiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|solutionrelative:backend-api\\controllers\\iam\\companiescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|d:\\multi-company-integracloud\\backend\\backend-api\\controllers\\iam\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|solutionrelative:backend-api\\controllers\\iam\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|d:\\multi-company-integracloud\\backend\\backend-api\\filters\\requirepermissionattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|solutionrelative:backend-api\\filters\\requirepermissionattribute.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\behaviors\\validationbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\behaviors\\validationbehavior.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\commands\\roles\\rolecommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\commands\\roles\\rolecommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\commands\\companies\\companycommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\commands\\companies\\companycommands.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\commands\\auth\\logincommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\commands\\auth\\logincommand.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\queries\\auth\\mequery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\queries\\auth\\mequery.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\queries\\users\\userqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\queries\\users\\userqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|d:\\multi-company-integracloud\\backend\\backend-application\\iam\\queries\\companies\\companyqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4ACA347C-253F-499A-4748-9E8E937A86BD}|Backend-Application\\Backend.Application.csproj|solutionrelative:backend-application\\iam\\queries\\companies\\companyqueries.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{509BBDF5-A650-A269-9759-E00A9D9DB0E9}|Backend-Domain\\Backend.Domain.csproj|d:\\multi-company-integracloud\\backend\\backend-domain\\iam\\events\\events.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{509BBDF5-A650-A269-9759-E00A9D9DB0E9}|Backend-Domain\\Backend.Domain.csproj|solutionrelative:backend-domain\\iam\\events\\events.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{509BBDF5-A650-A269-9759-E00A9D9DB0E9}|Backend-Domain\\Backend.Domain.csproj|d:\\multi-company-integracloud\\backend\\backend-domain\\iam\\services\\iservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{509BBDF5-A650-A269-9759-E00A9D9DB0E9}|Backend-Domain\\Backend.Domain.csproj|solutionrelative:backend-domain\\iam\\services\\iservices.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{509BBDF5-A650-A269-9759-E00A9D9DB0E9}|Backend-Domain\\Backend.Domain.csproj|d:\\multi-company-integracloud\\backend\\backend-domain\\iam\\repositories\\irepositories.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{509BBDF5-A650-A269-9759-E00A9D9DB0E9}|Backend-Domain\\Backend.Domain.csproj|solutionrelative:backend-domain\\iam\\repositories\\irepositories.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|d:\\multi-company-integracloud\\backend\\backend-api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B880BCA3-3564-D0C7-1FE1-265638FC29D1}|Backend-API\\Backend-API.csproj|solutionrelative:backend-api\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -23,6 +75,175 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "CompaniesController.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Controllers\\IAM\\CompaniesController.cs",
+              "RelativeDocumentMoniker": "Backend-API\\Controllers\\IAM\\CompaniesController.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Controllers\\IAM\\CompaniesController.cs",
+              "RelativeToolTip": "Backend-API\\Controllers\\IAM\\CompaniesController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:49.789Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Controllers\\IAM\\AuthController.cs",
+              "RelativeDocumentMoniker": "Backend-API\\Controllers\\IAM\\AuthController.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Controllers\\IAM\\AuthController.cs",
+              "RelativeToolTip": "Backend-API\\Controllers\\IAM\\AuthController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:48.518Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "RequirePermissionAttribute.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Filters\\RequirePermissionAttribute.cs",
+              "RelativeDocumentMoniker": "Backend-API\\Filters\\RequirePermissionAttribute.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Filters\\RequirePermissionAttribute.cs",
+              "RelativeToolTip": "Backend-API\\Filters\\RequirePermissionAttribute.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:40.542Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ValidationBehavior.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Behaviors\\ValidationBehavior.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Behaviors\\ValidationBehavior.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Behaviors\\ValidationBehavior.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Behaviors\\ValidationBehavior.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:28.869Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "RoleCommands.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Commands\\Roles\\RoleCommands.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Commands\\Roles\\RoleCommands.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Commands\\Roles\\RoleCommands.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Commands\\Roles\\RoleCommands.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:19.854Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CompanyCommands.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Commands\\Companies\\CompanyCommands.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Commands\\Companies\\CompanyCommands.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Commands\\Companies\\CompanyCommands.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Commands\\Companies\\CompanyCommands.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:17.765Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoginCommand.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Commands\\Auth\\LoginCommand.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Commands\\Auth\\LoginCommand.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Commands\\Auth\\LoginCommand.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Commands\\Auth\\LoginCommand.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:23:14.132Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "UserQueries.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Queries\\Users\\UserQueries.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Queries\\Users\\UserQueries.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Queries\\Users\\UserQueries.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Queries\\Users\\UserQueries.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:22:36.468Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "CompanyQueries.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Queries\\Companies\\CompanyQueries.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Queries\\Companies\\CompanyQueries.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Queries\\Companies\\CompanyQueries.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Queries\\Companies\\CompanyQueries.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:22:33.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "MeQuery.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Queries\\Auth\\MeQuery.cs",
+              "RelativeDocumentMoniker": "Backend-Application\\IAM\\Queries\\Auth\\MeQuery.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Application\\IAM\\Queries\\Auth\\MeQuery.cs",
+              "RelativeToolTip": "Backend-Application\\IAM\\Queries\\Auth\\MeQuery.cs",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAgwBAAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:22:32.117Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Events.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\IAM\\Events\\Events.cs",
+              "RelativeDocumentMoniker": "Backend-Domain\\IAM\\Events\\Events.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\IAM\\Events\\Events.cs",
+              "RelativeToolTip": "Backend-Domain\\IAM\\Events\\Events.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:22:14.54Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IRepositories.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\IAM\\Repositories\\IRepositories.cs",
+              "RelativeDocumentMoniker": "Backend-Domain\\IAM\\Repositories\\IRepositories.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\IAM\\Repositories\\IRepositories.cs",
+              "RelativeToolTip": "Backend-Domain\\IAM\\Repositories\\IRepositories.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:21:51.763Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "IServices.cs",
+              "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\IAM\\Services\\IServices.cs",
+              "RelativeDocumentMoniker": "Backend-Domain\\IAM\\Services\\IServices.cs",
+              "ToolTip": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\IAM\\Services\\IServices.cs",
+              "RelativeToolTip": "Backend-Domain\\IAM\\Services\\IServices.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-23T16:21:50.009Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-API\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "Backend-API\\Controllers\\WeatherForecastController.cs",
@@ -35,7 +256,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 14,
               "Title": "Class1.cs",
               "DocumentMoniker": "D:\\Multi-Company-IntegraCloud\\Backend\\Backend-Domain\\Class1.cs",
               "RelativeDocumentMoniker": "Backend-Domain\\Class1.cs",
@@ -43,8 +264,7 @@
               "RelativeToolTip": "Backend-Domain\\Class1.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-06-22T03:04:31.373Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-06-22T03:04:31.373Z"
             }
           ]
         }

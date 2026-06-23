@@ -18,6 +18,8 @@ function initials(name?: string): string {
     .join('')
 }
 
+const ghostDark = 'text-white hover:bg-white/10 hover:text-white'
+
 export function Header() {
   const user = useAuthStore((s) => s.user)
   const hidden = useSidebarStore((s) => s.hidden)
@@ -29,13 +31,14 @@ export function Header() {
     logout.mutate(undefined, { onSettled: () => navigate({ to: ROUTES.LOGIN }) })
 
   return (
-    <header className="flex h-14 items-center justify-between border-b bg-card px-4">
+    <header className="flex h-12 items-center justify-between border-b border-white/10 bg-zinc-800 px-4 text-white">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleHidden}
           title={hidden ? 'Mostrar menú' : 'Ocultar menú'}
+          className={ghostDark}
         >
           <PanelLeft className="size-5" />
         </Button>
@@ -47,19 +50,21 @@ export function Header() {
             hidden ? 'opacity-100' : 'pointer-events-none w-0 opacity-0',
           )}
         >
-          <img src={logo} alt={APP_NAME} className="size-7 object-contain" />
+          <span className="inline-flex size-7 items-center justify-center rounded-md bg-white p-0.5">
+            <img src={logo} alt={APP_NAME} className="size-full object-contain" />
+          </span>
           <span className="text-sm font-semibold tracking-wide">{APP_NAME}</span>
         </div>
       </div>
 
       <div className="flex items-center gap-3">
         <div className="hidden text-right sm:block">
-          <p className="text-sm font-medium leading-tight">{user?.fullName}</p>
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm font-medium leading-tight text-white">{user?.fullName}</p>
+          <p className="text-xs text-white">
             {user?.isOwner ? 'Propietario' : 'Empresa'}
           </p>
         </div>
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
+        <span className="flex size-9 items-center justify-center rounded-full bg-primary-foreground text-xs font-semibold text-primary">
           {initials(user?.fullName)}
         </span>
         <Button
@@ -68,6 +73,7 @@ export function Header() {
           onClick={onLogout}
           disabled={logout.isPending}
           title="Cerrar sesión"
+          className={ghostDark}
         >
           <LogOut className="size-4" />
         </Button>

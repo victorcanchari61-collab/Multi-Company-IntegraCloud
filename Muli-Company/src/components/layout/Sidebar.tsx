@@ -44,7 +44,7 @@ export function Sidebar() {
       )}
     >
       {/* Marca */}
-      <div className="flex h-14 items-center gap-2 border-b border-primary-foreground/10 px-3">
+      <div className="flex h-12 items-center gap-2 border-b border-primary-foreground/10 px-3">
         <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-white p-1">
           <img src={logo} alt={APP_NAME} className="size-full object-contain" />
         </span>

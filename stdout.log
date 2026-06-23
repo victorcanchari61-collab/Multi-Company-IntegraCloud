@@ -469,3 +469,11 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT c."Id", c.accounting_required, c.address, c.created_at, c.created_by, c.economic_activity, c.email, c.legal_name, c.logo_url, c.name, c.phone, c.settlement_currency, c.slug, c.status, c.tax_address, c.tax_id, c.taxpayer_type, c.website
       FROM companies AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (3ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c.accounting_required, c.address, c.created_at, c.created_by, c.economic_activity, c.email, c.legal_name, c.logo_url, c.name, c.phone, c.settlement_currency, c.slug, c.status, c.tax_address, c.tax_id, c.taxpayer_type, c.website
+      FROM companies AS c
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT c."Id", c.accounting_required, c.address, c.created_at, c.created_by, c.economic_activity, c.email, c.legal_name, c.logo_url, c.name, c.phone, c.settlement_currency, c.slug, c.status, c.tax_address, c.tax_id, c.taxpayer_type, c.website
+      FROM companies AS c

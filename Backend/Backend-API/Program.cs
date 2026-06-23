@@ -72,8 +72,9 @@ using (var scope = app.Services.CreateScope())
     var db = services.GetRequiredService<IamDbContext>();
     await db.Database.MigrateAsync();
 
+    var logger = services.GetRequiredService<ILogger<Program>>();
     var passwordHasher = services.GetRequiredService<IPasswordHasher>();
-    await IamSeedService.SeedAsync(db, passwordHasher);
+    await IamSeedService.SeedAsync(db, passwordHasher, logger);
 }
 
 app.Run();

@@ -29,7 +29,7 @@ public sealed class IamDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(IamDbContext).Assembly);
 
-        modelBuilder.Entity<User>().HasQueryFilter(u => u.CompanyId != null);
+        modelBuilder.Entity<User>().HasQueryFilter(u => u.CompanyId != null || u.IsOwner);
         modelBuilder.Entity<Role>().HasQueryFilter(r => r.Company != null);
         modelBuilder.Entity<CompanyModuleAccess>().HasQueryFilter(c => c.Company != null);
     }

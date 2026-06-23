@@ -631,3 +631,15 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       Executed DbCommand (7ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
       SELECT p."Id", p.action_code, p.description, p.key, p.module_id, p.resource_id, p.resource_type
       FROM permissions AS p
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@email='?'], CommandType='Text', CommandTimeout='30']
+      SELECT u."Id", u.company_id, u.created_at, u.email, u.full_name, u.is_owner, u.password_hash, u.status
+      FROM users AS u
+      WHERE (u.company_id IS NOT NULL OR u.is_owner) AND u.company_id IS NULL AND u.email = @email
+      LIMIT 1
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (1ms) [Parameters=[@companyId='?' (DbType = Guid)], CommandType='Text', CommandTimeout='30']
+      SELECT r."Id", r.company_id, r.created_at, r.description, r.is_system_template, r.name
+      FROM roles AS r
+      INNER JOIN companies AS c ON r.company_id = c."Id"
+      WHERE r.company_id = @companyId

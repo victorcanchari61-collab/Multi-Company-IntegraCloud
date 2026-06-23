@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { CSSProperties, ReactNode } from 'react'
 import {
   flexRender,
@@ -308,12 +309,15 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
   const [filterOpen, setFilterOpen] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const btnRef = useRef<HTMLButtonElement>(null)
+  const [filterPos, setFilterPos] = useState({ top: 0, left: 0 })
 
   useEffect(() => {
     if (!filterOpen) return
     inputRef.current?.focus()
     const handler = (e: MouseEvent) => {
-      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node) &&
+          btnRef.current && !btnRef.current.contains(e.target as Node)) {
         setFilterOpen(false)
       }
     }
@@ -336,11 +340,23 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
   const filterValue = header.column.getFilterValue() as string | undefined
   const hasFilter = filterValue !== undefined && filterValue !== ''
 
+  const openFilter = () => {
+    if (filterOpen) {
+      setFilterOpen(false)
+      return
+    }
+    if (btnRef.current) {
+      const rect = btnRef.current.getBoundingClientRect()
+      setFilterPos({ top: rect.bottom + 4, left: rect.left })
+    }
+    setFilterOpen(true)
+  }
+
   return (
     <TableHead
       ref={setNodeRef}
       style={style}
-      className="relative h-[30px] border-r border-white/20 bg-zinc-800 px-1.5 py-0 text-xs font-medium text-white last:border-r-0"
+      className="h-[30px] border-r border-white/20 bg-zinc-800 px-1.5 py-0 text-xs font-medium text-white last:border-r-0"
     >
       <div className="flex items-center gap-0.5">
         <div
@@ -371,10 +387,11 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
         )}
 
         <button
+          ref={btnRef}
           type="button"
           onClick={(e) => {
             e.stopPropagation()
-            setFilterOpen((v) => !v)
+            openFilter()
           }}
           className="shrink-0 rounded p-0.5 hover:bg-white/10"
         >
@@ -382,10 +399,11 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
         </button>
       </div>
 
-      {filterOpen && (
+      {filterOpen && createPortal(
         <div
           ref={filterRef}
-          className="absolute left-0 top-full z-50 mt-1 w-48 rounded-md border border-border bg-popover p-1.5 shadow-lg"
+          style={{ position: 'fixed', top: filterPos.top, left: filterPos.left, zIndex: 9999 }}
+          className="w-48 rounded-md border border-border bg-popover p-1.5 shadow-lg"
         >
           <Input
             ref={inputRef}
@@ -394,7 +412,8 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
             placeholder={`Filtrar...`}
             className="h-7 text-xs"
           />
-        </div>
+        </div>,
+        document.body
       )}
     </TableHead>
   )

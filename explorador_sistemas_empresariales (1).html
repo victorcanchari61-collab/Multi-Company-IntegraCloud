@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<title>Sistemas Empresariales</title>
+</head>
+<body class="bg-gray-50 min-h-screen p-4 font-sans">
+
+<div class="max-w-4xl mx-auto">
+
+  <div class="text-center mb-6">
+    <div class="inline-block bg-gray-800 text-white font-semibold px-6 py-3 rounded-xl text-sm tracking-wide shadow">
+      Sistemas Empresariales
+    </div>
+  </div>
+
+  <p class="text-xs text-gray-400 uppercase font-semibold tracking-widest mb-2 pl-1">Categoría</p>
+  <div class="grid grid-cols-3 gap-3 mb-6" id="cat-grid"></div>
+
+  <div id="sys-section" class="hidden mb-6">
+    <p class="text-xs text-gray-400 uppercase font-semibold tracking-widest mb-2 pl-1" id="sys-label">Sistemas</p>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2" id="sys-grid"></div>
+  </div>
+
+  <div id="detail-section" class="hidden">
+    <div id="breadcrumb" class="text-xs text-gray-400 mb-3 pl-1 flex gap-1 items-center"></div>
+    <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+      <div class="text-base font-semibold text-gray-800 mb-1" id="d-title"></div>
+      <div class="text-sm text-gray-500 mb-4" id="d-desc"></div>
+      <p class="text-xs text-gray-400 uppercase font-semibold tracking-widest mb-3">Módulos y submódulos</p>
+      <div class="flex flex-col gap-2" id="mod-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const DATA = {
+  categories: [
+    {
+      id:"op", label:"Operativos", sub:"Ejecutan procesos",
+      bg:"bg-blue-600", light:"bg-blue-50", border:"border-blue-500", text:"text-blue-700", badge:"bg-blue-100 text-blue-800",
+      modbg:"bg-blue-50", modtext:"text-blue-800", modborder:"border-blue-200",
+      systems:[
+        {id:"ERP",full:"Enterprise Resource Planning",desc:"Integra todos los procesos core del negocio en una sola plataforma.",modules:[
+          {name:"Finanzas",subs:["Contabilidad general","Cuentas por pagar","Cuentas por cobrar","Activos fijos","Gestión de presupuesto","Cierre financiero","Consolidación","Informes NIIF"]},
+          {name:"Compras",subs:["Solicitudes de compra","Órdenes de compra","Gestión de proveedores","Catálogo de materiales","Contratos de compra","Evaluación de proveedores"]},
+          {name:"Ventas",subs:["Cotizaciones","Órdenes de venta","Gestión de precios","Descuentos y promociones","Facturación","Devoluciones"]},
+          {name:"Producción",subs:["Planificación de producción","Órdenes de fabricación","Listas de materiales (BOM)","Rutas de producción","Control de piso","Capacidad de planta"]},
+          {name:"Proyectos",subs:["Planificación de proyectos","Costeo de proyectos","Recursos del proyecto","Hitos y entregables","Facturación por proyecto"]},
+        ]},
+        {id:"CRM",full:"Customer Relationship Management",desc:"Gestiona las relaciones con clientes a lo largo de todo el ciclo de vida.",modules:[
+          {name:"Ventas",subs:["Gestión de leads","Pipeline de ventas","Oportunidades","Pronóstico de ventas","Cuotas y metas","Propuestas comerciales"]},
+          {name:"Marketing",subs:["Campañas de marketing","Email marketing","Segmentación de clientes","Automatización de marketing","Landing pages","Métricas de campaña"]},
+          {name:"Servicio al cliente",subs:["Gestión de tickets","Base de conocimiento","Chat en vivo","Encuestas de satisfacción","SLA y escalamiento","Portal de autoservicio"]},
+          {name:"Análisis",subs:["Reportes de ventas","Análisis de clientes","Dashboards ejecutivos","Predicción de churn","Valor de vida del cliente (CLV)"]},
+        ]},
+        {id:"WMS",full:"Warehouse Management System",desc:"Controla y optimiza las operaciones dentro del almacén.",modules:[
+          {name:"Recepción",subs:["Aviso de recibo anticipado (ASN)","Control de calidad en recepción","Registro de lotes y series","Ubicación en almacén"]},
+          {name:"Almacenamiento",subs:["Gestión de ubicaciones","Movimientos internos","Reabastecimiento de picking","Control de inventario cíclico"]},
+          {name:"Picking & Packing",subs:["Picking por ola","Picking por zona","Cross-docking","Embalaje y etiquetado","Consolidación de pedidos"]},
+          {name:"Despacho",subs:["Programación de envíos","Carga de vehículos","Documentos de embarque","Track & trace"]},
+        ]},
+        {id:"SCM",full:"Supply Chain Management",desc:"Coordina el flujo de bienes, información y finanzas en la cadena de suministro.",modules:[
+          {name:"Planificación de demanda",subs:["Pronóstico estadístico","Consenso de demanda","Gestión de temporadas","Segmentación ABC-XYZ"]},
+          {name:"Planificación de suministro",subs:["Plan maestro de producción (MPS)","Política de inventarios","Gestión de restricciones","Colaboración con proveedores"]},
+          {name:"Aprovisionamiento",subs:["Selección de proveedores","Negociación de contratos","Monitoreo de entregas","Scorecard de proveedor"]},
+          {name:"Logística",subs:["Gestión de transporte","Freight management","Aduana e importaciones","Reverse logistics"]},
+        ]},
+        {id:"MRP",full:"Material Requirements Planning",desc:"Calcula los materiales necesarios para la producción basándose en la demanda.",modules:[
+          {name:"Planificación",subs:["Explosión de BOM","Cálculo de necesidades netas","Órdenes planificadas","Mensajes de acción"]},
+          {name:"Control de inventarios",subs:["Stock de seguridad","Lote económico (EOQ)","Puntos de reorden","Inventario en tránsito"]},
+          {name:"Capacidad",subs:["Plan de capacidad aproximada (RCCP)","Plan de requerimientos de capacidad (CRP)","Centros de trabajo","Calendarios de producción"]},
+        ]},
+        {id:"TMS",full:"Transportation Management System",desc:"Gestiona la planificación, ejecución y optimización del transporte.",modules:[
+          {name:"Planificación",subs:["Optimización de rutas","Selección de transportistas","Consolidación de cargas","Programación de envíos"]},
+          {name:"Ejecución",subs:["Dispatch","Seguimiento en tiempo real","Gestión de incidencias","Prueba de entrega electrónica (POD)"]},
+          {name:"Freight audit",subs:["Auditoría de fletes","Conciliación de facturas","Análisis de costos de transporte","KPIs de carrier"]},
+        ]},
+        {id:"HRM",full:"Human Resource Management",desc:"Administra todos los procesos relacionados con el capital humano.",modules:[
+          {name:"Reclutamiento",subs:["Publicación de vacantes","Gestión de candidatos (ATS)","Entrevistas y evaluaciones","Onboarding"]},
+          {name:"Nómina",subs:["Cálculo de nómina","Beneficios y deducciones","Horas extra","Reportes legales","Integración bancaria"]},
+          {name:"Desempeño",subs:["Evaluación 360°","Objetivos y OKRs","Plan de desarrollo","Retroalimentación continua"]},
+          {name:"Capacitación",subs:["Planes de formación","LMS integrado","Certificaciones","Historial de capacitación"]},
+          {name:"Asistencia",subs:["Control de asistencia","Gestión de turnos","Vacaciones y permisos","Ausentismo"]},
+        ]},
+        {id:"POS",full:"Point of Sale",desc:"Gestiona las transacciones de venta en el punto de contacto con el cliente.",modules:[
+          {name:"Ventas",subs:["Facturación rápida","Descuentos y cupones","Múltiples métodos de pago","Devoluciones y cambios"]},
+          {name:"Inventario",subs:["Control de stock en tienda","Reabastecimiento automático","Transferencias entre tiendas","Inventarios físicos"]},
+          {name:"Clientes",subs:["Programa de lealtad","Historial de compras","Crédito en tienda","Listas de deseos"]},
+          {name:"Reportes",subs:["Ventas por cajero","Ventas por producto","Cierre de caja","Análisis de tendencias"]},
+        ]},
+        {id:"PLM",full:"Product Lifecycle Management",desc:"Gestiona el ciclo de vida completo de un producto desde su concepción hasta el retiro.",modules:[
+          {name:"Diseño",subs:["CAD/CAE integration","Gestión de ingeniería (EBOM)","Control de cambios de ingeniería","Simulaciones y prototipos"]},
+          {name:"Manufactura",subs:["BOM de manufactura (MBOM)","Instrucciones de trabajo","Calificación de procesos"]},
+          {name:"Compliance",subs:["Regulaciones ambientales","Gestión de sustancias peligrosas (RoHS)","Documentación regulatoria"]},
+          {name:"Fin de vida",subs:["Planificación de descontinuación","Soporte posventa","Retiro del mercado","Reciclaje y disposición"]},
+        ]},
+        {id:"QMS",full:"Quality Management System",desc:"Asegura que los productos y procesos cumplan con los estándares de calidad.",modules:[
+          {name:"Control de calidad",subs:["Inspección de entrada","Control en proceso (IPQC)","Inspección de producto final","Muestreo estadístico (AQL)"]},
+          {name:"No conformidades",subs:["Registro de defectos","Análisis de causa raíz (RCA)","Acciones correctivas (CAPA)","8D Report"]},
+          {name:"Auditorías",subs:["Auditorías internas","Auditorías a proveedores","Preparación ISO 9001","Plan de auditoría"]},
+          {name:"Documentación",subs:["Control de documentos","SOPs y procedimientos","Registros de calidad","Trazabilidad de lotes"]},
+        ]},
+        {id:"EAM",full:"Enterprise Asset Management",desc:"Gestiona el ciclo de vida de los activos físicos de la empresa.",modules:[
+          {name:"Mantenimiento preventivo",subs:["Planes de mantenimiento","Órdenes de trabajo","Historial de equipos","Mantenimiento predictivo"]},
+          {name:"Gestión de activos",subs:["Registro de activos","Depreciación","Localización de activos","Gestión de garantías"]},
+          {name:"Repuestos",subs:["Inventario de repuestos","Criticidad de partes","Órdenes de compra MRO"]},
+          {name:"Confiabilidad",subs:["FMEA","Análisis de modos de falla","Indicadores OEE","MTBF / MTTR"]},
+        ]},
+      ]
+    },
+    {
+      id:"dec", label:"Decisión", sub:"Analizan datos",
+      bg:"bg-purple-600", light:"bg-purple-50", border:"border-purple-500", text:"text-purple-700", badge:"bg-purple-100 text-purple-800",
+      modbg:"bg-purple-50", modtext:"text-purple-800", modborder:"border-purple-200",
+      systems:[
+        {id:"BI",full:"Business Intelligence",desc:"Transforma datos en información accionable para la toma de decisiones.",modules:[
+          {name:"ETL / Integración",subs:["Extracción de fuentes","Transformación y limpieza","Carga al Data Warehouse","Orquestación de pipelines","Calidad de datos"]},
+          {name:"Data Warehouse",subs:["Modelo dimensional (estrella/copo)","Data marts","Particionamiento","Gestión de metadatos","Historial de datos"]},
+          {name:"Reportes",subs:["Reportes estáticos","Reportes ad hoc","Programación de envíos","Formatos: PDF, Excel, CSV"]},
+          {name:"Dashboards",subs:["Dashboards ejecutivos","KPIs en tiempo real","Mapas geográficos","Drilldown interactivo"]},
+          {name:"Self-service analytics",subs:["Exploración de datos","Filtros y segmentación","Exportación de datos","Creación de visualizaciones"]},
+        ]},
+        {id:"DSS",full:"Decision Support System",desc:"Apoya decisiones complejas combinando modelos analíticos y datos.",modules:[
+          {name:"Modelado",subs:["Modelos de simulación","Análisis de escenarios","Optimización matemática","Análisis de sensibilidad"]},
+          {name:"Gestión del conocimiento",subs:["Reglas de negocio","Árboles de decisión","Casos históricos","Repositorio de modelos"]},
+          {name:"Interfaz de análisis",subs:["Entrada de parámetros","Visualización de resultados","Comparación de alternativas","Informes de recomendación"]},
+        ]},
+        {id:"EIS",full:"Executive Information System",desc:"Provee información estratégica y resumida a la alta dirección.",modules:[
+          {name:"Monitoreo estratégico",subs:["Balanced Scorecard (BSC)","KPIs estratégicos","Semáforos de desempeño","Tendencias ejecutivas"]},
+          {name:"Análisis financiero",subs:["P&L ejecutivo","Flujo de caja","Comparativo vs presupuesto","Análisis de rentabilidad"]},
+          {name:"Alertas ejecutivas",subs:["Umbrales de alerta","Notificaciones automáticas","Resúmenes diarios/semanales","Excepciones críticas"]},
+        ]},
+      ]
+    },
+    {
+      id:"col", label:"Colaboración", sub:"Conectan personas",
+      bg:"bg-teal-600", light:"bg-teal-50", border:"border-teal-500", text:"text-teal-700", badge:"bg-teal-100 text-teal-800",
+      modbg:"bg-teal-50", modtext:"text-teal-800", modborder:"border-teal-200",
+      systems:[
+        {id:"KMS",full:"Knowledge Management System",desc:"Captura, organiza y distribuye el conocimiento organizacional.",modules:[
+          {name:"Captura de conocimiento",subs:["Wikis corporativas","Documentación técnica","Lecciones aprendidas","Mejores prácticas","Comunidades de práctica"]},
+          {name:"Búsqueda y recuperación",subs:["Motor de búsqueda interno","Búsqueda semántica","Taxonomías y etiquetas","Recomendaciones inteligentes"]},
+          {name:"Gestión del contenido",subs:["Control de versiones","Flujos de aprobación","Ciclo de vida de documentos","Archivo y retención"]},
+        ]},
+        {id:"ECS",full:"Enterprise Collaboration System",desc:"Facilita la comunicación y trabajo en equipo en la organización.",modules:[
+          {name:"Comunicación",subs:["Mensajería instantánea","Videollamadas","Canales y grupos","Correo interno"]},
+          {name:"Gestión de proyectos",subs:["Tableros Kanban","Cronogramas (Gantt)","Asignación de tareas","Seguimiento de progreso","Gestión de riesgos"]},
+          {name:"Documentos colaborativos",subs:["Edición simultánea","Control de versiones","Comentarios y anotaciones","Biblioteca de plantillas"]},
+          {name:"Intranet",subs:["Portal del empleado","Noticias corporativas","Directorio de empleados","Formularios y trámites internos"]},
+        ]},
+        {id:"OAS",full:"Office Automation System",desc:"Automatiza tareas administrativas y de oficina para mejorar la productividad.",modules:[
+          {name:"Gestión documental",subs:["Digitalización de documentos","OCR y clasificación automática","Firma electrónica","Archivo digital","Expedientes electrónicos"]},
+          {name:"Flujos de trabajo",subs:["Diseño de workflows","Aprobaciones automáticas","Seguimiento de procesos","Notificaciones y recordatorios"]},
+          {name:"Calendarios y agenda",subs:["Calendario corporativo","Reserva de salas","Gestión de viajes","Planificación de reuniones"]},
+        ]},
+        {id:"PRM",full:"Partner Relationship Management",desc:"Gestiona las relaciones con socios, distribuidores y canales de venta.",modules:[
+          {name:"Portal de socios",subs:["Registro de partners","Certificaciones de canal","Material de marketing","Soporte técnico para partners"]},
+          {name:"Gestión de acuerdos",subs:["Contratos de distribución","Metas y cuotas de canal","Fondos de desarrollo de mercado (MDF)","Registro de oportunidades"]},
+          {name:"Desempeño de canal",subs:["Scorecard de partners","Comisiones y rebates","Análisis de pipeline de canal","Comparativa entre partners"]},
+        ]},
+      ]
+    }
+  ]
+};
+
+let activeCat=null, openModIdx=null;
+
+function renderCats(){
+  const g=document.getElementById('cat-grid');
+  g.innerHTML='';
+  DATA.categories.forEach(cat=>{
+    const d=document.createElement('div');
+    d.id='cat-'+cat.id;
+    d.className=`cursor-pointer rounded-xl border-2 border-transparent bg-white p-4 text-center shadow-sm hover:shadow-md transition-all`;
+    d.innerHTML=`<div class="font-semibold text-gray-800 text-sm">${cat.label}</div><div class="text-xs text-gray-400 mt-1">${cat.sub}</div>`;
+    d.onclick=()=>selectCat(cat);
+    g.appendChild(d);
+  });
+}
+
+function selectCat(cat){
+  activeCat=cat; openModIdx=null;
+  DATA.categories.forEach(c=>{
+    const el=document.getElementById('cat-'+c.id);
+    if(c.id===cat.id){
+      el.className=`cursor-pointer rounded-xl border-2 p-4 text-center shadow-md transition-all ${cat.light} ${cat.border}`;
+      el.querySelector('div').className=`font-semibold text-sm ${cat.text}`;
+    } else {
+      el.className=`cursor-pointer rounded-xl border-2 border-transparent bg-white p-4 text-center shadow-sm hover:shadow-md transition-all`;
+      el.querySelector('div').className='font-semibold text-gray-800 text-sm';
+    }
+  });
+  document.getElementById('sys-label').textContent=`Sistemas — ${cat.label}`;
+  const sg=document.getElementById('sys-grid');
+  sg.innerHTML='';
+  cat.systems.forEach(sys=>{
+    const d=document.createElement('div');
+    d.id='sys-'+sys.id;
+    d.className='cursor-pointer rounded-lg border border-gray-200 bg-white p-3 shadow-sm hover:shadow-md transition-all';
+    d.innerHTML=`<div class="font-bold text-sm ${cat.text}">${sys.id}</div><div class="text-xs text-gray-500 mt-1 leading-tight">${sys.full}</div>`;
+    d.onclick=()=>selectSys(sys,cat);
+    sg.appendChild(d);
+  });
+  document.getElementById('sys-section').classList.remove('hidden');
+  document.getElementById('detail-section').classList.add('hidden');
+}
+
+function selectSys(sys,cat){
+  openModIdx=null;
+  cat.systems.forEach(s=>{
+    const el=document.getElementById('sys-'+s.id);
+    if(!el) return;
+    if(s.id===sys.id){
+      el.className=`cursor-pointer rounded-lg border-2 p-3 shadow-md transition-all ${cat.light} ${cat.border}`;
+    } else {
+      el.className='cursor-pointer rounded-lg border border-gray-200 bg-white p-3 shadow-sm hover:shadow-md transition-all';
+    }
+  });
+  document.getElementById('breadcrumb').innerHTML=
+    `<span class="text-gray-400">${cat.label}</span><span class="text-gray-300 mx-1">›</span><span class="${cat.text} font-semibold">${sys.id} — ${sys.full}</span>`;
+  document.getElementById('d-title').textContent=`${sys.id} — ${sys.full}`;
+  document.getElementById('d-desc').textContent=sys.desc;
+  const ml=document.getElementById('mod-list');
+  ml.innerHTML='';
+  sys.modules.forEach((mod,mi)=>{
+    const wrap=document.createElement('div');
+    wrap.className='rounded-lg overflow-hidden border border-gray-200';
+    const header=document.createElement('button');
+    header.className=`w-full text-left px-4 py-3 flex items-center justify-between font-medium text-sm ${cat.modbg} ${cat.modtext} hover:brightness-95 transition-all`;
+    header.innerHTML=`<span>${mod.name}</span><span id="chev-${mi}" class="text-gray-400 text-xs transition-transform duration-200">▶</span>`;
+    header.onclick=()=>toggleMod(mi,mod,cat);
+    const subWrap=document.createElement('div');
+    subWrap.id=`sub-${mi}`;
+    subWrap.className='hidden bg-white divide-y divide-gray-100';
+    mod.subs.forEach(s=>{
+      const si=document.createElement('div');
+      si.className='px-5 py-2 text-xs text-gray-600 flex items-center gap-2';
+      si.innerHTML=`<span class="${cat.text} font-bold">›</span>${s}`;
+      subWrap.appendChild(si);
+    });
+    wrap.appendChild(header);
+    wrap.appendChild(subWrap);
+    ml.appendChild(wrap);
+  });
+  document.getElementById('detail-section').classList.remove('hidden');
+  document.getElementById('detail-section').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function toggleMod(mi){
+  const sub=document.getElementById(`sub-${mi}`);
+  const chev=document.getElementById(`chev-${mi}`);
+  const isOpen=!sub.classList.contains('hidden');
+  document.querySelectorAll('[id^="sub-"]').forEach(s=>s.classList.add('hidden'));
+  document.querySelectorAll('[id^="chev-"]').forEach(c=>{c.style.transform='';});
+  if(!isOpen){
+    sub.classList.remove('hidden');
+    chev.style.transform='rotate(90deg)';
+  }
+}
+
+renderCats();
+</script>
+</body>
+</html>

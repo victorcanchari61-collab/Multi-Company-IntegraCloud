@@ -39,13 +39,15 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'flex shrink-0 flex-col overflow-hidden border-r bg-card transition-all duration-300 ease-in-out',
-        hidden ? 'w-0 border-r-0' : collapsed ? 'w-16' : 'w-64',
+        'flex shrink-0 flex-col overflow-hidden bg-primary text-primary-foreground transition-all duration-300 ease-in-out',
+        hidden ? 'w-0' : collapsed ? 'w-16' : 'w-47',
       )}
     >
       {/* Marca */}
-      <div className="flex h-14 items-center gap-2 border-b px-3">
-        <img src={logo} alt={APP_NAME} className="size-9 shrink-0 object-contain" />
+      <div className="flex h-14 items-center gap-2 border-b border-primary-foreground/10 px-3">
+        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-white p-1">
+          <img src={logo} alt={APP_NAME} className="size-full object-contain" />
+        </span>
         <span
           className={cn(
             'truncate text-sm font-semibold tracking-wide transition-opacity duration-200',
@@ -65,7 +67,7 @@ export function Sidebar() {
             title={collapsed ? label : undefined}
             activeOptions={{ exact: to === ROUTES.DASHBOARD }}
             className={cn(
-              'flex items-center gap-3 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground [&.active]:bg-accent [&.active]:font-medium [&.active]:text-foreground',
+              'flex items-center gap-3 rounded-md px-3 py-2 text-sm text-primary-foreground/70 transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground [&.active]:bg-primary-foreground/15 [&.active]:font-medium [&.active]:text-primary-foreground',
               collapsed && 'justify-center px-0',
             )}
           >
@@ -76,13 +78,13 @@ export function Sidebar() {
       </nav>
 
       {/* Contraer / desplegar */}
-      <div className="border-t p-2">
+      <div className="border-t border-primary-foreground/10 p-2">
         <button
           type="button"
           onClick={toggleCollapsed}
           title={collapsed ? 'Desplegar' : 'Contraer'}
           className={cn(
-            'flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground',
+            'flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-primary-foreground/70 transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground',
             collapsed && 'justify-center px-0',
           )}
         >

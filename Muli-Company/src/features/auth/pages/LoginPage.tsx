@@ -1,14 +1,34 @@
+import { useQuery } from '@tanstack/react-query'
 import { Rocket, ShieldCheck } from 'lucide-react'
-import logo from '@/assets/bravic-logo.png'
+import bravicLogo from '@/assets/bravic-logo.png'
 import { LoginForm } from '../components/LoginForm'
+import { getCompanyBranding } from '../services/branding.service'
+import { getTenantSlug } from '../lib/tenant'
 
 export default function LoginPage() {
+  const slug = getTenantSlug()
+
+  const { data: branding } = useQuery({
+    queryKey: ['company-branding', slug],
+    queryFn: () => getCompanyBranding(slug as string),
+    enabled: Boolean(slug),
+    retry: false,
+    staleTime: Infinity,
+  })
+
+  // Marca a mostrar: la de la empresa (por subdominio) o la del dueño de la plataforma.
+  const isTenant = Boolean(branding)
+  const brandName = branding?.name ?? 'BRAVIC SYSTEMS'
+  const brandLogo = branding?.logoUrl ?? bravicLogo
+  const tagline = isTenant
+    ? 'Accede a tu espacio de trabajo y gestiona la operación de tu empresa.'
+    : 'Gestiona toda tu operación en un solo lugar: empresas, usuarios y el acceso a cada sistema de la plataforma.'
+
   return (
     <div className="flex min-h-svh items-center justify-center bg-background p-4">
       <div className="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-card shadow-2xl ring-1 ring-black/5 md:min-h-[40rem] md:grid-cols-2">
         {/* ── Panel de marca (azul degradado) ── */}
         <div className="bg-brand-gradient relative hidden flex-col justify-between overflow-hidden p-10 text-white md:flex">
-          {/* brillos suaves */}
           <div className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-white/10 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 left-1/4 size-64 rounded-full bg-accent/30 blur-3xl" />
 
@@ -17,43 +37,44 @@ export default function LoginPage() {
           </span>
 
           <div className="relative flex flex-col items-center gap-4 text-center">
-            <span className="flex size-24 items-center justify-center rounded-full bg-white shadow-xl">
-              <img src={logo} alt="Bravic Systems" className="size-14 object-contain" />
+            <span className="flex size-24 items-center justify-center overflow-hidden rounded-full bg-white shadow-xl">
+              <img src={brandLogo} alt={brandName} className="size-14 object-contain" />
             </span>
-            <h2 className="text-3xl font-bold tracking-wide">BRAVIC SYSTEMS</h2>
-            <p className="max-w-xs text-sm leading-relaxed text-white/75">
-              Gestiona toda tu operación en un solo lugar: empresas, usuarios y el
-              acceso a cada sistema de la plataforma.
-            </p>
+            <h2 className="text-3xl font-bold tracking-wide">{brandName}</h2>
+            <p className="max-w-xs text-sm leading-relaxed text-white/75">{tagline}</p>
           </div>
 
           <div className="relative flex items-center gap-2 text-xs text-white/60">
             <ShieldCheck className="size-4" />
-            Acceso seguro · © {new Date().getFullYear()} Bravic Systems
+            Acceso seguro · © {new Date().getFullYear()} {isTenant ? brandName : 'Bravic Systems'}
           </div>
 
-          {/* Divisor ondulado tipo "nube" hacia el panel blanco */}
           <Wave />
         </div>
 
         {/* ── Panel de formulario ── */}
         <div className="flex flex-col justify-center gap-7 p-8 sm:p-12">
-          {/* Logo compacto solo en mobile */}
           <div className="flex items-center gap-2 md:hidden">
-            <span className="flex size-10 items-center justify-center rounded-full bg-primary">
-              <Rocket className="size-5 text-primary-foreground" />
+            <span className="flex size-10 items-center justify-center overflow-hidden rounded-full bg-primary">
+              {branding?.logoUrl ? (
+                <img src={branding.logoUrl} alt={brandName} className="size-full object-contain" />
+              ) : (
+                <Rocket className="size-5 text-primary-foreground" />
+              )}
             </span>
-            <span className="font-semibold tracking-wide">BRAVIC SYSTEMS</span>
+            <span className="font-semibold tracking-wide">{brandName}</span>
           </div>
 
           <div className="space-y-1.5">
             <h1 className="text-2xl font-bold text-foreground">Inicia sesión</h1>
             <p className="text-sm text-muted-foreground">
-              Ingresa tus credenciales para acceder a tu panel.
+              {isTenant
+                ? `Ingresa tus credenciales para acceder a ${brandName}.`
+                : 'Ingresa tus credenciales para acceder a tu panel.'}
             </p>
           </div>
 
-          <LoginForm showCompany={false} />
+          <LoginForm showCompany={false} companySlug={slug ?? undefined} />
 
           <p className="text-center text-xs text-muted-foreground">
             ¿Problemas para entrar?{' '}
@@ -65,7 +86,7 @@ export default function LoginPage() {
   )
 }
 
-/** Divisor ondulado (nubes) que conecta el panel azul con el formulario, como en el diseño. */
+/** Divisor ondulado (nubes) que conecta el panel azul con el formulario. */
 function Wave() {
   return (
     <svg

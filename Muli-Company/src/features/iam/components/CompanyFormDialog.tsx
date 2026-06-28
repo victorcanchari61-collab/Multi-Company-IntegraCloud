@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -30,34 +30,55 @@ import { lookupRuc } from '@/lib/lookup'
 import { useCreateCompany, useUpdateCompany } from '../queries/useCompanies'
 import type { Company } from '../types/iam'
 
-const schema = z.object({
-  name: z.string().min(1, 'El nombre es requerido').max(150),
-  slug: z
-    .string()
-    .min(1, 'El subdominio es requerido')
-    .regex(/^[a-z0-9-]+$/, 'Solo minúsculas, números y guiones'),
-  legalName: z.string().max(200).optional(),
-  /** Imagen del logo en data URL (base64). */
-  logoUrl: z.string().optional(),
-  email: z.string().email('Correo inválido').optional().or(z.literal('')),
-  phone: z.string().max(20).optional(),
-  website: z.string().url('URL inválida').optional().or(z.literal('')),
-  address: z.string().max(300).optional(),
-  taxId: z.string().max(20).optional(),
-  taxAddress: z.string().max(300).optional(),
-  economicActivity: z.string().max(255).optional(),
-  taxpayerType: z.number().int().min(1).max(2),
-  accountingRequired: z.boolean(),
-  settlementCurrency: z.string().min(3, 'Código de 3 letras').max(3),
-  // Credenciales SUNAT (opcionales al registrar)
-  solUser: z.string().max(60).optional(),
-  solPassword: z.string().max(120).optional(),
-  certificatePassword: z.string().max(120).optional(),
-  certificateFileName: z.string().optional(),
-  certificateContent: z.string().optional(),
-})
+const buildSchema = (isEdit: boolean) =>
+  z
+    .object({
+      name: z.string().min(1, 'El nombre es requerido').max(150),
+      slug: z
+        .string()
+        .min(1, 'El subdominio es requerido')
+        .regex(/^[a-z0-9-]+$/, 'Solo minúsculas, números y guiones'),
+      legalName: z.string().max(200).optional(),
+      /** Imagen del logo en data URL (base64). */
+      logoUrl: z.string().optional(),
+      email: z.string().email('Correo inválido').optional().or(z.literal('')),
+      phone: z.string().max(20).optional(),
+      website: z.string().url('URL inválida').optional().or(z.literal('')),
+      address: z.string().max(300).optional(),
+      taxId: z.string().max(20).optional(),
+      taxAddress: z.string().max(300).optional(),
+      economicActivity: z.string().max(255).optional(),
+      taxpayerType: z.number().int().min(1).max(2),
+      accountingRequired: z.boolean(),
+      settlementCurrency: z.string().min(3, 'Código de 3 letras').max(3),
+      // Credenciales SUNAT (opcionales al registrar)
+      solUser: z.string().max(60).optional(),
+      solPassword: z.string().max(120).optional(),
+      certificatePassword: z.string().max(120).optional(),
+      certificateFileName: z.string().optional(),
+      certificateContent: z.string().optional(),
+      // Administrador inicial (requerido solo al crear)
+      adminFullName: z.string().max(150).optional(),
+      adminEmail: z.string().email('Correo inválido').optional().or(z.literal('')),
+      adminPassword: z.string().optional().or(z.literal('')),
+    })
+    .superRefine((val, ctx) => {
+      if (isEdit) return
+      if (!val.adminEmail)
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['adminEmail'],
+          message: 'El correo del administrador es requerido',
+        })
+      if (!val.adminPassword || val.adminPassword.length < 8)
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ['adminPassword'],
+          message: 'Mínimo 8 caracteres',
+        })
+    })
 
-type FormData = z.infer<typeof schema>
+type FormData = z.infer<ReturnType<typeof buildSchema>>
 
 const empty = (value?: string) => (value && value.trim() !== '' ? value.trim() : null)
 
@@ -73,6 +94,7 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
   const createMut = useCreateCompany()
   const updateMut = useUpdateCompany()
   const isPending = createMut.isPending || updateMut.isPending
+  const schema = useMemo(() => buildSchema(isEdit), [isEdit])
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -96,6 +118,9 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
       certificatePassword: '',
       certificateFileName: '',
       certificateContent: '',
+      adminFullName: '',
+      adminEmail: '',
+      adminPassword: '',
     },
   })
 
@@ -192,6 +217,9 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
         certificatePassword: empty(data.certificatePassword),
         certificateFileName: empty(data.certificateFileName),
         certificateContent: empty(data.certificateContent),
+        adminEmail: empty(data.adminEmail),
+        adminFullName: empty(data.adminFullName),
+        adminPassword: data.adminPassword ? data.adminPassword : null,
       },
       {
         onSuccess: () => {
@@ -232,6 +260,7 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                   <TabsTrigger value="generales">Generales</TabsTrigger>
                   <TabsTrigger value="facturacion">Facturación</TabsTrigger>
                   {!isEdit && <TabsTrigger value="certificado">Certificado</TabsTrigger>}
+                  {!isEdit && <TabsTrigger value="administrador">Administrador</TabsTrigger>}
                   <TabsTrigger value="branding">Branding</TabsTrigger>
                 </TabsList>
 
@@ -551,6 +580,68 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                         )}
                       />
                     </div>
+                  </TabsContent>
+                  )}
+
+                  {/* ── Administrador inicial ── */}
+                  {!isEdit && (
+                  <TabsContent value="administrador" className="space-y-4">
+                    <p className="text-xs text-muted-foreground">
+                      Primer usuario administrador de la empresa. Con estas credenciales podrá
+                      iniciar sesión y crear el resto de usuarios y roles.
+                    </p>
+                    <FormField
+                      control={form.control}
+                      name="adminFullName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            Nombre del administrador{' '}
+                            <span className="text-muted-foreground">(opcional)</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="Juan Pérez" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="adminEmail"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Correo del administrador</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              placeholder="admin@miempresa.com"
+                              autoComplete="off"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="adminPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Contraseña temporal</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="password"
+                              placeholder="Mínimo 8 caracteres"
+                              autoComplete="new-password"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </TabsContent>
                   )}
 

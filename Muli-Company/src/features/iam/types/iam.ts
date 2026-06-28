@@ -108,6 +108,10 @@ export interface CreateCompanyRequest {
   certificateFileName?: string | null
   /** Contenido del .pem/.pfx en base64 (sin el prefijo data:). */
   certificateContent?: string | null
+  // Administrador inicial de la empresa (provisioning).
+  adminEmail?: string | null
+  adminFullName?: string | null
+  adminPassword?: string | null
 }
 
 export interface UpdateCompanyRequest {

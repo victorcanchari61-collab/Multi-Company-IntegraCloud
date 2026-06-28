@@ -1257,7 +1257,10 @@
         },
         "runtime": {
           "bin/placeholder/Backend.Infrastructure.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "Backend.SharedKernel/1.0.0": {
         "type": "project",

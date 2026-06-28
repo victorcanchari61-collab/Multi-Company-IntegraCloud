@@ -3,6 +3,7 @@ using Backend.Application.IAM.Queries.Companies;
 using Backend.SharedKernel;
 using Backend_API.Middleware;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend_API.Controllers.IAM;
@@ -24,6 +25,15 @@ public sealed class CompaniesController(IMediator mediator, TenantContext tenant
     {
         var result = await mediator.Send(new GetCompaniesQuery(page, size, status), ct);
         return Ok(result.Value);
+    }
+
+    /// <summary>Branding público de una empresa por subdominio (sin auth) para pintar el login.</summary>
+    [AllowAnonymous]
+    [HttpGet("branding/{slug}")]
+    public async Task<IActionResult> Branding(string slug, CancellationToken ct)
+    {
+        var result = await mediator.Send(new GetCompanyBrandingQuery(slug), ct);
+        return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
     }
 
     [HttpGet("{id:guid}")]

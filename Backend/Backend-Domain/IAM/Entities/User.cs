@@ -48,4 +48,11 @@ public sealed class User : AggregateRoot
     {
         PasswordHash = passwordHash;
     }
+
+    /// <summary>Asigna un rol al usuario (idempotente).</summary>
+    public void AssignRole(Guid roleId)
+    {
+        if (UserRoles.Any(ur => ur.RoleId == roleId)) return;
+        UserRoles.Add(new UserRole(Id, roleId));
+    }
 }

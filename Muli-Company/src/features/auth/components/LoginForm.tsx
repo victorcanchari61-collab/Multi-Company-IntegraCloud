@@ -31,6 +31,8 @@ type LoginFormData = z.infer<typeof schema>
 interface Props {
   /** Muestra el campo de empresa (slug). El dueño del sistema no lo necesita. */
   showCompany?: boolean
+  /** Fija la empresa (desde el subdominio); oculta el campo y la usa al iniciar sesión. */
+  companySlug?: string
 }
 
 const rememberedEmail = (): string =>
@@ -38,7 +40,7 @@ const rememberedEmail = (): string =>
     ? ''
     : (localStorage.getItem(STORAGE_KEYS.REMEMBER_EMAIL) ?? '')
 
-export function LoginForm({ showCompany = true }: Props) {
+export function LoginForm({ showCompany = true, companySlug }: Props) {
   const navigate = useNavigate()
   const { mutate, isPending } = useLogin()
   const initialEmail = rememberedEmail()
@@ -54,7 +56,7 @@ export function LoginForm({ showCompany = true }: Props) {
     else localStorage.removeItem(STORAGE_KEYS.REMEMBER_EMAIL)
 
     mutate(
-      { ...data, slug: data.slug?.trim() || null },
+      { ...data, slug: companySlug ?? (data.slug?.trim() || null) },
       {
         onSuccess: () => navigate({ to: ROUTES.DASHBOARD }),
         onError: (error) =>

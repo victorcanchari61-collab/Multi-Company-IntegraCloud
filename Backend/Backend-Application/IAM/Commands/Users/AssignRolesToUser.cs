@@ -30,12 +30,10 @@ public sealed class AssignRolesToUserCommandHandler(
                 return Result.Failure(
                     Error.Validation("role.company_mismatch", "Role does not belong to the user's company."));
 
-            if (!user.UserRoles.Any(ur => ur.RoleId == roleId))
-            {
-                var userRole = new UserRole(request.UserId, roleId);
-            }
+            user.AssignRole(roleId);
         }
 
+        userRepository.Update(user);
         return Result.Success();
     }
 }

@@ -1,4 +1,3 @@
-using Backend.Application.IAM.DTOs;
 using Backend.Domain.IAM.Entities;
 using Backend.Domain.IAM.Events;
 using Backend.Domain.IAM.Repositories;
@@ -23,11 +22,18 @@ public sealed record CreateCompanyCommand(
     int TaxpayerType = 1,
     bool AccountingRequired = false,
     string SettlementCurrency = "PEN",
+    // Provisioning del administrador inicial de la empresa.
+    string? AdminEmail = null,
+    string? AdminFullName = null,
+    string? AdminPassword = null,
     Guid? CreatedBy = null)
     : IRequest<Result<Guid>>;
 
 public sealed class CreateCompanyCommandHandler(
     ICompanyRepository companyRepository,
+    IUserRepository userRepository,
+    IRoleRepository roleRepository,
+    IPasswordHasher passwordHasher,
     IPublisher publisher)
     : IRequestHandler<CreateCompanyCommand, Result<Guid>>
 {
@@ -60,6 +66,29 @@ public sealed class CreateCompanyCommandHandler(
             request.CreatedBy);
 
         await companyRepository.AddAsync(company, ct);
+
+        // Provisioning: crea el primer admin de la empresa (rol "Administrador" + usuario).
+        if (!string.IsNullOrWhiteSpace(request.AdminEmail)
+            && !string.IsNullOrWhiteSpace(request.AdminPassword))
+        {
+            var role = new Role(Guid.NewGuid(), company.Id, "Administrador", "Administrador de la empresa");
+            await roleRepository.AddAsync(role, ct);
+
+            var fullName = string.IsNullOrWhiteSpace(request.AdminFullName)
+                ? request.AdminEmail.Trim()
+                : request.AdminFullName.Trim();
+
+            var admin = new User(
+                Guid.NewGuid(),
+                companyId: company.Id,
+                email: request.AdminEmail.Trim(),
+                passwordHash: passwordHasher.Hash(request.AdminPassword),
+                fullName: fullName,
+                isOwner: false);
+            admin.AssignRole(role.Id);
+
+            await userRepository.AddAsync(admin, ct);
+        }
 
         await publisher.Publish(new CompanyCreatedEvent(company.Id, company.Name), ct);
 

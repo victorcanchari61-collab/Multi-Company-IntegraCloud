@@ -15,10 +15,12 @@ public sealed record MenuModuleDto(
     string Code,
     string Label,
     string? Route,
+    string? RequiredPermission,
     List<MenuItemDto> Submodules);
 
 /// <summary>Submódulo (View) = pantalla navegable dentro de un módulo.</summary>
 public sealed record MenuItemDto(
     string Code,
     string Label,
-    string Route);
+    string Route,
+    string? RequiredPermission);

@@ -4,6 +4,7 @@ export interface MenuItem {
   code: string
   label: string
   route: string
+  requiredPermission: string | null
 }
 
 export interface MenuModule {
@@ -11,6 +12,7 @@ export interface MenuModule {
   label: string
   /** Si tiene valor (y submodules vacío) es un módulo-hoja (link directo). */
   route: string | null
+  requiredPermission: string | null
   submodules: MenuItem[]
 }
 

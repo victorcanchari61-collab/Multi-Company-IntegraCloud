@@ -15,7 +15,7 @@ public sealed class GetOwnerMenuQueryHandler
         {
             new("IAM", "IAM", new List<MenuModuleDto>
             {
-                new("companies", "Empresas", "/iam/companies", new List<MenuItemDto>()),
+                new("companies", "Empresas", "/iam/companies", null, new List<MenuItemDto>()),
             }),
         };
 

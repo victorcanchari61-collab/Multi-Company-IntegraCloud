@@ -15,12 +15,12 @@ public sealed class GetCompanyMenuQueryHandler(
     ICompanyModuleAccessRepository moduleAccessRepository)
     : IRequestHandler<GetCompanyMenuQuery, Result<List<MenuSectionDto>>>
 {
-    // Módulos HOJA (sin submódulos/views): su ruta y etiqueta vienen de aquí. Ej. IAM.
-    private static readonly Dictionary<string, (string Route, string Label)> LeafModuleConfig = new()
+    // Módulos HOJA (sin submódulos/views): su ruta, etiqueta y permiso requerido vienen de aquí.
+    private static readonly Dictionary<string, (string Route, string Label, string Permission)> LeafModuleConfig = new()
     {
-        ["IAM:users"] = ("/iam/users", "Usuarios"),
-        ["IAM:roles"] = ("/iam/roles", "Roles"),
-        ["IAM:permissions"] = ("/iam/permissions", "Permisos"),
+        ["IAM:users"] = ("/iam/users", "Usuarios", "iam.users.view"),
+        ["IAM:roles"] = ("/iam/roles", "Roles", "iam.roles.view"),
+        ["IAM:permissions"] = ("/iam/permissions", "Permisos", "iam.permissions.view"),
     };
 
     public async Task<Result<List<MenuSectionDto>>> Handle(GetCompanyMenuQuery request, CancellationToken ct)
@@ -53,20 +53,22 @@ public sealed class GetCompanyMenuQueryHandler(
                     .OrderBy(m => m.Name)
                     .Select(m =>
                     {
+                        var modulePermission = $"{system.Code.ToLowerInvariant()}.{m.Code.ToLowerInvariant()}.view";
+
                         // Submódulos = views del módulo (con ruta).
                         var submodules = allViews
                             .Where(v => v.ModuleId == m.Id && !string.IsNullOrEmpty(v.Route))
                             .OrderBy(v => v.Name)
-                            .Select(v => new MenuItemDto(v.Code, v.Name, v.Route!))
+                            .Select(v => new MenuItemDto(v.Code, v.Name, v.Route!, modulePermission))
                             .ToList();
 
                         if (submodules.Count > 0)
-                            return new MenuModuleDto(m.Code, m.Name, null, submodules);
+                            return new MenuModuleDto(m.Code, m.Name, null, modulePermission, submodules);
 
                         // Sin views → módulo hoja (link directo) según config.
                         var key = $"{system.Code}:{m.Code}";
                         if (LeafModuleConfig.TryGetValue(key, out var cfg))
-                            return new MenuModuleDto(m.Code, cfg.Label, cfg.Route, new List<MenuItemDto>());
+                            return new MenuModuleDto(m.Code, cfg.Label, cfg.Route, cfg.Permission, new List<MenuItemDto>());
 
                         return null;
                     })

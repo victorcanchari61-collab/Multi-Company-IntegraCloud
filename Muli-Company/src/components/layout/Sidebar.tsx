@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils'
 import { APP_NAME, ROUTES } from '@/lib/constants'
 import { useSidebarStore } from '@/stores/sidebarStore'
 import { useMenu } from '@/features/auth/queries/useMenu'
+import { usePermissions } from '@/features/auth/hooks/usePermissions'
 
 const SYSTEM_ICONS: Record<string, LucideIcon> = {
   IAM: ShieldCheck,
@@ -45,6 +46,7 @@ const linkBase =
 
 export function Sidebar() {
   const { data: sections = [] } = useMenu()
+  const { can } = usePermissions()
   const collapsed = useSidebarStore((s) => s.collapsed)
   const hidden = useSidebarStore((s) => s.hidden)
   const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed)
@@ -94,80 +96,93 @@ export function Sidebar() {
         </Link>
 
         {!collapsed &&
-          sections.map((section) => {
-            const SysIcon = SYSTEM_ICONS[section.systemCode] ?? ShieldCheck
-            const sysOpen = isOpen(section.systemCode)
-            return (
-              <div key={section.systemCode}>
-                {/* Nivel 1: Sistema */}
-                <button
-                  type="button"
-                  onClick={() => toggle(section.systemCode)}
-                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700"
-                >
-                  <SysIcon className="size-4 shrink-0" />
-                  <span className="flex-1 truncate text-left">{section.systemName}</span>
-                  <ChevronDown className={cn('size-3 transition-transform', !sysOpen && '-rotate-90')} />
-                </button>
+          sections
+            .map((section) => ({
+              ...section,
+              modules: section.modules
+                .filter((m) => !m.requiredPermission || can(m.requiredPermission))
+                .map((m) => ({
+                  ...m,
+                  submodules: m.submodules.filter(
+                    (s) => !s.requiredPermission || can(s.requiredPermission),
+                  ),
+                })),
+            }))
+            .filter((section) => section.modules.length > 0)
+            .map((section) => {
+              const SysIcon = SYSTEM_ICONS[section.systemCode] ?? ShieldCheck
+              const sysOpen = isOpen(section.systemCode)
+              return (
+                <div key={section.systemCode}>
+                  {/* Nivel 1: Sistema */}
+                  <button
+                    type="button"
+                    onClick={() => toggle(section.systemCode)}
+                    className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700"
+                  >
+                    <SysIcon className="size-4 shrink-0" />
+                    <span className="flex-1 truncate text-left">{section.systemName}</span>
+                    <ChevronDown className={cn('size-3 transition-transform', !sysOpen && '-rotate-90')} />
+                  </button>
 
-                {sysOpen && (
-                  <div className="ml-3 space-y-0.5 border-l pl-2">
-                    {section.modules.map((module) => {
-                      const ModIcon = MODULE_ICONS[module.code] ?? Folder
+                  {sysOpen && (
+                    <div className="ml-3 space-y-0.5 pl-2">
+                      {section.modules.map((module) => {
+                        const ModIcon = MODULE_ICONS[module.code] ?? Folder
 
-                      // Módulo GRUPO (con submódulos)
-                      if (module.submodules.length > 0) {
-                        const modKey = `${section.systemCode}/${module.code}`
-                        const modOpen = isOpen(modKey)
+                        // Módulo GRUPO (con submódulos)
+                        if (module.submodules.length > 0) {
+                          const modKey = `${section.systemCode}/${module.code}`
+                          const modOpen = isOpen(modKey)
+                          return (
+                            <div key={module.code}>
+                              <button
+                                type="button"
+                                onClick={() => toggle(modKey)}
+                                className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                              >
+                                <ModIcon className="size-3.5 shrink-0" />
+                                <span className="flex-1 truncate text-left">{module.label}</span>
+                                <ChevronDown
+                                  className={cn('size-3 transition-transform', !modOpen && '-rotate-90')}
+                                />
+                              </button>
+{modOpen && (
+                              <div className="ml-3 space-y-0.5 pl-2">
+                                  {module.submodules.map((sub) => (
+                                    <Link
+                                      key={sub.route}
+                                      to={sub.route}
+                                      title={sub.label}
+                                      className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/75 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
+                                    >
+                                      <span className="truncate">{sub.label}</span>
+                                    </Link>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        }
+
+                        // Módulo HOJA (link directo)
                         return (
-                          <div key={module.code}>
-                            <button
-                              type="button"
-                              onClick={() => toggle(modKey)}
-                              className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700"
-                            >
-                              <ModIcon className="size-3.5 shrink-0" />
-                              <span className="flex-1 truncate text-left">{module.label}</span>
-                              <ChevronDown
-                                className={cn('size-3 transition-transform', !modOpen && '-rotate-90')}
-                              />
-                            </button>
-                            {modOpen && (
-                              <div className="ml-3 space-y-0.5 border-l pl-2">
-                                {module.submodules.map((sub) => (
-                                  <Link
-                                    key={sub.route}
-                                    to={sub.route}
-                                    title={sub.label}
-                                    className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/75 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
-                                  >
-                                    <span className="truncate">{sub.label}</span>
-                                  </Link>
-                                ))}
-                              </div>
-                            )}
-                          </div>
+                          <Link
+                            key={module.code}
+                            to={module.route ?? '#'}
+                            title={module.label}
+                            className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
+                          >
+                            <ModIcon className="size-3.5 shrink-0" />
+                            <span className="truncate">{module.label}</span>
+                          </Link>
                         )
-                      }
-
-                      // Módulo HOJA (link directo)
-                      return (
-                        <Link
-                          key={module.code}
-                          to={module.route ?? '#'}
-                          title={module.label}
-                          className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
-                        >
-                          <ModIcon className="size-3.5 shrink-0" />
-                          <span className="truncate">{module.label}</span>
-                        </Link>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )
-          })}
+                      })}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
       </nav>
 
       <div className="border-t p-2">

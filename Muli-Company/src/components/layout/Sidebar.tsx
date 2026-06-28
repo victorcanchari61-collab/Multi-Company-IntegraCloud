@@ -11,7 +11,6 @@ import {
   Package,
   ShieldCheck,
   UserCheck,
-  UserCircle,
   Users,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -19,7 +18,6 @@ import logo from '@/assets/bravic-logo.png'
 import { cn } from '@/lib/utils'
 import { APP_NAME, ROUTES } from '@/lib/constants'
 import { useSidebarStore } from '@/stores/sidebarStore'
-import { usePermissions } from '@/features/auth/hooks/usePermissions'
 import { useMenu } from '@/features/auth/queries/useMenu'
 
 const SYSTEM_ICONS: Record<string, LucideIcon> = {
@@ -38,7 +36,6 @@ const MODULE_ICONS: Record<string, LucideIcon> = {
 }
 
 export function Sidebar() {
-  const { isOwner } = usePermissions()
   const { data: sections = [] } = useMenu()
   const collapsed = useSidebarStore((s) => s.collapsed)
   const hidden = useSidebarStore((s) => s.hidden)

@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
 import { usePermissions } from '../hooks/usePermissions'
+import type { PermissionKey } from '@/features/iam/types/iam'
 
 interface Props {
-  /** Permiso requerido, p. ej. "iam.companies.create". */
-  permission?: string
+  /** Permiso requerido, p. ej. PERMISSIONS.IAM_COMPANIES_CREATE. */
+  permission?: PermissionKey
   /** Permisos requeridos; por defecto basta con uno (any). */
   anyOf?: string[]
   /** Requiere todos los permisos de la lista. */

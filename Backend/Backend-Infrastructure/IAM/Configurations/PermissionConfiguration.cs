@@ -13,8 +13,6 @@ public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permissio
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Key).HasColumnName("key").HasMaxLength(160).IsRequired();
-        builder.Property(x => x.ResourceType).HasColumnName("resource_type").IsRequired();
-        builder.Property(x => x.ResourceId).HasColumnName("resource_id").IsRequired();
         builder.Property(x => x.ModuleId).HasColumnName("module_id").IsRequired();
         builder.Property(x => x.ActionCode).HasColumnName("action_code").HasMaxLength(30).IsRequired();
         builder.Property(x => x.Description).HasColumnName("description").HasMaxLength(255);
@@ -30,7 +28,7 @@ public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permissio
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasIndex(x => x.Key).IsUnique();
-        builder.HasIndex(x => new { x.ResourceType, x.ResourceId, x.ActionCode }).IsUnique();
+        builder.HasIndex(x => new { x.ModuleId, x.ActionCode }).IsUnique();
         builder.HasIndex(x => x.ModuleId);
     }
 }

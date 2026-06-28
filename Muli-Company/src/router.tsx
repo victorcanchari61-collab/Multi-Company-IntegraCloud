@@ -60,28 +60,36 @@ const companyDetailRoute = createRoute({
   component: CompanyDetailPage,
 })
 
+const validateCompanyId = (input: Record<string, unknown>) => ({
+  companyId: typeof input.companyId === 'string' ? input.companyId : undefined,
+})
+
 const usersRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.USERS,
   component: UsersPage,
+  validateSearch: validateCompanyId,
 })
 
 const rolesRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.ROLES,
   component: RolesPage,
+  validateSearch: validateCompanyId,
 })
 
 const roleDetailRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.ROLE_DETAIL,
   component: RoleDetailPage,
+  validateSearch: validateCompanyId,
 })
 
 const permissionsRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.PERMISSIONS,
   component: PermissionsPage,
+  validateSearch: validateCompanyId,
 })
 
 const profileRoute = createRoute({

@@ -15,6 +15,7 @@ import type { User } from '../types/iam'
 
 export default function UsersPage() {
   const companyId = useActiveCompanyId()
+  const [editTarget, setEditTarget] = useState<User | null>(null)
   const [rolesFor, setRolesFor] = useState<User | null>(null)
   const [passwordFor, setPasswordFor] = useState<User | null>(null)
   const [search, setSearch] = useState('')
@@ -29,6 +30,8 @@ export default function UsersPage() {
   return (
     <UsersContent
       companyId={companyId}
+      editTarget={editTarget}
+      setEditTarget={setEditTarget}
       rolesFor={rolesFor}
       setRolesFor={setRolesFor}
       passwordFor={passwordFor}
@@ -41,6 +44,8 @@ export default function UsersPage() {
 
 function UsersContent({
   companyId,
+  editTarget,
+  setEditTarget,
   rolesFor,
   setRolesFor,
   passwordFor,
@@ -49,6 +54,8 @@ function UsersContent({
   setSearch,
 }: {
   companyId: string
+  editTarget: User | null
+  setEditTarget: (user: User | null) => void
   rolesFor: User | null
   setRolesFor: (user: User | null) => void
   passwordFor: User | null
@@ -76,6 +83,7 @@ function UsersContent({
     () =>
       getUserColumns({
         pending: deactivate.isPending || reactivate.isPending,
+        onEdit: setEditTarget,
         onDeactivate,
         onReactivate,
         onAssignRoles: setRolesFor,
@@ -125,6 +133,14 @@ function UsersContent({
           search ? 'No hay usuarios que coincidan con la búsqueda.' : 'No hay usuarios en esta empresa.'
         }
       />
+
+      {editTarget && (
+        <UserFormDialog
+          companyId={companyId}
+          user={editTarget}
+          onClose={() => setEditTarget(null)}
+        />
+      )}
 
       <AssignRolesDialog
         companyId={companyId}

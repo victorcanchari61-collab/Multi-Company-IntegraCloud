@@ -38,6 +38,7 @@ public sealed class CreateCompanyCommandHandler(
     ICompanyRepository companyRepository,
     IUserRepository userRepository,
     IRoleRepository roleRepository,
+    IPermissionRepository permissionRepository,
     ICompanyBillingCredentialRepository billingRepository,
     IPasswordHasher passwordHasher,
     ISecretProtector secretProtector)
@@ -79,6 +80,11 @@ public sealed class CreateCompanyCommandHandler(
         {
             var role = new Role(Guid.NewGuid(), company.Id, "Administrador", "Administrador de la empresa");
             await roleRepository.AddAsync(role, ct);
+
+            // Asigna todos los permisos de la plataforma al rol Administrador.
+            var allPermissions = await permissionRepository.GetAllAsync(ct);
+            foreach (var perm in allPermissions)
+                role.RolePermissions.Add(new RolePermission(role.Id, perm.Id));
 
             var fullName = string.IsNullOrWhiteSpace(request.AdminFullName)
                 ? request.AdminEmail.Trim()

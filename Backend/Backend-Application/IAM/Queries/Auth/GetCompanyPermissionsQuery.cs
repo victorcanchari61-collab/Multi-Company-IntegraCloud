@@ -4,30 +4,25 @@ using MediatR;
 
 namespace Backend.Application.IAM.Queries.Auth;
 
-public sealed record GetMyPermissionsQuery(Guid UserId) : IRequest<Result<List<string>>>;
+public sealed record GetCompanyPermissionsQuery(Guid UserId, Guid CompanyId) : IRequest<Result<List<string>>>;
 
-public sealed class GetMyPermissionsQueryHandler(
+public sealed class GetCompanyPermissionsQueryHandler(
     IPermissionRepository permissionRepository,
     IUserRepository userRepository,
     IRoleRepository roleRepository,
     ICompanyModuleAccessRepository accessRepository)
-    : IRequestHandler<GetMyPermissionsQuery, Result<List<string>>>
+    : IRequestHandler<GetCompanyPermissionsQuery, Result<List<string>>>
 {
-    public async Task<Result<List<string>>> Handle(GetMyPermissionsQuery request, CancellationToken ct)
+    public async Task<Result<List<string>>> Handle(GetCompanyPermissionsQuery request, CancellationToken ct)
     {
         var user = await userRepository.GetByIdAsync(request.UserId, ct);
         if (user is null)
             return Result<List<string>>.Failure(
                 Error.NotFound("user.not_found", "User not found."));
 
-        if (user.IsOwner)
-        {
-            var allPermissions = await permissionRepository.GetAllAsync(ct);
-            return Result<List<string>>.Success(allPermissions.Select(p => p.Key).ToList());
-        }
-
-        var userRoles = await roleRepository.GetByCompanyIdAsync(user.CompanyId ?? Guid.Empty, ct);
-        var permittedModuleIds = (await accessRepository.GetByCompanyIdAsync(user.CompanyId ?? Guid.Empty, ct))
+        var companyId = user.CompanyId ?? request.CompanyId;
+        var userRoles = await roleRepository.GetByCompanyIdAsync(companyId, ct);
+        var permittedModuleIds = (await accessRepository.GetByCompanyIdAsync(companyId, ct))
             .Select(a => a.ModuleId)
             .ToHashSet();
 

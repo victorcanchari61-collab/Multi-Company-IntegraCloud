@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { ArrowLeft, Check, Plus } from 'lucide-react'
+import { ArrowLeft, Check, Plus, ShieldCheck, Users, UserCog } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -79,7 +79,7 @@ export default function CompanyDetailPage() {
     return (
       <div className="py-12 text-center">
         <p className="text-muted-foreground">Empresa no encontrada.</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate({ to: '/iam/companies' } as any)}>
+        <Button variant="outline" className="mt-4" onClick={() => navigate({ to: '/iam/companies' })}>
           Volver
         </Button>
       </div>
@@ -89,7 +89,7 @@ export default function CompanyDetailPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/iam/companies' } as any)}>
+        <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/iam/companies' })}>
           <ArrowLeft className="size-5" />
         </Button>
         <div>
@@ -241,8 +241,45 @@ export default function CompanyDetailPage() {
         </CardContent>
       </Card>
 
+      <Card>
+        <CardHeader>
+          <CardTitle>Gestión de la empresa</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Administra usuarios, roles y permisos de {company.name}.
+          </p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-3">
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => navigate({ to: '/iam/users', search: { companyId } })}
+            >
+              <Users className="size-4" />
+              Usuarios
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => navigate({ to: '/iam/roles', search: { companyId } })}
+            >
+              <UserCog className="size-4" />
+              Roles
+            </Button>
+            <Button
+              variant="outline"
+              className="gap-2"
+              onClick={() => navigate({ to: '/iam/permissions', search: { companyId } })}
+            >
+              <ShieldCheck className="size-4" />
+              Permisos
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="flex gap-2">
-        <Button variant="outline" onClick={() => navigate({ to: '/iam/companies' } as any)}>
+        <Button variant="outline" onClick={() => navigate({ to: '/iam/companies' })}>
           Volver a empresas
         </Button>
       </div>

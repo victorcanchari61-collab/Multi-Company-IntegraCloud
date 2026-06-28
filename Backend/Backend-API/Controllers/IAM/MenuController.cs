@@ -14,8 +14,14 @@ public sealed class MenuController(IMediator mediator, TenantContext tenantConte
     [HttpGet]
     public async Task<IActionResult> GetMenu(CancellationToken ct)
     {
-        var result = await mediator.Send(
-            new GetMenuQuery(tenantContext.IsOwner, tenantContext.CompanyId), ct);
-        return Ok(result.Value);
+        if (tenantContext.IsOwner)
+        {
+            var ownerResult = await mediator.Send(new GetOwnerMenuQuery(), ct);
+            return Ok(ownerResult.Value);
+        }
+
+        var companyResult = await mediator.Send(
+            new GetCompanyMenuQuery(tenantContext.CompanyId!.Value), ct);
+        return Ok(companyResult.Value);
     }
 }

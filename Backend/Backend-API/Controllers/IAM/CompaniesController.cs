@@ -1,7 +1,6 @@
 using Backend.Application.IAM.Commands.Companies;
 using Backend.Application.IAM.Queries.Companies;
 using Backend.SharedKernel;
-using Backend_API.Middleware;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +9,7 @@ namespace Backend_API.Controllers.IAM;
 
 [ApiController]
 [Route("api/[controller]")]
-public sealed class CompaniesController(IMediator mediator, TenantContext tenantContext) : ControllerBase
+public sealed class CompaniesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Create(CreateCompanyCommand command, CancellationToken ct)

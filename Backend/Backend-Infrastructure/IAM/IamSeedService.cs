@@ -7,7 +7,7 @@ namespace Backend.Infrastructure.IAM;
 
 public sealed class IamSeedService
 {
-    public static async Task SeedAsync(IamDbContext context, IPasswordHasher passwordHasher, ILogger? logger = null)
+    public static async Task SeedAsync(IamDbContext context, IPasswordHasher passwordHasher, ILogger? logger = null, CancellationToken ct = default)
     {
         logger?.LogInformation("Seed: Starting data seed...");
 
@@ -16,12 +16,16 @@ public sealed class IamSeedService
         {
             var actions = new List<PermissionAction>
             {
+                new(Guid.NewGuid(), "view", "View"),
                 new(Guid.NewGuid(), "read", "Read"),
                 new(Guid.NewGuid(), "create", "Create"),
                 new(Guid.NewGuid(), "update", "Update"),
                 new(Guid.NewGuid(), "delete", "Delete"),
                 new(Guid.NewGuid(), "export", "Export"),
                 new(Guid.NewGuid(), "approve", "Approve"),
+                new(Guid.NewGuid(), "assign_permissions", "Assign Permissions"),
+                new(Guid.NewGuid(), "assign_roles", "Assign Roles"),
+                new(Guid.NewGuid(), "manage_modules", "Manage Modules"),
             };
             context.Actions.AddRange(actions);
             logger?.LogInformation("Seed: Added actions");
@@ -48,28 +52,23 @@ public sealed class IamSeedService
             logger?.LogInformation("Seed: Added systems and modules");
         }
 
-        await context.SaveChangesAsync();
+        await context.SaveChangesAsync(ct);
 
         // ── Permisos del catálogo (Module × Action) ──
-        if (!await context.Permissions.AnyAsync())
+        if (!await context.Permissions.AnyAsync(ct))
         {
-            var modules = await context.Modules.ToListAsync();
-            var actions = await context.Actions.ToListAsync();
+            var modules = await context.Modules.Include(m => m.System).ToListAsync(ct);
+            var actions = await context.Actions.ToListAsync(ct);
             var permissions = new List<Permission>();
 
             foreach (var module in modules)
             {
+                var systemCode = module.System?.Code.ToLowerInvariant() ?? "iam";
                 foreach (var action in actions)
                 {
-                    // companies module actions solo para el owner
-                    if (module.Code == "companies" && action.Code is "create" or "update" or "delete")
-                        continue;
-
-                    var key = $"{module.Code}.{action.Code}";
+                    var key = $"{systemCode}.{module.Code}.{action.Code}";
                     permissions.Add(new Permission(
                         Guid.NewGuid(), key,
-                        resourceType: 2, // Module
-                        resourceId: module.Id,
                         moduleId: module.Id,
                         actionCode: action.Code,
                         description: $"{action.Name} {module.Name}"));
@@ -78,11 +77,11 @@ public sealed class IamSeedService
 
             context.Permissions.AddRange(permissions);
             logger?.LogInformation("Seed: Added {Count} permissions", permissions.Count);
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
         }
 
         // ── Owner ──
-        if (!await context.Users.AnyAsync(u => u.IsOwner))
+        if (!await context.Users.AnyAsync(u => u.IsOwner, ct))
         {
             var hash = passwordHasher.Hash("Admin123!");
             var owner = new User(
@@ -93,11 +92,23 @@ public sealed class IamSeedService
             context.Users.Add(owner);
             logger?.LogInformation("Seed: Owner created with hash length {Len}", hash.Length);
 
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(ct);
         }
         else
         {
             logger?.LogInformation("Seed: Owner already exists, skipping.");
+        }
+
+        // ── Cleanup expired refresh tokens ──
+        var cutoff = DateTime.UtcNow.AddDays(-30);
+        var expiredTokens = await context.RefreshTokens
+            .Where(t => t.ExpiresAt < DateTime.UtcNow || (t.RevokedAt != null && t.RevokedAt < cutoff))
+            .ToListAsync(ct);
+        if (expiredTokens.Count > 0)
+        {
+            context.RefreshTokens.RemoveRange(expiredTokens);
+            await context.SaveChangesAsync(ct);
+            logger?.LogInformation("Seed: Cleaned {Count} expired refresh tokens", expiredTokens.Count);
         }
 
         logger?.LogInformation("Seed: Completed successfully.");

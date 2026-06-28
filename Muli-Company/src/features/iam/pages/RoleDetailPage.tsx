@@ -42,6 +42,9 @@ function RoleDetailContent({
   roleId: string
   navigate: ReturnType<typeof useNavigate>
 }) {
+  const backToRoles = () => {
+    navigate({ to: '/iam/roles', search: { companyId } })
+  }
   const { data: role, isLoading: loadingRole } = useRoleById(companyId, roleId)
   const { data: allPermissions, isLoading: loadingPerms } = useAllPermissions()
   const assignPerms = useAssignPermissionsToRole(companyId)
@@ -107,7 +110,7 @@ function RoleDetailContent({
     deleteRole.mutate(roleId, {
       onSuccess: () => {
         toast.success('Rol eliminado')
-        navigate({ to: '/iam/roles' } as any)
+        backToRoles()
       },
       onError: (error) =>
         toast.error(error instanceof ApiError ? error.message : 'Error al eliminar rol'),
@@ -128,7 +131,7 @@ function RoleDetailContent({
     return (
       <div className="py-12 text-center">
         <p className="text-muted-foreground">Rol no encontrado.</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate({ to: '/iam/roles' } as any)}>
+        <Button variant="outline" className="mt-4" onClick={backToRoles}>
           Volver
         </Button>
       </div>
@@ -144,7 +147,7 @@ function RoleDetailContent({
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate({ to: '/iam/roles' } as any)}>
+          <Button variant="ghost" size="icon" onClick={backToRoles}>
             <ArrowLeft className="size-5" />
           </Button>
           <div>

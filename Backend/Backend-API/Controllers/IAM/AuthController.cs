@@ -59,8 +59,15 @@ public sealed class AuthController(IMediator mediator, TenantContext tenantConte
         if (tenantContext.UserId is null)
             return Unauthorized();
 
-        var result = await mediator.Send(new GetMyPermissionsQuery(tenantContext.UserId.Value), ct);
-        return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
+        if (tenantContext.IsOwner)
+        {
+            var ownerResult = await mediator.Send(new GetOwnerPermissionsQuery(), ct);
+            return ownerResult.IsSuccess ? Ok(ownerResult.Value) : ToError(ownerResult.Error!.Value);
+        }
+
+        var companyResult = await mediator.Send(
+            new GetCompanyPermissionsQuery(tenantContext.UserId.Value, tenantContext.CompanyId ?? Guid.Empty), ct);
+        return companyResult.IsSuccess ? Ok(companyResult.Value) : ToError(companyResult.Error!.Value);
     }
 
     private IActionResult ToError(Error error) => error.Type switch

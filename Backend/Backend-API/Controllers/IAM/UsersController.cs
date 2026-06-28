@@ -1,6 +1,7 @@
 using Backend.Application.IAM.Commands.Users;
 using Backend.Application.IAM.Queries.Users;
 using Backend.SharedKernel;
+using Backend_API.Filters;
 using Backend_API.Middleware;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,8 @@ namespace Backend_API.Controllers.IAM;
 
 [ApiController]
 [Route("api/companies/{companyId:guid}/[controller]")]
-public sealed class UsersController(IMediator mediator, TenantContext tenantContext) : ControllerBase
+[RequireCompanyAccess]
+public sealed class UsersController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Create(Guid companyId, CreateUserCommand command, CancellationToken ct)

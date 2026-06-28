@@ -24,5 +24,6 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.UserId);
+        builder.HasIndex(x => x.ExpiresAt);
     }
 }

@@ -138,9 +138,9 @@ function RolesContent({
         loading={isLoading}
         getRowId={(r) => r.id}
         mobileTitle={(r) => r.name}
-        onRowClick={(role) =>
-          navigate({ to: '/iam/roles/$roleId', params: { roleId: role.id } })
-        }
+        onRowClick={(role) => {
+          navigate({ to: '/iam/roles/$roleId', params: { roleId: role.id }, search: { companyId } })
+        }}
         emptyMessage={
           search
             ? 'No hay roles que coincidan con la b&uacute;squeda.'

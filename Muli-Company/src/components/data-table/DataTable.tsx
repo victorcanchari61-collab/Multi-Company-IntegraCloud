@@ -73,6 +73,8 @@ interface DataTableProps<TData> {
   emptyMessage?: string
   getRowId?: (row: TData) => string
   mobileTitle?: (row: TData) => ReactNode
+  /** Al hacer click en una fila (escritorio) o tarjeta (móvil). */
+  onRowClick?: (row: TData) => void
 }
 
 const animStyles = `
@@ -109,6 +111,7 @@ export function DataTable<TData>({
   emptyMessage = 'No hay registros.',
   getRowId,
   mobileTitle,
+  onRowClick,
 }: DataTableProps<TData>) {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(() =>
@@ -234,7 +237,14 @@ export function DataTable<TData>({
                     rows.map((row, i) => (
                       <TableRow
                         key={row.id}
-                        className="animate-dt-fade-in border-b-0 hover:bg-muted/40"
+                        className={cn(
+                          'animate-dt-fade-in border-b-0 hover:bg-muted/40',
+                          onRowClick && 'cursor-pointer',
+                        )}
+                        onClick={(e) => {
+                          if ((e.target as HTMLElement).closest('button, a, input, label')) return
+                          onRowClick?.(row.original)
+                        }}
                         style={{ animationDelay: `${i * 15}ms` }}
                       >
                         {row.getVisibleCells().map((cell) => (
@@ -263,7 +273,14 @@ export function DataTable<TData>({
             rows.map((row, i) => (
               <div
                 key={row.id}
-                className="animate-dt-slide-down rounded-lg border bg-card p-3 shadow-sm"
+                onClick={(e) => {
+                  if ((e.target as HTMLElement).closest('button, a, input, label')) return
+                  onRowClick?.(row.original)
+                }}
+                className={cn(
+                  'animate-dt-slide-down rounded-lg border bg-card p-3 shadow-sm',
+                  onRowClick && 'cursor-pointer',
+                )}
                 style={{ animationDelay: `${i * 20}ms` }}
               >
                 {mobileTitle && (

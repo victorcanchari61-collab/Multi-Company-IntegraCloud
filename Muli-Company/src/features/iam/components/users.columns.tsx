@@ -1,4 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
+import { Pencil } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ENTITY_STATUS } from '@/lib/constants'
 import { Can } from '@/features/auth/components/Can'
@@ -7,6 +8,7 @@ import { StatusBadge } from './StatusBadge'
 
 interface Options {
   pending: boolean
+  onEdit: (user: User) => void
   onDeactivate: (user: User) => void
   onReactivate: (user: User) => void
   onAssignRoles: (user: User) => void
@@ -15,6 +17,7 @@ interface Options {
 
 export function getUserColumns({
   pending,
+  onEdit,
   onDeactivate,
   onReactivate,
   onAssignRoles,
@@ -52,6 +55,11 @@ export function getUserColumns({
         const isActive = user.status === ENTITY_STATUS.ACTIVE
         return (
           <div className="flex justify-end gap-1">
+            <Can permission="iam.users.update">
+              <Button variant="ghost" size="sm" onClick={() => onEdit(user)}>
+                <Pencil className="size-4" />
+              </Button>
+            </Can>
             <Can permission="iam.users.assign_roles">
               <Button variant="outline" size="sm" onClick={() => onAssignRoles(user)}>
                 Roles

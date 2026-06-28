@@ -192,3 +192,31 @@ export interface ListParams {
   search?: string
   status?: number
 }
+
+// ── Permission keys (única fuente de verdad para el frontend) ──
+// Formato: {system}.{module}.{action}
+// Generado por: Backend.Infrastructure.IAM.IamSeedService
+export const PERMISSIONS = {
+  IAM_USERS_VIEW: 'iam.users.view',
+  IAM_USERS_READ: 'iam.users.read',
+  IAM_USERS_CREATE: 'iam.users.create',
+  IAM_USERS_UPDATE: 'iam.users.update',
+  IAM_USERS_DELETE: 'iam.users.delete',
+  IAM_USERS_ASSIGN_ROLES: 'iam.users.assign_roles',
+  IAM_ROLES_VIEW: 'iam.roles.view',
+  IAM_ROLES_READ: 'iam.roles.read',
+  IAM_ROLES_CREATE: 'iam.roles.create',
+  IAM_ROLES_UPDATE: 'iam.roles.update',
+  IAM_ROLES_DELETE: 'iam.roles.delete',
+  IAM_ROLES_ASSIGN_PERMISSIONS: 'iam.roles.assign_permissions',
+  IAM_COMPANIES_VIEW: 'iam.companies.view',
+  IAM_COMPANIES_READ: 'iam.companies.read',
+  IAM_COMPANIES_CREATE: 'iam.companies.create',
+  IAM_COMPANIES_UPDATE: 'iam.companies.update',
+  IAM_COMPANIES_DELETE: 'iam.companies.delete',
+  IAM_COMPANIES_MANAGE_MODULES: 'iam.companies.manage_modules',
+  IAM_PERMISSIONS_VIEW: 'iam.permissions.view',
+  IAM_PERMISSIONS_READ: 'iam.permissions.read',
+} as const
+
+export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]

@@ -1,4 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
+import { Ban, Eye, Power } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ENTITY_STATUS } from '@/lib/constants'
 import { Can } from '@/features/auth/components/Can'
@@ -36,16 +37,19 @@ export function getCompanyColumns({
       accessorKey: 'slug',
       header: 'Slug',
       meta: { label: 'Slug' },
-      cell: ({ row }) => <span className="text-muted-foreground">{row.original.slug}</span>,
+      cell: ({ row }) => <span>{row.original.slug}</span>,
     },
     {
       id: 'taxId',
       accessorKey: 'taxId',
       header: 'RUC',
       meta: { label: 'RUC' },
-      cell: ({ row }) => (
-        <span className="text-muted-foreground">{row.original.taxId ?? '\u2014'}</span>
-      ),
+      cell: ({ row }) =>
+        row.original.taxId ? (
+          <span>{row.original.taxId}</span>
+        ) : (
+          <span className="text-muted-foreground">{'\u2014'}</span>
+        ),
     },
     {
       id: 'status',
@@ -63,20 +67,32 @@ export function getCompanyColumns({
         const company = row.original
         const active = company.status === ENTITY_STATUS.ACTIVE
         return (
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-1">
             <Can permission="iam.companies.view">
-              <Button variant="outline" size="sm" onClick={() => onViewDetail(company)}>
-                Detalle
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                title="Ver detalle"
+                onClick={() => onViewDetail(company)}
+              >
+                <Eye className="text-primary" />
+                <span className="sr-only">Ver detalle</span>
               </Button>
             </Can>
             <Can permission="iam.companies.update">
               <Button
-                variant={active ? 'ghost' : 'outline'}
-                size="sm"
+                variant="ghost"
+                size="icon-sm"
                 disabled={pending}
+                title={active ? 'Suspender' : 'Activar'}
                 onClick={() => onToggleStatus(company)}
               >
-                {active ? 'Suspender' : 'Activar'}
+                {active ? (
+                  <Ban className="text-destructive" />
+                ) : (
+                  <Power className="text-success" />
+                )}
+                <span className="sr-only">{active ? 'Suspender' : 'Activar'}</span>
               </Button>
             </Can>
           </div>

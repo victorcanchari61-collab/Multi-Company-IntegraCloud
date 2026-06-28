@@ -33,7 +33,7 @@ export function getUserColumns({
       accessorKey: 'email',
       header: 'Correo',
       meta: { label: 'Correo' },
-      cell: ({ row }) => <span className="text-muted-foreground">{row.original.email}</span>,
+      cell: ({ row }) => <span>{row.original.email}</span>,
     },
     {
       id: 'status',

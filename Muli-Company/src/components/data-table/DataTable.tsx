@@ -11,6 +11,7 @@ import {
 import type {
   ColumnDef,
   ColumnOrderState,
+  ColumnSizingState,
   Header,
   RowData,
   SortingState,
@@ -114,14 +115,19 @@ export function DataTable<TData>({
     columns.map((c) => c.id as string),
   )
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({})
 
   const table = useReactTable({
     data,
     columns,
-    state: { columnVisibility, columnOrder, sorting },
+    state: { columnVisibility, columnOrder, sorting, columnSizing },
     onColumnVisibilityChange: setColumnVisibility,
     onColumnOrderChange: setColumnOrder,
     onSortingChange: setSorting,
+    onColumnSizingChange: setColumnSizing,
+    enableColumnResizing: true,
+    columnResizeMode: 'onChange',
+    defaultColumn: { minSize: 60, size: 160 },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -179,7 +185,7 @@ export function DataTable<TData>({
         </div>
 
         {/* Desktop table */}
-        <div className="hidden overflow-hidden rounded-lg border md:block">
+        <div className="hidden overflow-hidden rounded-lg bg-card shadow-sm md:block">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -187,7 +193,7 @@ export function DataTable<TData>({
             onDragEnd={onDragEnd}
           >
             <div className="min-h-[250px]">
-              <Table>
+              <Table className="min-w-full" style={{ width: table.getCenterTotalSize() }}>
                 <TableHeader className="[&_tr]:border-b-0">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id} className="bg-primary hover:bg-primary">
@@ -232,7 +238,7 @@ export function DataTable<TData>({
                         style={{ animationDelay: `${i * 15}ms` }}
                       >
                         {row.getVisibleCells().map((cell) => (
-                          <BodyCell key={cell.id}>
+                          <BodyCell key={cell.id} style={{ width: cell.column.getSize() }}>
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                           </BodyCell>
                         ))}
@@ -331,6 +337,7 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
   const style: CSSProperties = {
     transform: CSS.Translate.toString(transform),
     transition,
+    width: header.getSize(),
     opacity: isDragging ? 0.85 : 1,
     zIndex: isDragging ? 10 : undefined,
   }
@@ -356,7 +363,7 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
     <TableHead
       ref={setNodeRef}
       style={style}
-      className="h-[30px] border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
+      className="relative h-[30px] border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
     >
       <div className="flex items-center gap-0.5">
         <div
@@ -414,6 +421,19 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
           />
         </div>,
         document.body
+      )}
+
+      {header.column.getCanResize() && (
+        <div
+          onMouseDown={header.getResizeHandler()}
+          onTouchStart={header.getResizeHandler()}
+          onClick={(e) => e.stopPropagation()}
+          className={cn(
+            'absolute top-0 right-0 z-10 h-full w-1.5 cursor-col-resize touch-none select-none',
+            'bg-primary-foreground/0 transition-colors hover:bg-primary-foreground/40',
+            header.column.getIsResizing() && 'bg-primary-foreground/70',
+          )}
+        />
       )}
     </TableHead>
   )

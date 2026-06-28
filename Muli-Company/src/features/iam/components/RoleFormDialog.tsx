@@ -24,37 +24,127 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { ApiError } from '@/lib/api'
-import { useCreateRole } from '../queries/useRoles'
+import { useCreateRole, useUpdateRole } from '../queries/useRoles'
+import type { Role } from '../types/iam'
 
-const schema = z.object({
+const createSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(80),
   description: z.string().max(255).optional(),
 })
 
-type FormData = z.infer<typeof schema>
+const editSchema = z.object({
+  name: z.string().min(1, 'El nombre es requerido').max(80),
+  description: z.string().max(255).optional(),
+})
 
-export function RoleFormDialog({ companyId }: { companyId: string }) {
+type CreateFormData = z.infer<typeof createSchema>
+type EditFormData = z.infer<typeof editSchema>
+
+interface Props {
+  companyId: string
+  role?: Role
+  onClose?: () => void
+}
+
+export function RoleFormDialog({ companyId, role, onClose }: Props) {
+  const isEdit = Boolean(role)
   const [open, setOpen] = useState(false)
-  const { mutate, isPending } = useCreateRole(companyId)
+  const createMut = useCreateRole(companyId)
+  const updateMut = useUpdateRole(companyId)
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(schema),
+  const createForm = useForm<CreateFormData>({
+    resolver: zodResolver(createSchema),
     defaultValues: { name: '', description: '' },
   })
 
-  const onSubmit = (data: FormData) =>
-    mutate(
+  const editForm = useForm<EditFormData>({
+    resolver: zodResolver(editSchema),
+    defaultValues: { name: role?.name ?? '', description: role?.description ?? '' },
+  })
+
+  const isPending = createMut.isPending || updateMut.isPending
+
+  const onCreateSubmit = (data: CreateFormData) =>
+    createMut.mutate(
       { name: data.name, description: data.description?.trim() || null },
       {
         onSuccess: () => {
           toast.success('Rol creado')
-          form.reset()
+          createForm.reset()
           setOpen(false)
         },
         onError: (error) =>
           toast.error(error instanceof ApiError ? error.message : 'No se pudo crear el rol'),
       },
     )
+
+  const onEditSubmit = (data: EditFormData) => {
+    if (!role) return
+    updateMut.mutate(
+      { roleId: role.id, data: { name: data.name, description: data.description?.trim() || null } },
+      {
+        onSuccess: () => {
+          toast.success('Rol actualizado')
+          onClose?.()
+        },
+        onError: (error) =>
+          toast.error(error instanceof ApiError ? error.message : 'No se pudo actualizar'),
+      },
+    )
+  }
+
+  if (isEdit) {
+    return (
+      <Dialog open={true} onOpenChange={(o) => !o && onClose?.()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Editar rol</DialogTitle>
+            <DialogDescription>Actualiza el nombre y descripci&oacute;n del rol.</DialogDescription>
+          </DialogHeader>
+          <Form {...editForm}>
+            <form onSubmit={editForm.handleSubmit(onEditSubmit)} className="space-y-4">
+              <FormField
+                control={editForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={editForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Descripci&oacute;n <span className="text-muted-foreground">(opcional)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea rows={3} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button variant="outline" onClick={onClose}>
+                  Cancelar
+                </Button>
+                <Button type="submit" disabled={isPending || !editForm.watch('name')?.trim()}>
+                  {isPending ? 'Guardando\u2026' : 'Guardar'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+    )
+  }
 
   return (
     <>
@@ -63,47 +153,47 @@ export function RoleFormDialog({ companyId }: { companyId: string }) {
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Nuevo rol</DialogTitle>
-          <DialogDescription>Define un rol para tu empresa.</DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nombre</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Vendedor" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>
-                    Descripción <span className="text-muted-foreground">(opcional)</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Textarea rows={3} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <Button type="submit" disabled={isPending}>
-                {isPending ? 'Creando…' : 'Crear rol'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+          <DialogHeader>
+            <DialogTitle>Nuevo rol</DialogTitle>
+            <DialogDescription>Define un rol para tu empresa.</DialogDescription>
+          </DialogHeader>
+          <Form {...createForm}>
+            <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="space-y-4">
+              <FormField
+                control={createForm.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Nombre</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Vendedor" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={createForm.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>
+                      Descripci&oacute;n <span className="text-muted-foreground">(opcional)</span>
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea rows={3} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter>
+                <Button type="submit" disabled={isPending}>
+                  {isPending ? 'Creando\u2026' : 'Crear rol'}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </>

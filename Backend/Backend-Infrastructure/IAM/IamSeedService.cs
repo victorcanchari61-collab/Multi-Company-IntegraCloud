@@ -9,14 +9,9 @@ public sealed class IamSeedService
 {
     public static async Task SeedAsync(IamDbContext context, IPasswordHasher passwordHasher, ILogger? logger = null)
     {
-        if (await context.Users.AnyAsync(u => u.IsOwner))
-        {
-            logger?.LogInformation("Seed: Owner already exists, skipping.");
-            return;
-        }
-
         logger?.LogInformation("Seed: Starting data seed...");
 
+        // ── Actions ──
         if (!await context.Actions.AnyAsync())
         {
             var actions = new List<PermissionAction>
@@ -32,6 +27,7 @@ public sealed class IamSeedService
             logger?.LogInformation("Seed: Added actions");
         }
 
+        // ── Systems & Modules ──
         if (!await context.Systems.AnyAsync())
         {
             var sysIam = new SystemEntity(Guid.NewGuid(), "IAM", "IAM", "User and permission management");
@@ -54,17 +50,56 @@ public sealed class IamSeedService
 
         await context.SaveChangesAsync();
 
-        // ── Owner ──
-        var hash = passwordHasher.Hash("Admin123!");
-        var owner = new User(
-            Guid.NewGuid(), companyId: null,
-            email: "admin@sistema.com",
-            passwordHash: hash,
-            fullName: "Super Admin", isOwner: true);
-        context.Users.Add(owner);
-        logger?.LogInformation("Seed: Owner created with hash length {Len}", hash.Length);
+        // ── Permisos del catálogo (Module × Action) ──
+        if (!await context.Permissions.AnyAsync())
+        {
+            var modules = await context.Modules.ToListAsync();
+            var actions = await context.Actions.ToListAsync();
+            var permissions = new List<Permission>();
 
-        await context.SaveChangesAsync();
+            foreach (var module in modules)
+            {
+                foreach (var action in actions)
+                {
+                    // companies module actions solo para el owner
+                    if (module.Code == "companies" && action.Code is "create" or "update" or "delete")
+                        continue;
+
+                    var key = $"{module.Code}.{action.Code}";
+                    permissions.Add(new Permission(
+                        Guid.NewGuid(), key,
+                        resourceType: 2, // Module
+                        resourceId: module.Id,
+                        moduleId: module.Id,
+                        actionCode: action.Code,
+                        description: $"{action.Name} {module.Name}"));
+                }
+            }
+
+            context.Permissions.AddRange(permissions);
+            logger?.LogInformation("Seed: Added {Count} permissions", permissions.Count);
+            await context.SaveChangesAsync();
+        }
+
+        // ── Owner ──
+        if (!await context.Users.AnyAsync(u => u.IsOwner))
+        {
+            var hash = passwordHasher.Hash("Admin123!");
+            var owner = new User(
+                Guid.NewGuid(), companyId: null,
+                email: "admin@sistema.com",
+                passwordHash: hash,
+                fullName: "Super Admin", isOwner: true);
+            context.Users.Add(owner);
+            logger?.LogInformation("Seed: Owner created with hash length {Len}", hash.Length);
+
+            await context.SaveChangesAsync();
+        }
+        else
+        {
+            logger?.LogInformation("Seed: Owner already exists, skipping.");
+        }
+
         logger?.LogInformation("Seed: Completed successfully.");
     }
 }

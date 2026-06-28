@@ -190,7 +190,7 @@ export function DataTable<TData>({
               <Table>
                 <TableHeader className="[&_tr]:border-b-0">
                   {table.getHeaderGroups().map((headerGroup) => (
-                    <TableRow key={headerGroup.id} className="bg-zinc-800 hover:bg-zinc-800">
+                    <TableRow key={headerGroup.id} className="bg-primary hover:bg-primary">
                       <SortableContext
                         items={columnOrder}
                         strategy={horizontalListSortingStrategy}
@@ -291,7 +291,7 @@ export function DataTable<TData>({
 function BodyCell({ children, className, ...props }: React.ComponentProps<typeof TableCell>) {
   return (
     <TableCell
-      className={cn('h-[32px] px-2 py-0 text-xs text-black', className)}
+      className={cn('h-[32px] px-2 py-0 text-xs text-foreground', className)}
       {...props}
     >
       <div className="flex items-center truncate">{children}</div>
@@ -300,9 +300,9 @@ function BodyCell({ children, className, ...props }: React.ComponentProps<typeof
 }
 
 function SortIcon({ sorted }: { sorted: false | 'asc' | 'desc' }) {
-  if (sorted === 'asc') return <ArrowUp className="size-3 shrink-0 text-white" />
-  if (sorted === 'desc') return <ArrowDown className="size-3 shrink-0 text-white" />
-  return <ArrowUpDown className="size-3 shrink-0 text-white" />
+  if (sorted === 'asc') return <ArrowUp className="size-3 shrink-0 text-primary-foreground" />
+  if (sorted === 'desc') return <ArrowDown className="size-3 shrink-0 text-primary-foreground" />
+  return <ArrowUpDown className="size-3 shrink-0 text-primary-foreground" />
 }
 
 function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) {
@@ -356,7 +356,7 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
     <TableHead
       ref={setNodeRef}
       style={style}
-      className="h-[30px] border-r border-white/20 bg-zinc-800 px-1.5 py-0 text-xs font-medium text-white last:border-r-0"
+      className="h-[30px] border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
     >
       <div className="flex items-center gap-0.5">
         <div
@@ -364,7 +364,7 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="size-3 shrink-0 text-white" />
+          <GripVertical className="size-3 shrink-0 text-primary-foreground/70" />
         </div>
 
         {canSort ? (
@@ -393,9 +393,9 @@ function DraggableHeader<TData>({ header }: { header: Header<TData, unknown> }) 
             e.stopPropagation()
             openFilter()
           }}
-          className="shrink-0 rounded p-0.5 hover:bg-white/10"
+          className="shrink-0 rounded p-0.5 hover:bg-primary-foreground/10"
         >
-          <ListFilter className={cn('size-3', hasFilter ? 'text-blue-400' : 'text-white')} />
+          <ListFilter className={cn('size-3', hasFilter ? 'text-amber-300' : 'text-primary-foreground')} />
         </button>
       </div>
 

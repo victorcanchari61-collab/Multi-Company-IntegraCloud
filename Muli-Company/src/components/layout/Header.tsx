@@ -1,5 +1,5 @@
-import { useNavigate } from '@tanstack/react-router'
-import { LogOut, PanelLeft } from 'lucide-react'
+import { Link, useNavigate } from '@tanstack/react-router'
+import { LogOut, PanelLeft, UserCircle } from 'lucide-react'
 import logo from '@/assets/bravic-logo.png'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
@@ -70,9 +70,13 @@ export function Header() {
             {user?.isOwner ? 'Propietario' : 'Empresa'}
           </p>
         </div>
-        <span className="flex size-9 items-center justify-center rounded-full bg-primary-foreground text-xs font-semibold text-primary">
-          {initials(user?.fullName)}
-        </span>
+        <Link
+          to={ROUTES.PROFILE}
+          title="Mi perfil"
+          className="flex size-9 items-center justify-center rounded-full bg-primary-foreground text-xs font-semibold text-primary transition-colors hover:bg-white/90"
+        >
+          {user?.fullName ? initials(user.fullName) : <UserCircle className="size-5" />}
+        </Link>
         <Button
           variant="ghost"
           size="icon"

@@ -42,13 +42,15 @@ export function getRoleColumns({
         return (
           <div className="flex justify-end gap-1">
             <Can permission="iam.roles.update">
-              <Button variant="ghost" size="sm" onClick={() => onEdit(role)}>
-                <Pencil className="size-4" />
+              <Button variant="ghost" size="icon-sm" title="Editar" onClick={() => onEdit(role)}>
+                <Pencil className="size-4 text-amber-500" />
+                <span className="sr-only">Editar</span>
               </Button>
             </Can>
             <Can permission="iam.roles.delete">
-              <Button variant="ghost" size="sm" onClick={() => onDelete(role)}>
-                <Trash2 className="size-4" />
+              <Button variant="ghost" size="icon-sm" title="Eliminar" onClick={() => onDelete(role)}>
+                <Trash2 className="size-4 text-destructive" />
+                <span className="sr-only">Eliminar</span>
               </Button>
             </Can>
           </div>

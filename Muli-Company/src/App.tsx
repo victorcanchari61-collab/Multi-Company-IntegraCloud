@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/react-router'
 import { Toaster } from '@/components/ui/sonner'
+import { ConfirmProvider } from '@/components/ui/confirm-dialog'
 import { router } from '@/router'
 
 const queryClient = new QueryClient({
@@ -16,7 +17,9 @@ const queryClient = new QueryClient({
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <ConfirmProvider>
+        <RouterProvider router={router} />
+      </ConfirmProvider>
       <Toaster richColors position="top-right" />
     </QueryClientProvider>
   )

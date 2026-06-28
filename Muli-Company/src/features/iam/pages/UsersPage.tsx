@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { ApiError } from '@/lib/api'
 import { Can } from '@/features/auth/components/Can'
+import { useConfirm } from '@/components/ui/confirm-dialog'
 import { DataTable } from '@/components/data-table/DataTable'
 import { useActiveCompanyId } from '../hooks/useActiveCompanyId'
 import { useUsers, useDeactivateUser, useReactivateUser } from '../queries/useUsers'
@@ -50,12 +51,21 @@ function UsersContent({
   const { data, isLoading } = useUsers(companyId, { page: 1, size: 50, search: search || undefined })
   const deactivate = useDeactivateUser(companyId)
   const reactivate = useReactivateUser(companyId)
+  const confirm = useConfirm()
 
-  const onDeactivate = (user: User) =>
+  const onDeactivate = async (user: User) => {
+    const ok = await confirm({
+      title: 'Desactivar usuario',
+      description: `¿Seguro que quieres desactivar a ${user.fullName}? No podrá iniciar sesión.`,
+      confirmText: 'Desactivar',
+      variant: 'destructive',
+    })
+    if (!ok) return
     deactivate.mutate(user.id, {
       onError: (error) =>
         toast.error(error instanceof ApiError ? error.message : 'No se pudo desactivar'),
     })
+  }
 
   const onReactivate = (user: User) =>
     reactivate.mutate(user.id, {

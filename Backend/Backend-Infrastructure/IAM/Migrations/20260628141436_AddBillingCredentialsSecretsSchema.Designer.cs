@@ -3,6 +3,7 @@ using System;
 using Backend.Infrastructure.IAM;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Infrastructure.IAM.Migrations
 {
     [DbContext(typeof(IamDbContext))]
-    partial class IamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260628141436_AddBillingCredentialsSecretsSchema")]
+    partial class AddBillingCredentialsSecretsSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -63,7 +66,8 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .HasColumnName("legal_name");
 
                     b.Property<string>("LogoUrl")
-                        .HasColumnType("text")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
                         .HasColumnName("logo_url");
 
                     b.Property<string>("Name")

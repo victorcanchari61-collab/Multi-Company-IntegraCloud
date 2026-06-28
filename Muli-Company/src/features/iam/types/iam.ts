@@ -116,6 +116,7 @@ export interface CreateCompanyRequest {
 
 export interface UpdateCompanyRequest {
   name: string
+  slug: string
   legalName?: string | null
   logoUrl?: string | null
   email?: string | null
@@ -128,6 +129,12 @@ export interface UpdateCompanyRequest {
   taxpayerType?: number
   accountingRequired?: boolean
   settlementCurrency?: string
+  // Credenciales SUNAT: solo se actualizan las enviadas.
+  solUser?: string | null
+  solPassword?: string | null
+  certificatePassword?: string | null
+  certificateFileName?: string | null
+  certificateContent?: string | null
 }
 
 export interface CreateUserRequest {

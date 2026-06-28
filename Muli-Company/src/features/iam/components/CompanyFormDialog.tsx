@@ -193,7 +193,18 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
 
     if (isEdit && company) {
       updateMut.mutate(
-        { id: company.id, data: profile },
+        {
+          id: company.id,
+          data: {
+            ...profile,
+            slug: data.slug,
+            solUser: empty(data.solUser),
+            solPassword: empty(data.solPassword),
+            certificatePassword: empty(data.certificatePassword),
+            certificateFileName: empty(data.certificateFileName),
+            certificateContent: empty(data.certificateContent),
+          },
+        },
         {
           onSuccess: () => {
             toast.success('Empresa actualizada')
@@ -259,7 +270,7 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                 <TabsList className="w-full">
                   <TabsTrigger value="generales">Generales</TabsTrigger>
                   <TabsTrigger value="facturacion">Facturación</TabsTrigger>
-                  {!isEdit && <TabsTrigger value="certificado">Certificado</TabsTrigger>}
+                  <TabsTrigger value="certificado">Certificado</TabsTrigger>
                   {!isEdit && <TabsTrigger value="administrador">Administrador</TabsTrigger>}
                   <TabsTrigger value="branding">Branding</TabsTrigger>
                 </TabsList>
@@ -288,7 +299,7 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                           <FormItem>
                             <FormLabel>Subdominio</FormLabel>
                             <FormControl>
-                              <Input placeholder="mi-empresa" disabled={isEdit} {...field} />
+                              <Input placeholder="mi-empresa" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -498,11 +509,12 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                   </TabsContent>
 
                   {/* ── Certificado SUNAT ── */}
-                  {!isEdit && (
                   <TabsContent value="certificado" className="space-y-4">
                     <p className="text-xs text-muted-foreground">
                       Credenciales para emitir comprobantes electrónicos. Se almacenan cifradas.
-                      Puedes dejarlas vacías y configurarlas después.
+                      {isEdit
+                        ? ' Deja un campo vacío para mantener el valor actual.'
+                        : ' Puedes dejarlas vacías y configurarlas después.'}
                     </p>
                     <FormField
                       control={form.control}
@@ -581,7 +593,6 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                       />
                     </div>
                   </TabsContent>
-                  )}
 
                   {/* ── Administrador inicial ── */}
                   {!isEdit && (

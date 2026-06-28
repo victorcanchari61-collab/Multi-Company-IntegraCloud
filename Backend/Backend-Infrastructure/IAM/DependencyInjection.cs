@@ -2,6 +2,7 @@ using Backend.Domain.IAM.Repositories;
 using Backend.Domain.IAM.Services;
 using Backend.Infrastructure.IAM.Repositories;
 using Backend.Infrastructure.IAM.Services;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,9 +43,13 @@ public static class DependencyInjection
         services.AddScoped<IPermissionRepository, PermissionRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<ICompanyModuleAccessRepository, CompanyModuleAccessRepository>();
+        services.AddScoped<ICompanyBillingCredentialRepository, CompanyBillingCredentialRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+
+        services.AddDataProtection();
+        services.AddScoped<ISecretProtector, DataProtectionSecretProtector>();
 
         services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
         services.AddScoped<ITokenService, JwtTokenService>();

@@ -1,5 +1,4 @@
 using Backend.Domain.IAM.Entities;
-using Backend.Domain.IAM.Events;
 using Backend.Domain.IAM.Repositories;
 using Backend.Domain.IAM.Services;
 using Backend.SharedKernel;
@@ -26,6 +25,12 @@ public sealed record CreateCompanyCommand(
     string? AdminEmail = null,
     string? AdminFullName = null,
     string? AdminPassword = null,
+    // Credenciales SUNAT (se guardan cifradas en secrets.*).
+    string? SolUser = null,
+    string? SolPassword = null,
+    string? CertificatePassword = null,
+    string? CertificateFileName = null,
+    string? CertificateContent = null,
     Guid? CreatedBy = null)
     : IRequest<Result<Guid>>;
 
@@ -33,8 +38,9 @@ public sealed class CreateCompanyCommandHandler(
     ICompanyRepository companyRepository,
     IUserRepository userRepository,
     IRoleRepository roleRepository,
+    ICompanyBillingCredentialRepository billingRepository,
     IPasswordHasher passwordHasher,
-    IPublisher publisher)
+    ISecretProtector secretProtector)
     : IRequestHandler<CreateCompanyCommand, Result<Guid>>
 {
     public async Task<Result<Guid>> Handle(CreateCompanyCommand request, CancellationToken ct)
@@ -90,7 +96,28 @@ public sealed class CreateCompanyCommandHandler(
             await userRepository.AddAsync(admin, ct);
         }
 
-        await publisher.Publish(new CompanyCreatedEvent(company.Id, company.Name), ct);
+        // Credenciales SUNAT cifradas en reposo (secrets.*), si se enviaron.
+        string? Enc(string? value) =>
+            string.IsNullOrWhiteSpace(value) ? null : secretProtector.Protect(value);
+
+        if (!string.IsNullOrWhiteSpace(request.SolUser)
+            || !string.IsNullOrWhiteSpace(request.SolPassword)
+            || !string.IsNullOrWhiteSpace(request.CertificateContent)
+            || !string.IsNullOrWhiteSpace(request.CertificatePassword))
+        {
+            var credential = new CompanyBillingCredential(
+                Guid.NewGuid(),
+                company.Id,
+                Enc(request.SolUser),
+                Enc(request.SolPassword),
+                Enc(request.CertificateContent),
+                Enc(request.CertificatePassword),
+                string.IsNullOrWhiteSpace(request.CertificateFileName)
+                    ? null
+                    : request.CertificateFileName.Trim());
+
+            await billingRepository.AddAsync(credential, ct);
+        }
 
         return Result<Guid>.Success(company.Id);
     }

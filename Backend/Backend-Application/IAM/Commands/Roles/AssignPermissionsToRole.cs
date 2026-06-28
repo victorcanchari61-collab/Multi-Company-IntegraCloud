@@ -1,5 +1,4 @@
 using Backend.Domain.IAM.Entities;
-using Backend.Domain.IAM.Events;
 using Backend.Domain.IAM.Repositories;
 using Backend.SharedKernel;
 using MediatR;
@@ -13,8 +12,7 @@ public sealed record AssignPermissionsToRoleCommand(
 public sealed class AssignPermissionsToRoleCommandHandler(
     IRoleRepository roleRepository,
     IPermissionRepository permissionRepository,
-    ICompanyModuleAccessRepository accessRepository,
-    IPublisher publisher)
+    ICompanyModuleAccessRepository accessRepository)
     : IRequestHandler<AssignPermissionsToRoleCommand, Result>
 {
     public async Task<Result> Handle(AssignPermissionsToRoleCommand request, CancellationToken ct)
@@ -44,7 +42,6 @@ public sealed class AssignPermissionsToRoleCommandHandler(
             }
         }
 
-        await publisher.Publish(new RolePermissionsChangedEvent(request.RoleId, role.CompanyId), ct);
         return Result.Success();
     }
 }

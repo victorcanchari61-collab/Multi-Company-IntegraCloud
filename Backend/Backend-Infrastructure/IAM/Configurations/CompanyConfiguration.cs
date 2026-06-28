@@ -15,7 +15,8 @@ public sealed class CompanyConfiguration : IEntityTypeConfiguration<Company>
         builder.Property(x => x.Name).HasColumnName("name").HasMaxLength(150).IsRequired();
         builder.Property(x => x.Slug).HasColumnName("slug").HasMaxLength(80).IsRequired();
         builder.Property(x => x.LegalName).HasColumnName("legal_name").HasMaxLength(200);
-        builder.Property(x => x.LogoUrl).HasColumnName("logo_url").HasMaxLength(500);
+        // Guarda data URLs (base64) del logo → sin límite de longitud (text).
+        builder.Property(x => x.LogoUrl).HasColumnName("logo_url");
         builder.Property(x => x.Email).HasColumnName("email").HasMaxLength(150);
         builder.Property(x => x.Phone).HasColumnName("phone").HasMaxLength(20);
         builder.Property(x => x.Website).HasColumnName("website").HasMaxLength(255);

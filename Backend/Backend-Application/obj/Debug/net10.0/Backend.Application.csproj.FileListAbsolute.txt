@@ -28,3 +28,12 @@ C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild4\Backend.Application.deps.json
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild4\Backend.Application.dll
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild4\Backend.Application.pdb
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild5\Backend.Application.deps.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild5\Backend.Application.dll
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild5\Backend.Application.pdb
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild6\Backend.Application.deps.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild6\Backend.Application.dll
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild6\Backend.Application.pdb
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild7\Backend.Application.deps.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild7\Backend.Application.dll
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuild7\Backend.Application.pdb

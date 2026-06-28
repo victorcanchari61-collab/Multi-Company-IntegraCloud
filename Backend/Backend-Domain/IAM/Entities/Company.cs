@@ -72,9 +72,10 @@ public sealed class Company : AggregateRoot
     public void Suspend() => Status = 2;
     public void Activate() => Status = 1;
 
-    /// <summary>Actualiza el perfil de la empresa. El slug (subdominio) es inmutable.</summary>
+    /// <summary>Actualiza el perfil de la empresa, incluido el subdominio.</summary>
     public void Update(
         string name,
+        string slug,
         string? legalName,
         string? logoUrl,
         string? email,
@@ -89,6 +90,7 @@ public sealed class Company : AggregateRoot
         string settlementCurrency)
     {
         Name = name;
+        Slug = slug;
         LegalName = legalName;
         LogoUrl = logoUrl;
         Email = email;

@@ -16,7 +16,6 @@ import {
   useRevokeSystem,
 } from '../queries/useCompanies'
 import { useAuthStore } from '@/stores/authStore'
-import { Can } from '@/features/auth/components/Can'
 import type { ModuleAccess, SystemAccess } from '../types/iam'
 
 export default function CompanyDetailPage() {
@@ -171,16 +170,14 @@ export default function CompanyDetailPage() {
                       )}
                     </div>
                     {!sys.isBase && (
-                      <Can permission="iam.companies.manage_modules">
-                        <Button
-                          size="sm"
-                          variant={sys.granted ? 'outline' : 'default'}
-                          disabled={busy}
-                          onClick={() => toggleSystem(sys)}
-                        >
-                          {sys.granted ? 'Quitar sistema' : 'Conceder sistema'}
-                        </Button>
-                      </Can>
+                      <Button
+                        size="sm"
+                        variant={sys.granted ? 'outline' : 'default'}
+                        disabled={busy}
+                        onClick={() => toggleSystem(sys)}
+                      >
+                        {sys.granted ? 'Quitar sistema' : 'Conceder sistema'}
+                      </Button>
                     )}
                   </div>
 
@@ -202,32 +199,25 @@ export default function CompanyDetailPage() {
                                 {mod.name}
                               </Badge>
                             ) : (
-                              <Can
+                              <button
                                 key={mod.moduleId}
-                                permission="iam.companies.manage_modules"
-                                fallback={
-                                  <Badge variant={mod.granted ? 'default' : 'outline'}>{mod.name}</Badge>
-                                }
+                                type="button"
+                                disabled={busy}
+                                onClick={() => toggleModule(mod)}
+                                className={cn(
+                                  'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors disabled:opacity-50',
+                                  mod.granted
+                                    ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
+                                    : 'border-border bg-background text-foreground hover:bg-muted',
+                                )}
                               >
-                                <button
-                                  type="button"
-                                  disabled={busy}
-                                  onClick={() => toggleModule(mod)}
-                                  className={cn(
-                                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors disabled:opacity-50',
-                                    mod.granted
-                                      ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
-                                      : 'border-border bg-background text-foreground hover:bg-muted',
-                                  )}
-                                >
-                                  {mod.granted ? (
-                                    <Check className="size-3" />
-                                  ) : (
-                                    <Plus className="size-3" />
-                                  )}
-                                  {mod.name}
-                                </button>
-                              </Can>
+                                {mod.granted ? (
+                                  <Check className="size-3" />
+                                ) : (
+                                  <Plus className="size-3" />
+                                )}
+                                {mod.name}
+                              </button>
                             ),
                           )}
                         </div>

@@ -18,9 +18,9 @@ public sealed class GetCompanyMenuQueryHandler(
     // Módulos HOJA (sin submódulos/views): su ruta, etiqueta y permiso requerido vienen de aquí.
     private static readonly Dictionary<string, (string Route, string Label, string Permission)> LeafModuleConfig = new()
     {
-        ["IAM:users"] = ("/iam/users", "Usuarios", "iam.users.view"),
-        ["IAM:roles"] = ("/iam/roles", "Roles", "iam.roles.view"),
-        ["IAM:permissions"] = ("/iam/permissions", "Permisos", "iam.permissions.view"),
+        ["IAM:users"] = ("/iam/users", "Usuarios", "iam.users.read"),
+        ["IAM:roles"] = ("/iam/roles", "Roles", "iam.roles.read"),
+        ["IAM:permissions"] = ("/iam/permissions", "Permisos", "iam.permissions.read"),
     };
 
     public async Task<Result<List<MenuSectionDto>>> Handle(GetCompanyMenuQuery request, CancellationToken ct)
@@ -53,7 +53,7 @@ public sealed class GetCompanyMenuQueryHandler(
                     .OrderBy(m => m.Name)
                     .Select(m =>
                     {
-                        var modulePermission = $"{system.Code.ToLowerInvariant()}.{m.Code.ToLowerInvariant()}.view";
+                        var modulePermission = $"{system.Code.ToLowerInvariant()}.{m.Code.ToLowerInvariant()}.read";
 
                         // Submódulos = views del módulo (con ruta).
                         var submodules = allViews

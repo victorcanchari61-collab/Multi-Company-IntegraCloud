@@ -9,15 +9,11 @@ import { useActiveCompanyId } from '../hooks/useActiveCompanyId'
 import { useUsers, useDeactivateUser, useReactivateUser } from '../queries/useUsers'
 import { getUserColumns } from '../components/users.columns'
 import { UserFormDialog } from '../components/UserFormDialog'
-import { AssignRolesDialog } from '../components/AssignRolesDialog'
-import { ChangePasswordDialog } from '../components/ChangePasswordDialog'
 import type { User } from '../types/iam'
 
 export default function UsersPage() {
   const companyId = useActiveCompanyId()
   const [editTarget, setEditTarget] = useState<User | null>(null)
-  const [rolesFor, setRolesFor] = useState<User | null>(null)
-  const [passwordFor, setPasswordFor] = useState<User | null>(null)
   const [search, setSearch] = useState('')
 
   if (!companyId)
@@ -32,10 +28,6 @@ export default function UsersPage() {
       companyId={companyId}
       editTarget={editTarget}
       setEditTarget={setEditTarget}
-      rolesFor={rolesFor}
-      setRolesFor={setRolesFor}
-      passwordFor={passwordFor}
-      setPasswordFor={setPasswordFor}
       search={search}
       setSearch={setSearch}
     />
@@ -46,20 +38,12 @@ function UsersContent({
   companyId,
   editTarget,
   setEditTarget,
-  rolesFor,
-  setRolesFor,
-  passwordFor,
-  setPasswordFor,
   search,
   setSearch,
 }: {
   companyId: string
   editTarget: User | null
   setEditTarget: (user: User | null) => void
-  rolesFor: User | null
-  setRolesFor: (user: User | null) => void
-  passwordFor: User | null
-  setPasswordFor: (user: User | null) => void
   search: string
   setSearch: (s: string) => void
 }) {
@@ -86,8 +70,6 @@ function UsersContent({
         onEdit: setEditTarget,
         onDeactivate,
         onReactivate,
-        onAssignRoles: setRolesFor,
-        onChangePassword: setPasswordFor,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [deactivate.isPending, reactivate.isPending],
@@ -141,18 +123,6 @@ function UsersContent({
           onClose={() => setEditTarget(null)}
         />
       )}
-
-      <AssignRolesDialog
-        companyId={companyId}
-        user={rolesFor}
-        onClose={() => setRolesFor(null)}
-      />
-
-      <ChangePasswordDialog
-        companyId={companyId}
-        user={passwordFor}
-        onClose={() => setPasswordFor(null)}
-      />
     </div>
   )
 }

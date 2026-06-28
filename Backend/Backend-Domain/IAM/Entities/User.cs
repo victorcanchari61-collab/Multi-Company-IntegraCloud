@@ -55,4 +55,17 @@ public sealed class User : AggregateRoot
         if (UserRoles.Any(ur => ur.RoleId == roleId)) return;
         UserRoles.Add(new UserRole(Id, roleId));
     }
+
+    /// <summary>Reemplaza el conjunto de roles del usuario (agrega los nuevos, quita los que ya no están).
+    /// Requiere que UserRoles esté cargada.</summary>
+    public void SetRoles(IEnumerable<Guid> roleIds)
+    {
+        var target = roleIds.Distinct().ToHashSet();
+
+        foreach (var ur in UserRoles.Where(ur => !target.Contains(ur.RoleId)).ToList())
+            UserRoles.Remove(ur);
+
+        foreach (var roleId in target.Where(id => UserRoles.All(ur => ur.RoleId != id)))
+            UserRoles.Add(new UserRole(Id, roleId));
+    }
 }

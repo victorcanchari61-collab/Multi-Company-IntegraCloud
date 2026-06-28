@@ -16,7 +16,7 @@ public sealed class AssignRolesToUserCommandHandler(
 {
     public async Task<Result> Handle(AssignRolesToUserCommand request, CancellationToken ct)
     {
-        var user = await userRepository.GetByIdAsync(request.UserId, ct);
+        var user = await userRepository.GetByIdWithRolesAsync(request.UserId, ct);
         if (user is null)
             return Result.Failure(Error.NotFound("user.not_found", "User not found."));
 
@@ -29,10 +29,10 @@ public sealed class AssignRolesToUserCommandHandler(
             if (role.CompanyId != user.CompanyId)
                 return Result.Failure(
                     Error.Validation("role.company_mismatch", "Role does not belong to the user's company."));
-
-            user.AssignRole(roleId);
         }
 
+        // Reemplaza el conjunto completo de roles (agrega y quita).
+        user.SetRoles(request.RoleIds);
         userRepository.Update(user);
         return Result.Success();
     }

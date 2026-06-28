@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { Pencil } from 'lucide-react'
+import { Ban, Pencil, Power } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ENTITY_STATUS } from '@/lib/constants'
 import { Can } from '@/features/auth/components/Can'
@@ -11,8 +11,6 @@ interface Options {
   onEdit: (user: User) => void
   onDeactivate: (user: User) => void
   onReactivate: (user: User) => void
-  onAssignRoles: (user: User) => void
-  onChangePassword: (user: User) => void
 }
 
 export function getUserColumns({
@@ -20,8 +18,6 @@ export function getUserColumns({
   onEdit,
   onDeactivate,
   onReactivate,
-  onAssignRoles,
-  onChangePassword,
 }: Options): ColumnDef<User, unknown>[] {
   return [
     {
@@ -56,39 +52,30 @@ export function getUserColumns({
         return (
           <div className="flex justify-end gap-1">
             <Can permission="iam.users.update">
-              <Button variant="ghost" size="sm" onClick={() => onEdit(user)}>
-                <Pencil className="size-4" />
-              </Button>
-            </Can>
-            <Can permission="iam.users.assign_roles">
-              <Button variant="outline" size="sm" onClick={() => onAssignRoles(user)}>
-                Roles
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                title="Editar"
+                onClick={() => onEdit(user)}
+              >
+                <Pencil className="text-amber-500" />
+                <span className="sr-only">Editar</span>
               </Button>
             </Can>
             <Can permission="iam.users.update">
-              {isActive ? (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  disabled={pending}
-                  onClick={() => onDeactivate(user)}
-                >
-                  Desactivar
-                </Button>
-              ) : (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={pending}
-                  onClick={() => onReactivate(user)}
-                >
-                  Reactivar
-                </Button>
-              )}
-            </Can>
-            <Can permission="iam.users.update">
-              <Button variant="ghost" size="sm" onClick={() => onChangePassword(user)}>
-                Password
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                disabled={pending}
+                title={isActive ? 'Desactivar' : 'Reactivar'}
+                onClick={() => (isActive ? onDeactivate(user) : onReactivate(user))}
+              >
+                {isActive ? (
+                  <Ban className="text-destructive" />
+                ) : (
+                  <Power className="text-success" />
+                )}
+                <span className="sr-only">{isActive ? 'Desactivar' : 'Reactivar'}</span>
               </Button>
             </Can>
           </div>

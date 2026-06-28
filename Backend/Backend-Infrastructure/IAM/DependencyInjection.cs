@@ -47,6 +47,16 @@ public static class DependencyInjection
         services.AddScoped<ICompanyBillingCredentialRepository, CompanyBillingCredentialRepository>();
         services.AddScoped<Backend.Domain.ERP.Repositories.IUnitOfMeasureRepository,
             Backend.Infrastructure.ERP.Repositories.UnitOfMeasureRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.ICategoryRepository,
+            Backend.Infrastructure.ERP.Repositories.CategoryRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.ISubcategoryRepository,
+            Backend.Infrastructure.ERP.Repositories.SubcategoryRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IBrandRepository,
+            Backend.Infrastructure.ERP.Repositories.BrandRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.ISubbrandRepository,
+            Backend.Infrastructure.ERP.Repositories.SubbrandRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IProductRepository,
+            Backend.Infrastructure.ERP.Repositories.ProductRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

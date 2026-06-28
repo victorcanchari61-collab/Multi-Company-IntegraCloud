@@ -134,21 +134,42 @@ export function Sidebar() {
                         if (module.submodules.length > 0) {
                           const modKey = `${section.systemCode}/${module.code}`
                           const modOpen = isOpen(modKey)
+                          const header = module.route ? (
+                            <Link
+                              to={module.route}
+                              className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
+                              onClick={() => setTimeout(() => toggle(modKey), 0)}
+                            >
+                              <ModIcon className="size-3.5 shrink-0" />
+                              <span className="flex-1 truncate text-left">{module.label}</span>
+                            </Link>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => toggle(modKey)}
+                              className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                            >
+                              <ModIcon className="size-3.5 shrink-0" />
+                              <span className="flex-1 truncate text-left">{module.label}</span>
+                            </button>
+                          )
                           return (
                             <div key={module.code}>
-                              <button
-                                type="button"
-                                onClick={() => toggle(modKey)}
-                                className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700"
-                              >
-                                <ModIcon className="size-3.5 shrink-0" />
-                                <span className="flex-1 truncate text-left">{module.label}</span>
-                                <ChevronDown
-                                  className={cn('size-3 transition-transform', !modOpen && '-rotate-90')}
-                                />
-                              </button>
-{modOpen && (
-                              <div className="ml-3 space-y-0.5 pl-2">
+                              <div className="flex items-center">
+                                {header}
+                                <button
+                                  type="button"
+                                  onClick={() => toggle(modKey)}
+                                  className="flex size-7 shrink-0 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                                  title={modOpen ? 'Contraer' : 'Expandir'}
+                                >
+                                  <ChevronDown
+                                    className={cn('size-3 transition-transform', !modOpen && '-rotate-90')}
+                                  />
+                                </button>
+                              </div>
+                              {modOpen && (
+                                <div className="ml-3 space-y-0.5 pl-2">
                                   {module.submodules.map((sub) => (
                                     <Link
                                       key={sub.route}

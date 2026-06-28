@@ -22,6 +22,270 @@ namespace Backend.Infrastructure.IAM.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Brand", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("CompanyId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("brands", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Category", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("CompanyId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("categories", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Product", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Barcode")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("barcode");
+
+                    b.Property<Guid?>("BrandId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("brand_id");
+
+                    b.Property<Guid?>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<decimal?>("CostPrice")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("cost_price");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("name");
+
+                    b.Property<decimal?>("SalePrice")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("sale_price");
+
+                    b.Property<string>("Sku")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasColumnName("sku");
+
+                    b.Property<Guid?>("SubbrandId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("subbrand_id");
+
+                    b.Property<Guid?>("SubcategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("subcategory_id");
+
+                    b.Property<Guid?>("UnitOfMeasureId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("unit_of_measure_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("SubbrandId");
+
+                    b.HasIndex("SubcategoryId");
+
+                    b.HasIndex("UnitOfMeasureId");
+
+                    b.HasIndex("CompanyId", "Sku")
+                        .IsUnique()
+                        .HasFilter("\"sku\" IS NOT NULL");
+
+                    b.ToTable("products", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Subbrand", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BrandId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("brand_id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
+
+                    b.HasIndex("CompanyId", "BrandId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("subbrands", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Subcategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CategoryId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("category_id");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CompanyId", "CategoryId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("subcategories", "erp");
+                });
+
             modelBuilder.Entity("Backend.Domain.ERP.Entities.UnitOfMeasure", b =>
                 {
                     b.Property<Guid>("Id")
@@ -674,6 +938,61 @@ namespace Backend.Infrastructure.IAM.Migrations
                     b.ToTable("views", "platform");
                 });
 
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Product", b =>
+                {
+                    b.HasOne("Backend.Domain.ERP.Entities.Brand", "Brand")
+                        .WithMany("Products")
+                        .HasForeignKey("BrandId");
+
+                    b.HasOne("Backend.Domain.ERP.Entities.Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId");
+
+                    b.HasOne("Backend.Domain.ERP.Entities.Subbrand", "Subbrand")
+                        .WithMany("Products")
+                        .HasForeignKey("SubbrandId");
+
+                    b.HasOne("Backend.Domain.ERP.Entities.Subcategory", "Subcategory")
+                        .WithMany("Products")
+                        .HasForeignKey("SubcategoryId");
+
+                    b.HasOne("Backend.Domain.ERP.Entities.UnitOfMeasure", "UnitOfMeasure")
+                        .WithMany()
+                        .HasForeignKey("UnitOfMeasureId");
+
+                    b.Navigation("Brand");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Subbrand");
+
+                    b.Navigation("Subcategory");
+
+                    b.Navigation("UnitOfMeasure");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Subbrand", b =>
+                {
+                    b.HasOne("Backend.Domain.ERP.Entities.Brand", "Brand")
+                        .WithMany("Subbrands")
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Brand");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Subcategory", b =>
+                {
+                    b.HasOne("Backend.Domain.ERP.Entities.Category", "Category")
+                        .WithMany("Subcategories")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("Backend.Domain.IAM.Entities.CompanyBillingCredential", b =>
                 {
                     b.HasOne("Backend.Domain.IAM.Entities.Company", null)
@@ -837,6 +1156,30 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .IsRequired();
 
                     b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Brand", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Subbrands");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Category", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Subcategories");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Subbrand", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Subcategory", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Backend.Domain.IAM.Entities.Company", b =>

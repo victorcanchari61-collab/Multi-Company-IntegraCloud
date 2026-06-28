@@ -26,6 +26,11 @@ public sealed class IamDbContext : DbContext, IUnitOfWork
 
     // ── ERP / Maestros ──
     public DbSet<UnitOfMeasure> UnitsOfMeasure => Set<UnitOfMeasure>();
+    public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Subcategory> Subcategories => Set<Subcategory>();
+    public DbSet<Brand> Brands => Set<Brand>();
+    public DbSet<Subbrand> Subbrands => Set<Subbrand>();
+    public DbSet<Product> Products => Set<Product>();
 
     public IamDbContext(DbContextOptions<IamDbContext> options) : base(options) { }
 

@@ -23,6 +23,12 @@ public sealed class GetCompanyMenuQueryHandler(
         ["IAM:permissions"] = ("/iam/permissions", "Permisos", "iam.permissions.read"),
     };
 
+    // Módulos GRUPO (con submódulos) que también tienen una página principal.
+    private static readonly Dictionary<string, string> GroupModuleRoute = new()
+    {
+        ["ERP:productos"] = "/erp/productos",
+    };
+
     public async Task<Result<List<MenuSectionDto>>> Handle(GetCompanyMenuQuery request, CancellationToken ct)
     {
         var systems = (await systemRepository.GetAllAsync(ct))
@@ -63,7 +69,10 @@ public sealed class GetCompanyMenuQueryHandler(
                             .ToList();
 
                         if (submodules.Count > 0)
-                            return new MenuModuleDto(m.Code, m.Name, null, modulePermission, submodules);
+                        {
+                            var groupRoute = GroupModuleRoute.TryGetValue($"{system.Code}:{m.Code}", out var gr) ? gr : null;
+                            return new MenuModuleDto(m.Code, m.Name, groupRoute, modulePermission, submodules);
+                        }
 
                         // Sin views → módulo hoja (link directo) según config.
                         var key = $"{system.Code}:{m.Code}";

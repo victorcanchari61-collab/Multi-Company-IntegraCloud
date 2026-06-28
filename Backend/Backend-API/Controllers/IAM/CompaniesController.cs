@@ -71,6 +71,29 @@ public sealed class CompaniesController(IMediator mediator, TenantContext tenant
         return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
     }
 
+    // ── Licenciamiento de dos niveles: sistemas → módulos ──
+
+    [HttpGet("{id:guid}/access")]
+    public async Task<IActionResult> GetAccess(Guid id, CancellationToken ct)
+    {
+        var result = await mediator.Send(new GetCompanyAccessQuery(id), ct);
+        return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
+    }
+
+    [HttpPost("{id:guid}/systems")]
+    public async Task<IActionResult> GrantSystems(Guid id, GrantCompanySystemAccessCommand command, CancellationToken ct)
+    {
+        var result = await mediator.Send(command with { CompanyId = id }, ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
+    [HttpDelete("{id:guid}/systems/{systemId:guid}")]
+    public async Task<IActionResult> RevokeSystem(Guid id, Guid systemId, CancellationToken ct)
+    {
+        var result = await mediator.Send(new RevokeCompanySystemAccessCommand(id, systemId), ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
     [HttpPost("{id:guid}/modules")]
     public async Task<IActionResult> GrantModules(Guid id, GrantCompanyModuleAccessCommand command, CancellationToken ct)
     {

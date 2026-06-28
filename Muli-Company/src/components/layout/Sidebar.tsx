@@ -56,9 +56,6 @@ export function Sidebar() {
 
   const baseItems = [
     { to: ROUTES.DASHBOARD, label: 'Inicio', icon: LayoutDashboard },
-    ...isOwner
-      ? [{ to: ROUTES.COMPANIES, label: 'Empresas', icon: Building2 }]
-      : [],
   ]
 
   const sidebarClasses = cn(

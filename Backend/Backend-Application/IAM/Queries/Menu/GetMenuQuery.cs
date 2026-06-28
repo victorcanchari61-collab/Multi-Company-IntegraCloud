@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Backend.Application.IAM.Queries.Menu;
 
-public sealed record GetMenuQuery : IRequest<Result<List<MenuSectionDto>>>;
+public sealed record GetMenuQuery(bool IsOwner, Guid? CompanyId) : IRequest<Result<List<MenuSectionDto>>>;
 
 public sealed class GetMenuQueryHandler(
     ISystemRepository systemRepository,
@@ -18,6 +18,7 @@ public sealed class GetMenuQueryHandler(
     {
         ["IAM:users"] = ("/iam/users", "Usuarios"),
         ["IAM:roles"] = ("/iam/roles", "Roles"),
+        ["IAM:permissions"] = ("/iam/permissions", "Permisos"),
         ["IAM:companies"] = ("/iam/companies", "Empresas"),
         ["ERP:units"] = ("/erp/unidades", "Unidades"),
     };
@@ -32,12 +33,28 @@ public sealed class GetMenuQueryHandler(
 
         var allModules = await moduleRepository.GetAllAsync(ct);
 
-        // IAM companies module is always owner-only
+        HashSet<Guid>? grantedSystemIds = null;
+        HashSet<Guid>? grantedModuleIds = null;
+
+        if (!request.IsOwner && request.CompanyId.HasValue)
+        {
+            grantedSystemIds = (await systemAccessRepository.GetByCompanyIdAsync(request.CompanyId.Value, ct))
+                .Select(a => a.SystemId).ToHashSet();
+            grantedModuleIds = (await moduleAccessRepository.GetByCompanyIdAsync(request.CompanyId.Value, ct))
+                .Select(a => a.ModuleId).ToHashSet();
+        }
+
         var sections = systems.Select(system =>
         {
+            var isBase = system.Code == "IAM";
+
+            // Owner solo ve IAM (gestión de plataforma); company user ve sistemas concedidos
+            if (!isBase && (request.IsOwner || grantedSystemIds is null || !grantedSystemIds.Contains(system.Id)))
+                return null;
+
             var modules = allModules
                 .Where(m => m.SystemId == system.Id && m.IsActive)
-                .Where(m => system.Code != "IAM" || m.Code != "companies")
+                .Where(m => !(isBase && m.Code == "companies" && !request.IsOwner))
                 .OrderBy(m => m.Name)
                 .Select(m =>
                 {
@@ -50,7 +67,7 @@ public sealed class GetMenuQueryHandler(
                 .ToList()!;
 
             return new MenuSectionDto(system.Code, system.Name, modules);
-        }).Where(s => s.Items.Count > 0).ToList();
+        }).Where(s => s is not null).ToList()!;
 
         return Result<List<MenuSectionDto>>.Success(sections);
     }

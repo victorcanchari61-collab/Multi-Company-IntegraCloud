@@ -15,6 +15,7 @@ import CompanyDetailPage from '@/features/iam/pages/CompanyDetailPage'
 import UsersPage from '@/features/iam/pages/UsersPage'
 import RolesPage from '@/features/iam/pages/RolesPage'
 import RoleDetailPage from '@/features/iam/pages/RoleDetailPage'
+import PermissionsPage from '@/features/iam/pages/PermissionsPage'
 import ProfilePage from '@/features/iam/pages/ProfilePage'
 import UnitsPage from '@/features/erp/pages/UnitsPage'
 
@@ -77,6 +78,12 @@ const roleDetailRoute = createRoute({
   component: RoleDetailPage,
 })
 
+const permissionsRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: ROUTES.PERMISSIONS,
+  component: PermissionsPage,
+})
+
 const profileRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.PROFILE,
@@ -98,6 +105,7 @@ const routeTree = rootRoute.addChildren([
     usersRoute,
     rolesRoute,
     roleDetailRoute,
+    permissionsRoute,
     profileRoute,
     erpUnitsRoute,
   ]),

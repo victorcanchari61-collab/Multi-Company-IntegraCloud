@@ -61,6 +61,7 @@ export const ROUTES = {
   USER_DETAIL: '/iam/users/$userId',
   ROLES: '/iam/roles',
   ROLE_DETAIL: '/iam/roles/$roleId',
+  PERMISSIONS: '/iam/permissions',
   PROFILE: '/profile',
   ERP_UNITS: '/erp/unidades',
 } as const

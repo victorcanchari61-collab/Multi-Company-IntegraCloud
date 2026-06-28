@@ -34,7 +34,10 @@ const protectedRoute = createRoute({
   id: 'protected',
   component: AppShell,
   beforeLoad: () => {
-    if (!useAuthStore.getState().accessToken) throw redirect({ to: ROUTES.LOGIN })
+    if (!useAuthStore.getState().accessToken) {
+      const slug = useAuthStore.getState().companySlug
+      throw redirect({ to: ROUTES.LOGIN, search: slug ? { empresa: slug } : undefined })
+    }
   },
 })
 

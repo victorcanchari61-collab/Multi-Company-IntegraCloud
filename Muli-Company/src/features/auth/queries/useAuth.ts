@@ -8,11 +8,13 @@ export function useLogin() {
   const setSession = useAuthStore((s) => s.setSession)
   const setUser = useAuthStore((s) => s.setUser)
   const setPermissions = useAuthStore((s) => s.setPermissions)
+  const setCompanySlug = useAuthStore((s) => s.setCompanySlug)
 
   return useMutation({
     mutationFn: (data: LoginRequest) => login(data),
-    onSuccess: async (tokens) => {
+    onSuccess: async (tokens, variables) => {
       setSession(tokens)
+      setCompanySlug(variables.slug ?? null)
       const [me, permissions] = await Promise.all([getMe(), getMyPermissions()])
       setUser(me)
       setPermissions(permissions)

@@ -9,10 +9,12 @@ interface AuthState {
   expiresAt: string | null
   user: AuthUser | null
   permissions: string[]
+  companySlug: string | null
 
   setSession: (tokens: AuthTokens) => void
   setUser: (user: AuthUser) => void
   setPermissions: (permissions: string[]) => void
+  setCompanySlug: (slug: string | null) => void
   clear: () => void
 }
 
@@ -22,6 +24,7 @@ const initial = {
   expiresAt: null,
   user: null,
   permissions: [] as string[],
+  companySlug: null as string | null,
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -36,6 +39,7 @@ export const useAuthStore = create<AuthState>()(
         }),
       setUser: (user) => set({ user }),
       setPermissions: (permissions) => set({ permissions }),
+      setCompanySlug: (slug) => set({ companySlug: slug }),
       clear: () => set({ ...initial }),
     }),
     {
@@ -46,6 +50,7 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: s.refreshToken,
         expiresAt: s.expiresAt,
         user: s.user,
+        companySlug: s.companySlug,
       }),
     },
   ),

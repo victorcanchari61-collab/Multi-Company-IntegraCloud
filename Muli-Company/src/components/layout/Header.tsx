@@ -27,8 +27,14 @@ export function Header() {
   const logout = useLogout()
   const navigate = useNavigate()
 
-  const onLogout = () =>
-    logout.mutate(undefined, { onSettled: () => navigate({ to: ROUTES.LOGIN }) })
+  const onLogout = () => {
+    const slug = useAuthStore.getState().companySlug
+    logout.mutate(undefined, {
+      onSettled: () => {
+        navigate({ to: ROUTES.LOGIN, search: slug ? { empresa: slug } : undefined })
+      },
+    })
+  }
 
   return (
     <header className="flex h-12 items-center justify-between border-b border-white/10 bg-[#0b4c8c] px-4 text-white">

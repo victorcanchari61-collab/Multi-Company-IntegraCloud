@@ -88,7 +88,7 @@ export function getCompanyColumns({
                 title="Editar"
                 onClick={() => onEdit(company)}
               >
-                <Pencil className="text-foreground" />
+                <Pencil className="text-amber-500" />
                 <span className="sr-only">Editar</span>
               </Button>
             </Can>

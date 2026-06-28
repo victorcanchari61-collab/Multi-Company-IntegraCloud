@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { ImageIcon, Plus, Search, Upload } from 'lucide-react'
+import { ImageIcon, Loader2, Plus, Search, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -359,13 +359,19 @@ export function CompanyFormDialog({ company, onClose }: Props = {}) {
                                 <Input placeholder="20123456789" {...field} />
                                 <Button
                                   type="button"
-                                  variant="outline"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="size-9 shrink-0"
                                   onClick={onBuscarRuc}
                                   disabled={rucLoading}
                                   title="Consultar en SUNAT"
                                 >
-                                  <Search className="size-4" />
-                                  {rucLoading ? 'Buscando…' : 'Buscar'}
+                                  {rucLoading ? (
+                                    <Loader2 className="size-4 animate-spin text-primary" />
+                                  ) : (
+                                    <Search className="size-4 text-primary" />
+                                  )}
+                                  <span className="sr-only">Consultar RUC</span>
                                 </Button>
                               </div>
                             </FormControl>

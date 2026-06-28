@@ -52,3 +52,6 @@ C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend.SharedKernel.deps.json
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend.SharedKernel.dll
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend.SharedKernel.pdb
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildmenu\Backend.SharedKernel.deps.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildmenu\Backend.SharedKernel.dll
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildmenu\Backend.SharedKernel.pdb

@@ -1,15 +1,18 @@
 import { useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import {
+  Boxes,
   Building2,
   ChevronDown,
   ChevronsLeft,
   ChevronsRight,
+  Folder,
+  KeyRound,
   LayoutDashboard,
-  Ruler,
-  ShoppingCart,
   Package,
+  Ruler,
   ShieldCheck,
+  ShoppingCart,
   UserCheck,
   Users,
 } from 'lucide-react'
@@ -22,7 +25,7 @@ import { useMenu } from '@/features/auth/queries/useMenu'
 
 const SYSTEM_ICONS: Record<string, LucideIcon> = {
   IAM: ShieldCheck,
-  ERP: Ruler,
+  ERP: Boxes,
   POS: ShoppingCart,
   WMS: Package,
   RRHH: UserCheck,
@@ -31,39 +34,35 @@ const SYSTEM_ICONS: Record<string, LucideIcon> = {
 const MODULE_ICONS: Record<string, LucideIcon> = {
   users: Users,
   roles: ShieldCheck,
+  permissions: KeyRound,
   companies: Building2,
+  productos: Boxes,
   units: Ruler,
 }
+
+const linkBase =
+  'flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700'
 
 export function Sidebar() {
   const { data: sections = [] } = useMenu()
   const collapsed = useSidebarStore((s) => s.collapsed)
   const hidden = useSidebarStore((s) => s.hidden)
   const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed)
-  const [expanded, setExpanded] = useState<Set<string>>(() => new Set(sections.map(s => s.systemCode)))
 
-  const toggleSection = (code: string) => {
-    setExpanded(prev => {
+  // Guardamos los nodos CERRADOS; por defecto todo abierto.
+  const [closed, setClosed] = useState<Set<string>>(new Set())
+  const isOpen = (key: string) => !closed.has(key)
+  const toggle = (key: string) =>
+    setClosed((prev) => {
       const next = new Set(prev)
-      if (next.has(code)) next.delete(code)
-      else next.add(code)
+      if (next.has(key)) next.delete(key)
+      else next.add(key)
       return next
     })
-  }
-
-  const baseItems = [
-    { to: ROUTES.DASHBOARD, label: 'Inicio', icon: LayoutDashboard },
-  ]
 
   const sidebarClasses = cn(
     'flex shrink-0 flex-col overflow-hidden bg-white text-foreground transition-all duration-300 ease-in-out',
-    hidden ? 'w-0' : collapsed ? 'w-16' : 'w-47',
-  )
-
-  const linkBase = cn(
-    'flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground transition-colors',
-    'hover:bg-blue-50 hover:text-blue-700',
-    '[&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700',
+    hidden ? 'w-0' : collapsed ? 'w-16' : 'w-56',
   )
 
   return (
@@ -72,62 +71,103 @@ export function Sidebar() {
         <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary p-1">
           <img src={logo} alt={APP_NAME} className="size-full object-contain" />
         </span>
-        <span className={cn('truncate text-sm font-semibold tracking-wide transition-opacity duration-200', collapsed && 'opacity-0')}>
+        <span
+          className={cn(
+            'truncate text-sm font-semibold tracking-wide transition-opacity duration-200',
+            collapsed && 'opacity-0',
+          )}
+        >
           {APP_NAME}
         </span>
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-2">
-        {baseItems.map(({ to, label, icon: Icon }) => (
-          <Link
-            key={to}
-            to={to}
-            title={collapsed ? label : undefined}
-            activeOptions={{ exact: to === ROUTES.DASHBOARD }}
-            className={cn(linkBase, collapsed && 'justify-center px-0')}
-          >
-            <Icon className="size-4 shrink-0" />
-            <span className={cn('truncate', collapsed && 'hidden')}>{label}</span>
-          </Link>
-        ))}
+        {/* Inicio */}
+        <Link
+          to={ROUTES.DASHBOARD}
+          title={collapsed ? 'Inicio' : undefined}
+          activeOptions={{ exact: true }}
+          className={cn(linkBase, collapsed && 'justify-center px-0')}
+        >
+          <LayoutDashboard className="size-4 shrink-0" />
+          <span className={cn('truncate', collapsed && 'hidden')}>Inicio</span>
+        </Link>
 
-        {!collapsed && sections.map(section => {
-          const Icon = SYSTEM_ICONS[section.systemCode] ?? ShieldCheck
-          const isExpanded = expanded.has(section.systemCode)
+        {!collapsed &&
+          sections.map((section) => {
+            const SysIcon = SYSTEM_ICONS[section.systemCode] ?? ShieldCheck
+            const sysOpen = isOpen(section.systemCode)
+            return (
+              <div key={section.systemCode}>
+                {/* Nivel 1: Sistema */}
+                <button
+                  type="button"
+                  onClick={() => toggle(section.systemCode)}
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700"
+                >
+                  <SysIcon className="size-4 shrink-0" />
+                  <span className="flex-1 truncate text-left">{section.systemName}</span>
+                  <ChevronDown className={cn('size-3 transition-transform', !sysOpen && '-rotate-90')} />
+                </button>
 
-          return (
-            <div key={section.systemCode}>
-              <button
-                type="button"
-                onClick={() => toggleSection(section.systemCode)}
-                className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700"
-              >
-                <Icon className="size-4 shrink-0" />
-                <span className="flex-1 truncate text-left font-medium">{section.systemName}</span>
-                <ChevronDown className={cn('size-3 transition-transform', isExpanded && 'rotate-180')} />
-              </button>
+                {sysOpen && (
+                  <div className="ml-3 space-y-0.5 border-l pl-2">
+                    {section.modules.map((module) => {
+                      const ModIcon = MODULE_ICONS[module.code] ?? Folder
 
-              {isExpanded && (
-                <div className="ml-2 space-y-0.5 pl-2">
-                  {section.items.map(item => {
-                    const ModIcon = MODULE_ICONS[item.code] ?? ChevronsRight
-                    return (
-                      <Link
-                        key={item.route}
-                        to={item.route}
-                        title={item.label}
-                        className="flex items-center gap-3 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
-                      >
-                        <ModIcon className="size-3.5 shrink-0" />
-                        <span className="truncate">{item.label}</span>
-                      </Link>
-                    )
-                  })}
-                </div>
-              )}
-            </div>
-          )
-        })}
+                      // Módulo GRUPO (con submódulos)
+                      if (module.submodules.length > 0) {
+                        const modKey = `${section.systemCode}/${module.code}`
+                        const modOpen = isOpen(modKey)
+                        return (
+                          <div key={module.code}>
+                            <button
+                              type="button"
+                              onClick={() => toggle(modKey)}
+                              className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700"
+                            >
+                              <ModIcon className="size-3.5 shrink-0" />
+                              <span className="flex-1 truncate text-left">{module.label}</span>
+                              <ChevronDown
+                                className={cn('size-3 transition-transform', !modOpen && '-rotate-90')}
+                              />
+                            </button>
+                            {modOpen && (
+                              <div className="ml-3 space-y-0.5 border-l pl-2">
+                                {module.submodules.map((sub) => (
+                                  <Link
+                                    key={sub.route}
+                                    to={sub.route}
+                                    title={sub.label}
+                                    className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/75 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
+                                  >
+                                    <span className="truncate">{sub.label}</span>
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      }
+
+                      // Módulo HOJA (link directo)
+                      return (
+                        <Link
+                          key={module.code}
+                          to={module.route ?? '#'}
+                          title={module.label}
+                          className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
+                        >
+                          <ModIcon className="size-3.5 shrink-0" />
+                          <span className="truncate">{module.label}</span>
+                        </Link>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+            )
+          })}
       </nav>
 
       <div className="border-t p-2">

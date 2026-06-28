@@ -10,16 +10,17 @@ public sealed record GetCompanyMenuQuery(Guid CompanyId) : IRequest<Result<List<
 public sealed class GetCompanyMenuQueryHandler(
     ISystemRepository systemRepository,
     IModuleRepository moduleRepository,
+    IViewRepository viewRepository,
     ICompanySystemAccessRepository systemAccessRepository,
     ICompanyModuleAccessRepository moduleAccessRepository)
     : IRequestHandler<GetCompanyMenuQuery, Result<List<MenuSectionDto>>>
 {
-    private static readonly Dictionary<string, (string Route, string Label)> ModuleConfig = new()
+    // Módulos HOJA (sin submódulos/views): su ruta y etiqueta vienen de aquí. Ej. IAM.
+    private static readonly Dictionary<string, (string Route, string Label)> LeafModuleConfig = new()
     {
         ["IAM:users"] = ("/iam/users", "Usuarios"),
         ["IAM:roles"] = ("/iam/roles", "Roles"),
         ["IAM:permissions"] = ("/iam/permissions", "Permisos"),
-        ["ERP:units"] = ("/erp/unidades", "Unidades"),
     };
 
     public async Task<Result<List<MenuSectionDto>>> Handle(GetCompanyMenuQuery request, CancellationToken ct)
@@ -31,6 +32,7 @@ public sealed class GetCompanyMenuQueryHandler(
             .ToList();
 
         var allModules = await moduleRepository.GetAllAsync(ct);
+        var allViews = await viewRepository.GetAllAsync(ct);
 
         var grantedSystemIds = (await systemAccessRepository.GetByCompanyIdAsync(request.CompanyId, ct))
             .Select(a => a.SystemId).ToHashSet();
@@ -46,18 +48,30 @@ public sealed class GetCompanyMenuQueryHandler(
 
                 var modules = allModules
                     .Where(m => m.SystemId == system.Id && m.IsActive)
-                    .Where(m => m.Code != "companies")
-                    .Where(m => grantedModuleIds.Contains(m.Id))
+                    .Where(m => m.Code != "companies")            // gestión de empresas = solo dueño
+                    .Where(m => isBase || grantedModuleIds.Contains(m.Id)) // IAM base siempre; resto si está licenciado
                     .OrderBy(m => m.Name)
                     .Select(m =>
                     {
+                        // Submódulos = views del módulo (con ruta).
+                        var submodules = allViews
+                            .Where(v => v.ModuleId == m.Id && !string.IsNullOrEmpty(v.Route))
+                            .OrderBy(v => v.Name)
+                            .Select(v => new MenuItemDto(v.Code, v.Name, v.Route!))
+                            .ToList();
+
+                        if (submodules.Count > 0)
+                            return new MenuModuleDto(m.Code, m.Name, null, submodules);
+
+                        // Sin views → módulo hoja (link directo) según config.
                         var key = $"{system.Code}:{m.Code}";
-                        if (ModuleConfig.TryGetValue(key, out var config))
-                            return new MenuItemDto(m.Code, config.Label, config.Route);
+                        if (LeafModuleConfig.TryGetValue(key, out var cfg))
+                            return new MenuModuleDto(m.Code, cfg.Label, cfg.Route, new List<MenuItemDto>());
+
                         return null;
                     })
                     .Where(m => m is not null)
-                    .Cast<MenuItemDto>()
+                    .Cast<MenuModuleDto>()
                     .ToList();
 
                 if (modules.Count == 0)

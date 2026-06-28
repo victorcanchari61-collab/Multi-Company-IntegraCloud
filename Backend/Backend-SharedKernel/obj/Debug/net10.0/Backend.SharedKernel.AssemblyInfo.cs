@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Backend.SharedKernel")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d22588dbe4040c0544d117be8d5deba302fd65f1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36acc3dfef96ee09733f9bb0f039576169c790dc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Backend.SharedKernel")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Backend.SharedKernel")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

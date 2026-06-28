@@ -116,7 +116,7 @@ export function Sidebar() {
                         key={item.route}
                         to={item.route}
                         title={item.label}
-                        className="flex items-center gap-3 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:text-blue-700"
+                        className="flex items-center gap-3 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
                       >
                         <ModIcon className="size-3.5 shrink-0" />
                         <span className="truncate">{item.label}</span>

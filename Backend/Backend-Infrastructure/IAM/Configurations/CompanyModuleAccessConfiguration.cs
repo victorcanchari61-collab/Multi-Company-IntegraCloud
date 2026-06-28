@@ -8,7 +8,7 @@ public sealed class CompanyModuleAccessConfiguration : IEntityTypeConfiguration<
 {
     public void Configure(EntityTypeBuilder<CompanyModuleAccess> builder)
     {
-        builder.ToTable("company_module_access");
+        builder.ToTable("company_module_access", "platform");
 
         builder.HasKey(x => x.Id);
 

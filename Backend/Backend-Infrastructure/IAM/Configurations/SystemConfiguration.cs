@@ -8,7 +8,7 @@ public sealed class SystemConfiguration : IEntityTypeConfiguration<SystemEntity>
 {
     public void Configure(EntityTypeBuilder<SystemEntity> builder)
     {
-        builder.ToTable("systems");
+        builder.ToTable("systems", "platform");
 
         builder.HasKey(x => x.Id);
 

@@ -8,7 +8,7 @@ public sealed class CompanyConfiguration : IEntityTypeConfiguration<Company>
 {
     public void Configure(EntityTypeBuilder<Company> builder)
     {
-        builder.ToTable("companies");
+        builder.ToTable("companies", "platform");
 
         builder.HasKey(x => x.Id);
 

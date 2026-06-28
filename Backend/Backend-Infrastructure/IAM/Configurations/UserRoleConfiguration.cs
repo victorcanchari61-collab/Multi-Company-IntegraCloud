@@ -8,7 +8,7 @@ public sealed class UserRoleConfiguration : IEntityTypeConfiguration<UserRole>
 {
     public void Configure(EntityTypeBuilder<UserRole> builder)
     {
-        builder.ToTable("user_roles");
+        builder.ToTable("user_roles", "iam");
 
         builder.HasKey(x => x.Id);
 

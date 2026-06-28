@@ -8,7 +8,7 @@ public sealed class ActionConfiguration : IEntityTypeConfiguration<PermissionAct
 {
     public void Configure(EntityTypeBuilder<PermissionAction> builder)
     {
-        builder.ToTable("actions");
+        builder.ToTable("actions", "platform");
 
         builder.HasKey(x => x.Code);
         builder.Ignore(x => x.Id);

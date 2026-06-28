@@ -8,7 +8,7 @@ public sealed class ModuleConfiguration : IEntityTypeConfiguration<Module>
 {
     public void Configure(EntityTypeBuilder<Module> builder)
     {
-        builder.ToTable("modules");
+        builder.ToTable("modules", "platform");
 
         builder.HasKey(x => x.Id);
 

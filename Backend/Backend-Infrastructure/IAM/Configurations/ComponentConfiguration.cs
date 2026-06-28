@@ -8,7 +8,7 @@ public sealed class ComponentConfiguration : IEntityTypeConfiguration<Component>
 {
     public void Configure(EntityTypeBuilder<Component> builder)
     {
-        builder.ToTable("components");
+        builder.ToTable("components", "platform");
 
         builder.HasKey(x => x.Id);
 

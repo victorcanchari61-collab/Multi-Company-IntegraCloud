@@ -8,7 +8,7 @@ public sealed class ViewConfiguration : IEntityTypeConfiguration<View>
 {
     public void Configure(EntityTypeBuilder<View> builder)
     {
-        builder.ToTable("views");
+        builder.ToTable("views", "platform");
 
         builder.HasKey(x => x.Id);
 

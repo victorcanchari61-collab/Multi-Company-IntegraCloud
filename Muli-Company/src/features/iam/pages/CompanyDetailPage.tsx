@@ -1,42 +1,66 @@
 import { useParams, useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { ArrowLeft, ShieldCheck, ShieldX } from 'lucide-react'
+import { ArrowLeft, Check, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import { cn } from '@/lib/utils'
 import { ApiError } from '@/lib/api'
-import { useCompany, useCompanyModules, useGrantModules, useRevokeModules } from '../queries/useCompanies'
+import {
+  useCompany,
+  useCompanyAccess,
+  useGrantModules,
+  useGrantSystems,
+  useRevokeModules,
+  useRevokeSystem,
+} from '../queries/useCompanies'
 import { useAuthStore } from '@/stores/authStore'
 import { Can } from '@/features/auth/components/Can'
+import type { ModuleAccess, SystemAccess } from '../types/iam'
 
 export default function CompanyDetailPage() {
   const { companyId } = useParams({ strict: false }) as { companyId: string }
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const { data: company, isLoading: loadingCompany } = useCompany(companyId)
-  const { data: modules, isLoading: loadingModules } = useCompanyModules(companyId)
+  const { data: access, isLoading: loadingAccess } = useCompanyAccess(companyId)
+
+  const grantSystems = useGrantSystems()
+  const revokeSystem = useRevokeSystem()
   const grantModules = useGrantModules()
   const revokeModules = useRevokeModules()
 
-  const handleToggleModule = (moduleId: string, isGranted: boolean) => {
-    if (isGranted) {
-      revokeModules.mutate(
-        { companyId, moduleIds: [moduleId] },
-        {
-          onSuccess: () => toast.success('M\u00f3dulo revocado'),
-          onError: (error) =>
-            toast.error(error instanceof ApiError ? error.message : 'Error al revocar m\u00f3dulo'),
-        },
+  const busy =
+    grantSystems.isPending ||
+    revokeSystem.isPending ||
+    grantModules.isPending ||
+    revokeModules.isPending
+
+  const onError = (error: unknown) =>
+    toast.error(error instanceof ApiError ? error.message : 'No se pudo actualizar el acceso')
+
+  const toggleSystem = (sys: SystemAccess) => {
+    if (sys.granted) {
+      revokeSystem.mutate(
+        { companyId, systemId: sys.systemId },
+        { onSuccess: () => toast.success(`Sistema "${sys.name}" revocado`), onError },
       )
     } else {
+      grantSystems.mutate(
+        { companyId, systemIds: [sys.systemId], grantedBy: user?.id ?? '' },
+        { onSuccess: () => toast.success(`Sistema "${sys.name}" concedido`), onError },
+      )
+    }
+  }
+
+  const toggleModule = (mod: ModuleAccess) => {
+    if (mod.granted) {
+      revokeModules.mutate({ companyId, moduleIds: [mod.moduleId] }, { onError })
+    } else {
       grantModules.mutate(
-        { companyId, moduleIds: [moduleId], grantedBy: user?.id ?? '' },
-        {
-          onSuccess: () => toast.success('M\u00f3dulo concedido'),
-          onError: (error) =>
-            toast.error(error instanceof ApiError ? error.message : 'Error al conceder m\u00f3dulo'),
-        },
+        { companyId, moduleIds: [mod.moduleId], grantedBy: user?.id ?? '' },
+        { onError },
       )
     }
   }
@@ -82,129 +106,137 @@ export default function CompanyDetailPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Informaci&oacute;n general</CardTitle>
+            <CardTitle>Información general</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">RUC</span>
-              <span>{company.taxId ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Raz&oacute;n social</span>
-              <span>{company.legalName ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Email</span>
-              <span>{company.email ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Moneda</span>
-              <span>{company.settlementCurrency}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Tipo contribuyente</span>
-              <span>{company.taxpayerType === 1 ? 'Natural' : 'Jur\u00eddico'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Creada</span>
-              <span>{new Date(company.createdAt).toLocaleDateString()}</span>
-            </div>
+            <Row label="RUC" value={company.taxId} />
+            <Row label="Razón social" value={company.legalName} />
+            <Row label="Email" value={company.email} />
+            <Row label="Moneda" value={company.settlementCurrency} />
+            <Row label="Tipo contribuyente" value={company.taxpayerType === 1 ? 'Natural' : 'Jurídico'} />
+            <Row label="Creada" value={new Date(company.createdAt).toLocaleDateString()} />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle>Direcci&oacute;n</CardTitle>
+            <CardTitle>Dirección</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Direcci&oacute;n fiscal</span>
-              <span className="text-right">{company.taxAddress ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Direcci&oacute;n</span>
-              <span className="text-right">{company.address ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Tel&eacute;fono</span>
-              <span>{company.phone ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Web</span>
-              <span>{company.website ?? '\u2014'}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Actividad econ&oacute;mica</span>
-              <span className="text-right">{company.economicActivity ?? '\u2014'}</span>
-            </div>
+            <Row label="Dirección fiscal" value={company.taxAddress} />
+            <Row label="Dirección" value={company.address} />
+            <Row label="Teléfono" value={company.phone} />
+            <Row label="Web" value={company.website} />
+            <Row label="Actividad económica" value={company.economicActivity} />
           </CardContent>
         </Card>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>M&oacute;dulos del sistema</CardTitle>
+          <CardTitle>Sistemas y módulos</CardTitle>
+          <p className="text-sm text-muted-foreground">
+            Concede a la empresa los sistemas y, dentro de cada uno, sus módulos.
+          </p>
         </CardHeader>
         <CardContent>
-          {loadingModules ? (
+          {loadingAccess ? (
             <div className="space-y-2">
-              {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-full" />
+              {Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-14 w-full" />
               ))}
             </div>
-          ) : modules ? (
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">M&oacute;dulos concedidos</h3>
-                {modules.grantedModules.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">Ning&uacute;n m&oacute;dulo concedido.</p>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {modules.grantedModules.map((mod) => (
-                      <Badge key={mod.id} variant="default" className="gap-1 pr-1">
-                        <ShieldCheck className="size-3" />
-                        {mod.name}
-                        <Can permission="iam.companies.manage_modules">
-                          <button
-                            className="ml-1 hover:text-destructive transition-colors"
-                            onClick={() => handleToggleModule(mod.id, true)}
-                            disabled={revokeModules.isPending}
-                          >
-                            &times;
-                          </button>
-                        </Can>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">M&oacute;dulos disponibles</h3>
-                {modules.availableModules.length === 0 ? (
-                  <p className="text-sm text-muted-foreground">No hay m&aacute;s m&oacute;dulos disponibles.</p>
-                ) : (
-                  <div className="flex flex-wrap gap-2">
-                    {modules.availableModules.map((mod) => (
-                      <Badge key={mod.id} variant="outline" className="gap-1">
-                        <ShieldX className="size-3" />
-                        {mod.name}
-                        <Can permission="iam.companies.manage_modules">
-                          <button
-                            className="ml-1 text-muted-foreground hover:text-primary transition-colors"
-                            onClick={() => handleToggleModule(mod.id, false)}
-                            disabled={grantModules.isPending}
-                          >
-                            +
-                          </button>
-                        </Can>
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+          ) : !access || access.systems.length === 0 ? (
+            <p className="text-sm text-muted-foreground">No hay sistemas para licenciar.</p>
           ) : (
-            <p className="text-sm text-muted-foreground">Error al cargar m&oacute;dulos.</p>
+            <div className="space-y-3">
+              {access.systems.map((sys) => (
+                <div key={sys.systemId} className="overflow-hidden rounded-lg border">
+                  <div className="flex items-center justify-between gap-3 p-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">{sys.name}</span>
+                      {sys.isBase ? (
+                        <Badge variant="secondary">Base · siempre activo</Badge>
+                      ) : (
+                        <Badge
+                          className={cn(
+                            'border-transparent',
+                            sys.granted
+                              ? 'bg-success text-success-foreground'
+                              : 'bg-muted text-muted-foreground',
+                          )}
+                        >
+                          {sys.granted ? 'Concedido' : 'No concedido'}
+                        </Badge>
+                      )}
+                    </div>
+                    {!sys.isBase && (
+                      <Can permission="iam.companies.manage_modules">
+                        <Button
+                          size="sm"
+                          variant={sys.granted ? 'outline' : 'default'}
+                          disabled={busy}
+                          onClick={() => toggleSystem(sys)}
+                        >
+                          {sys.granted ? 'Quitar sistema' : 'Conceder sistema'}
+                        </Button>
+                      </Can>
+                    )}
+                  </div>
+
+                  {sys.granted && (
+                    <div className="border-t bg-muted/30 p-3">
+                      <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                        Módulos
+                      </p>
+                      {sys.modules.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                          Este sistema aún no tiene módulos en el catálogo.
+                        </p>
+                      ) : (
+                        <div className="flex flex-wrap gap-2">
+                          {sys.modules.map((mod) =>
+                            sys.isBase ? (
+                              <Badge key={mod.moduleId} variant="default" className="gap-1">
+                                <Check className="size-3" />
+                                {mod.name}
+                              </Badge>
+                            ) : (
+                              <Can
+                                key={mod.moduleId}
+                                permission="iam.companies.manage_modules"
+                                fallback={
+                                  <Badge variant={mod.granted ? 'default' : 'outline'}>{mod.name}</Badge>
+                                }
+                              >
+                                <button
+                                  type="button"
+                                  disabled={busy}
+                                  onClick={() => toggleModule(mod)}
+                                  className={cn(
+                                    'inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition-colors disabled:opacity-50',
+                                    mod.granted
+                                      ? 'border-transparent bg-primary text-primary-foreground hover:bg-primary/80'
+                                      : 'border-border bg-background text-foreground hover:bg-muted',
+                                  )}
+                                >
+                                  {mod.granted ? (
+                                    <Check className="size-3" />
+                                  ) : (
+                                    <Plus className="size-3" />
+                                  )}
+                                  {mod.name}
+                                </button>
+                              </Can>
+                            ),
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           )}
         </CardContent>
       </Card>
@@ -213,10 +245,16 @@ export default function CompanyDetailPage() {
         <Button variant="outline" onClick={() => navigate({ to: '/iam/companies' } as any)}>
           Volver a empresas
         </Button>
-        <Button variant="outline" onClick={() => navigate({ to: `/iam/companies/${companyId}/users` } as any)}>
-          Ver usuarios
-        </Button>
       </div>
+    </div>
+  )
+}
+
+function Row({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div className="flex justify-between gap-4">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="text-right">{value ?? '—'}</span>
     </div>
   )
 }

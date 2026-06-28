@@ -2,6 +2,7 @@ import { api } from '@/lib/api'
 import { API_ENDPOINTS } from '@/lib/constants'
 import type {
   Company,
+  CompanyAccess,
   CompanyModules,
   CreateCompanyRequest,
   ListParams,
@@ -59,3 +60,17 @@ export const revokeModules = (
   moduleIds: string[],
 ): Promise<void> =>
   api.delete<void>(API_ENDPOINTS.companyModules(companyId), { moduleIds })
+
+// ── Licenciamiento de dos niveles ──
+export const getCompanyAccess = (companyId: string): Promise<CompanyAccess> =>
+  api.get<CompanyAccess>(API_ENDPOINTS.companyAccess(companyId))
+
+export const grantSystems = (
+  companyId: string,
+  systemIds: string[],
+  grantedBy: string,
+): Promise<void> =>
+  api.post<void>(API_ENDPOINTS.companySystems(companyId), { systemIds, grantedBy })
+
+export const revokeSystem = (companyId: string, systemId: string): Promise<void> =>
+  api.delete<void>(API_ENDPOINTS.companySystem(companyId, systemId))

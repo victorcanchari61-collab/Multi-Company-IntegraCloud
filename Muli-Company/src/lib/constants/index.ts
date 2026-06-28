@@ -20,6 +20,10 @@ export const API_ENDPOINTS = {
   },
   company: (companyId: string) => `/companies/${companyId}`,
   companyModules: (companyId: string) => `/companies/${companyId}/modules`,
+  companyAccess: (companyId: string) => `/companies/${companyId}/access`,
+  companySystems: (companyId: string) => `/companies/${companyId}/systems`,
+  companySystem: (companyId: string, systemId: string) =>
+    `/companies/${companyId}/systems/${systemId}`,
   companyUsers: (companyId: string) => `/companies/${companyId}/users`,
   companyUser: (companyId: string, userId: string) =>
     `/companies/${companyId}/users/${userId}`,

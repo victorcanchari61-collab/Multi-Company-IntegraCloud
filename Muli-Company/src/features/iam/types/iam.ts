@@ -78,6 +78,29 @@ export interface CompanyModules {
   availableModules: Module[]
 }
 
+// ── Licenciamiento de dos niveles: sistema → módulos ──
+export interface ModuleAccess {
+  moduleId: string
+  code: string
+  name: string
+  granted: boolean
+}
+
+export interface SystemAccess {
+  systemId: string
+  code: string
+  name: string
+  granted: boolean
+  /** IAM = sistema base, siempre activo; no se concede ni se quita. */
+  isBase: boolean
+  modules: ModuleAccess[]
+}
+
+export interface CompanyAccess {
+  companyId: string
+  systems: SystemAccess[]
+}
+
 export interface PermissionNode {
   id: string
   key: string

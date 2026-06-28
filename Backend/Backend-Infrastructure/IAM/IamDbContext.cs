@@ -16,6 +16,7 @@ public sealed class IamDbContext : DbContext, IUnitOfWork
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<Company> Companies => Set<Company>();
     public DbSet<CompanyModuleAccess> CompanyModuleAccesses => Set<CompanyModuleAccess>();
+    public DbSet<CompanySystemAccess> CompanySystemAccesses => Set<CompanySystemAccess>();
     public DbSet<CompanyBillingCredential> CompanyBillingCredentials => Set<CompanyBillingCredential>();
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();

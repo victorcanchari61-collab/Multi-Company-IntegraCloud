@@ -13,7 +13,8 @@ public sealed record GrantCompanyModuleAccessCommand(
 public sealed class GrantCompanyModuleAccessCommandHandler(
     ICompanyModuleAccessRepository accessRepository,
     ICompanyRepository companyRepository,
-    IModuleRepository moduleRepository)
+    IModuleRepository moduleRepository,
+    ICompanySystemAccessRepository systemAccessRepository)
     : IRequestHandler<GrantCompanyModuleAccessCommand, Result>
 {
     public async Task<Result> Handle(GrantCompanyModuleAccessCommand request, CancellationToken ct)
@@ -27,6 +28,11 @@ public sealed class GrantCompanyModuleAccessCommandHandler(
             var module = await moduleRepository.GetByIdAsync(moduleId, ct);
             if (module is null)
                 return Result.Failure(Error.NotFound("module.not_found", $"Module {moduleId} not found."));
+
+            // Nivel 1: el sistema del módulo debe estar concedido primero.
+            if (!await systemAccessRepository.HasAccessAsync(request.CompanyId, module.SystemId, ct))
+                return Result.Failure(Error.Forbidden("system.not_granted",
+                    "El sistema de este módulo no está concedido a la empresa."));
 
             var exists = await accessRepository.HasAccessAsync(request.CompanyId, moduleId, ct);
             if (!exists)

@@ -10,4 +10,10 @@ internal sealed class RoleRepository(IamDbContext context)
 {
     public async Task<List<Role>> GetByCompanyIdAsync(Guid companyId, CancellationToken ct = default)
         => await Context.Roles.Where(r => r.CompanyId == companyId).ToListAsync(ct);
+
+    public async Task<Role?> GetByIdWithPermissionsAsync(Guid roleId, CancellationToken ct = default)
+        => await Context.Roles
+            .Include(r => r.RolePermissions)
+                .ThenInclude(rp => rp.Permission)
+            .FirstOrDefaultAsync(r => r.Id == roleId, ct);
 }

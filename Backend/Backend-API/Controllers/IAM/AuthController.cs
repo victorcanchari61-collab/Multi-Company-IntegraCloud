@@ -1,5 +1,6 @@
 using Backend.Application.IAM.Commands.Auth;
 using Backend.Application.IAM.Queries.Auth;
+using Backend.Application.IAM.Queries.Permissions;
 using Backend.SharedKernel;
 using Backend_API.Middleware;
 using MediatR;
@@ -40,6 +41,16 @@ public sealed class AuthController(IMediator mediator, TenantContext tenantConte
 
         var result = await mediator.Send(new GetMeQuery(tenantContext.UserId.Value), ct);
         return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
+    }
+
+    [HttpPost("me/change-password")]
+    public async Task<IActionResult> ChangeMyPassword(ChangeMyPasswordCommand command, CancellationToken ct)
+    {
+        if (tenantContext.UserId is null)
+            return Unauthorized();
+
+        var result = await mediator.Send(command with { UserId = tenantContext.UserId.Value }, ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
     }
 
     [HttpGet("me/permissions")]

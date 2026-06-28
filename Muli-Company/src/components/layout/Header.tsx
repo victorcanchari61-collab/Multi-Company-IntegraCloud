@@ -31,7 +31,7 @@ export function Header() {
     logout.mutate(undefined, { onSettled: () => navigate({ to: ROUTES.LOGIN }) })
 
   return (
-    <header className="flex h-12 items-center justify-between border-b border-white/10 bg-zinc-800 px-4 text-white">
+    <header className="flex h-12 items-center justify-between border-b border-white/10 bg-[#0b4c8c] px-4 text-white">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"

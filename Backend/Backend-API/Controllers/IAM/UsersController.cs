@@ -26,10 +26,38 @@ public sealed class UsersController(IMediator mediator, TenantContext tenantCont
         return Ok(result.Value);
     }
 
+    [HttpGet("{userId:guid}")]
+    public async Task<IActionResult> GetById(Guid companyId, Guid userId, CancellationToken ct)
+    {
+        var result = await mediator.Send(new GetUserByIdQuery(userId), ct);
+        return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
+    }
+
+    [HttpPut("{userId:guid}")]
+    public async Task<IActionResult> Update(Guid companyId, Guid userId, UpdateUserCommand command, CancellationToken ct)
+    {
+        var result = await mediator.Send(command with { UserId = userId }, ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
     [HttpPost("{userId:guid}/deactivate")]
     public async Task<IActionResult> Deactivate(Guid companyId, Guid userId, CancellationToken ct)
     {
         var result = await mediator.Send(new DeactivateUserCommand(userId), ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
+    [HttpPost("{userId:guid}/reactivate")]
+    public async Task<IActionResult> Reactivate(Guid companyId, Guid userId, CancellationToken ct)
+    {
+        var result = await mediator.Send(new ReactivateUserCommand(userId), ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
+    [HttpPost("{userId:guid}/change-password")]
+    public async Task<IActionResult> ChangePassword(Guid companyId, Guid userId, ChangePasswordCommand command, CancellationToken ct)
+    {
+        var result = await mediator.Send(command with { UserId = userId }, ct);
         return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
     }
 
@@ -44,6 +72,7 @@ public sealed class UsersController(IMediator mediator, TenantContext tenantCont
     {
         ErrorType.NotFound => NotFound(new { error.Code, error.Message }),
         ErrorType.Conflict => Conflict(new { error.Code, error.Message }),
+        ErrorType.Unauthorized => Unauthorized(new { error.Code, error.Message }),
         _ => BadRequest(new { error.Code, error.Message }),
     };
 }

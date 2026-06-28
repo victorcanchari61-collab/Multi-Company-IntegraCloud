@@ -24,4 +24,10 @@ public sealed class Role : AggregateRoot
         Description = description;
         IsSystemTemplate = isSystemTemplate;
     }
+
+    public void Update(string name, string? description)
+    {
+        Name = name;
+        Description = description;
+    }
 }

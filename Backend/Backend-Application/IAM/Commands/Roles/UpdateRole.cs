@@ -18,6 +18,8 @@ public sealed class UpdateRoleCommandHandler(IRoleRepository roleRepository)
         if (role is null)
             return Result.Failure(Error.NotFound("role.not_found", "Role not found."));
 
+        role.Update(request.Name, request.Description);
+        roleRepository.Update(role);
         return Result.Success();
     }
 }

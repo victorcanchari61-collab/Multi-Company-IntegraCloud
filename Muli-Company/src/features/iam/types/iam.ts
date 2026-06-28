@@ -1,6 +1,3 @@
-// Tipos del feature IAM (administración). Espejan los DTOs del backend.
-// Referencia del modelo: doc/sistemas/iam.md
-
 export interface PagedResult<T> {
   items: T[]
   total: number
@@ -36,10 +33,37 @@ export interface User {
   createdAt: string
 }
 
+export interface UserDetail {
+  id: string
+  email: string
+  fullName: string
+  status: number
+  createdAt: string
+  roles: UserRoleResult[]
+}
+
+export interface UserRoleResult {
+  roleId: string
+  roleName: string
+}
+
 export interface Role {
   id: string
   name: string
   description: string | null
+}
+
+export interface RoleDetail {
+  id: string
+  name: string
+  description: string | null
+  permissions: PermissionResult[]
+}
+
+export interface PermissionResult {
+  id: string
+  key: string
+  description: string
 }
 
 export interface Module {
@@ -48,13 +72,19 @@ export interface Module {
   name: string
 }
 
+export interface CompanyModules {
+  companyId: string
+  grantedModules: Module[]
+  availableModules: Module[]
+}
+
 export interface PermissionNode {
   id: string
   key: string
   description: string
 }
 
-// ---- Requests (payloads de los Commands) ----
+// ---- Requests ----
 
 export interface CreateCompanyRequest {
   name: string
@@ -78,7 +108,22 @@ export interface CreateUserRequest {
   password: string
 }
 
+export interface UpdateUserRequest {
+  fullName: string
+  email: string
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
+}
+
 export interface CreateRoleRequest {
+  name: string
+  description?: string | null
+}
+
+export interface UpdateRoleRequest {
   name: string
   description?: string | null
 }

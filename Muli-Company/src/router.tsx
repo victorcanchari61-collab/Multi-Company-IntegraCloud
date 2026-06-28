@@ -11,8 +11,11 @@ import { AppShell } from '@/components/layout/AppShell'
 import LoginPage from '@/features/auth/pages/LoginPage'
 import DashboardPage from '@/features/dashboard/pages/DashboardPage'
 import CompaniesPage from '@/features/iam/pages/CompaniesPage'
+import CompanyDetailPage from '@/features/iam/pages/CompanyDetailPage'
 import UsersPage from '@/features/iam/pages/UsersPage'
 import RolesPage from '@/features/iam/pages/RolesPage'
+import RoleDetailPage from '@/features/iam/pages/RoleDetailPage'
+import ProfilePage from '@/features/iam/pages/ProfilePage'
 
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 
@@ -25,7 +28,6 @@ const loginRoute = createRoute({
   },
 })
 
-// Layout protegido: exige sesión. Los hijos se renderizan dentro del AppShell.
 const protectedRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'protected',
@@ -47,6 +49,12 @@ const companiesRoute = createRoute({
   component: CompaniesPage,
 })
 
+const companyDetailRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: ROUTES.COMPANY_DETAIL,
+  component: CompanyDetailPage,
+})
+
 const usersRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.USERS,
@@ -59,9 +67,29 @@ const rolesRoute = createRoute({
   component: RolesPage,
 })
 
+const roleDetailRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: ROUTES.ROLE_DETAIL,
+  component: RoleDetailPage,
+})
+
+const profileRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: ROUTES.PROFILE,
+  component: ProfilePage,
+})
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
-  protectedRoute.addChildren([dashboardRoute, companiesRoute, usersRoute, rolesRoute]),
+  protectedRoute.addChildren([
+    dashboardRoute,
+    companiesRoute,
+    companyDetailRoute,
+    usersRoute,
+    rolesRoute,
+    roleDetailRoute,
+    profileRoute,
+  ]),
 ])
 
 export const router = createRouter({ routeTree, defaultPreload: 'intent' })

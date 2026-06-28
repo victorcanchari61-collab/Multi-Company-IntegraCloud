@@ -1,15 +1,18 @@
 import { useMemo } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { ApiError } from '@/lib/api'
+
 import { ENTITY_STATUS } from '@/lib/constants'
 import { Can } from '@/features/auth/components/Can'
 import { DataTable } from '@/components/data-table/DataTable'
+import { ApiError } from '@/lib/api'
 import { useCompanies, useSetCompanyStatus } from '../queries/useCompanies'
 import { getCompanyColumns } from '../components/companies.columns'
 import { CompanyFormDialog } from '../components/CompanyFormDialog'
 import type { Company } from '../types/iam'
 
 export default function CompaniesPage() {
+  const navigate = useNavigate()
   const { data, isLoading } = useCompanies({ page: 1, size: 50 })
   const setStatus = useSetCompanyStatus()
 
@@ -23,9 +26,14 @@ export default function CompaniesPage() {
     )
 
   const columns = useMemo(
-    () => getCompanyColumns({ pending: setStatus.isPending, onToggleStatus }),
+    () =>
+      getCompanyColumns({
+        pending: setStatus.isPending,
+        onToggleStatus,
+        onViewDetail: (company) => navigate({ to: '/iam/companies/$companyId', params: { companyId: company.id } }),
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [setStatus.isPending],
+    [setStatus.isPending, navigate],
   )
 
   return (

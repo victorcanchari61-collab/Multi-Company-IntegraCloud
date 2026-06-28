@@ -37,4 +37,15 @@ public sealed class User : AggregateRoot
 
     public void Suspend() => Status = 2;
     public void Activate() => Status = 1;
+
+    public void UpdateProfile(string fullName, string email)
+    {
+        FullName = fullName;
+        Email = email;
+    }
+
+    public void ChangePassword(string passwordHash)
+    {
+        PasswordHash = passwordHash;
+    }
 }

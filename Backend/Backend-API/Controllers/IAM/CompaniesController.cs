@@ -47,6 +47,13 @@ public sealed class CompaniesController(IMediator mediator, TenantContext tenant
         return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
     }
 
+    [HttpGet("{id:guid}/modules")]
+    public async Task<IActionResult> GetModules(Guid id, CancellationToken ct)
+    {
+        var result = await mediator.Send(new GetCompanyModulesQuery(id), ct);
+        return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
+    }
+
     [HttpPost("{id:guid}/modules")]
     public async Task<IActionResult> GrantModules(Guid id, GrantCompanyModuleAccessCommand command, CancellationToken ct)
     {
@@ -65,6 +72,7 @@ public sealed class CompaniesController(IMediator mediator, TenantContext tenant
     {
         ErrorType.NotFound => NotFound(new { error.Code, error.Message }),
         ErrorType.Conflict => Conflict(new { error.Code, error.Message }),
+        ErrorType.Unauthorized => Unauthorized(new { error.Code, error.Message }),
         _ => BadRequest(new { error.Code, error.Message }),
     };
 }

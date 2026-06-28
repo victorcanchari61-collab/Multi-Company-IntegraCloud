@@ -19,7 +19,7 @@ public sealed class AssignPermissionsToRoleCommandHandler(
 {
     public async Task<Result> Handle(AssignPermissionsToRoleCommand request, CancellationToken ct)
     {
-        var role = await roleRepository.GetByIdAsync(request.RoleId, ct);
+        var role = await roleRepository.GetByIdWithPermissionsAsync(request.RoleId, ct);
         if (role is null)
             return Result.Failure(Error.NotFound("role.not_found", "Role not found."));
 
@@ -40,6 +40,7 @@ public sealed class AssignPermissionsToRoleCommandHandler(
             if (!role.RolePermissions.Any(rp => rp.PermissionId == permissionId))
             {
                 var rolePermission = new RolePermission(request.RoleId, permissionId);
+                role.RolePermissions.Add(rolePermission);
             }
         }
 

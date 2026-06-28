@@ -2,26 +2,42 @@
 @import "tw-animate-css";
 
 @theme inline {
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.145 0 0);
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.145 0 0);
-  --color-popover: oklch(1 0 0);
-  --color-popover-foreground: oklch(0.145 0 0);
-  --color-primary: oklch(0.205 0 0);
-  --color-primary-foreground: oklch(0.985 0 0);
-  --color-secondary: oklch(0.97 0 0);
-  --color-secondary-foreground: oklch(0.205 0 0);
-  --color-muted: oklch(0.97 0 0);
-  --color-muted-foreground: oklch(0.556 0 0);
-  --color-accent: oklch(0.97 0 0);
-  --color-accent-foreground: oklch(0.205 0 0);
-  --color-destructive: oklch(0.577 0.245 27.325);
-  --color-destructive-foreground: oklch(0.985 0 0);
-  --color-border: oklch(0.922 0 0);
-  --color-input: oklch(0.922 0 0);
-  --color-ring: oklch(0.708 0 0);
+  /* Paleta "Spacer" — azul royal sobre superficies claras.
+     Todos los componentes shadcn heredan estos tokens (bg-primary, text-primary, ring, …). */
+  --color-background: #eef2f7;
+  --color-foreground: #1e293b;
+  --color-card: #ffffff;
+  --color-card-foreground: #1e293b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1e293b;
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e8f1ff;
+  --color-secondary-foreground: #1e3a8a;
+  --color-muted: #f1f5fb;
+  --color-muted-foreground: #94a3b8;
+  --color-accent: #3b82f6;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #d4ddec;
+  --color-input: #d4ddec;
+  --color-ring: #2563eb;
   --radius: 0.625rem;
+
+  /* Marca: tonos del degradado del panel azul, reutilizables por cualquier componente. */
+  --color-brand-from: #1e3a8a;
+  --color-brand-via: #2563eb;
+  --color-brand-to: #3b82f6;
+}
+
+/* Degradado de marca + utilidad reutilizable (.bg-brand-gradient). */
+:root {
+  --brand-gradient: linear-gradient(160deg, #1e3a8a 0%, #2563eb 48%, #3b82f6 100%);
+}
+
+@utility bg-brand-gradient {
+  background-image: var(--brand-gradient);
 }
 
 @theme inline {

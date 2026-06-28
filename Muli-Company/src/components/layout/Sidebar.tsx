@@ -5,6 +5,7 @@ import {
   ChevronsRight,
   LayoutDashboard,
   ShieldCheck,
+  UserCircle,
   Users,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -26,6 +27,7 @@ const NAV: NavItem[] = [
   { to: ROUTES.COMPANIES, label: 'Empresas', icon: Building2, permission: 'iam.companies.read' },
   { to: ROUTES.USERS, label: 'Usuarios', icon: Users, permission: 'iam.users.read' },
   { to: ROUTES.ROLES, label: 'Roles', icon: ShieldCheck, permission: 'iam.roles.read' },
+  { to: ROUTES.PROFILE, label: 'Mi perfil', icon: UserCircle },
 ]
 
 export function Sidebar() {
@@ -39,7 +41,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        'flex shrink-0 flex-col overflow-hidden bg-primary text-primary-foreground transition-all duration-300 ease-in-out',
+        'flex shrink-0 flex-col overflow-hidden bg-[#0b4c8c] text-white transition-all duration-300 ease-in-out',
         hidden ? 'w-0' : collapsed ? 'w-16' : 'w-47',
       )}
     >

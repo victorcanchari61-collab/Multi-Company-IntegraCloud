@@ -1,4 +1,5 @@
 using Backend.Application.IAM.Commands.Roles;
+using Backend.Application.IAM.Queries.Roles;
 using Backend.Application.IAM.Queries.Users;
 using Backend.SharedKernel;
 using Backend_API.Middleware;
@@ -25,6 +26,27 @@ public sealed class RolesController(IMediator mediator, TenantContext tenantCont
         return Ok(result.Value);
     }
 
+    [HttpGet("{roleId:guid}")]
+    public async Task<IActionResult> GetById(Guid companyId, Guid roleId, CancellationToken ct)
+    {
+        var result = await mediator.Send(new GetRoleByIdQuery(roleId), ct);
+        return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
+    }
+
+    [HttpPut("{roleId:guid}")]
+    public async Task<IActionResult> Update(Guid companyId, Guid roleId, UpdateRoleCommand command, CancellationToken ct)
+    {
+        var result = await mediator.Send(command with { RoleId = roleId }, ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
+    [HttpDelete("{roleId:guid}")]
+    public async Task<IActionResult> Delete(Guid companyId, Guid roleId, CancellationToken ct)
+    {
+        var result = await mediator.Send(new DeleteRoleCommand(roleId), ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
     [HttpPost("{roleId:guid}/permissions")]
     public async Task<IActionResult> AssignPermissions(Guid companyId, Guid roleId,
         AssignPermissionsToRoleCommand command, CancellationToken ct)
@@ -37,6 +59,7 @@ public sealed class RolesController(IMediator mediator, TenantContext tenantCont
     {
         ErrorType.NotFound => NotFound(new { error.Code, error.Message }),
         ErrorType.Forbidden => Forbid(),
+        ErrorType.Conflict => Conflict(new { error.Code, error.Message }),
         _ => BadRequest(new { error.Code, error.Message }),
     };
 }

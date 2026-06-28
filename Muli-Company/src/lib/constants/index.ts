@@ -1,6 +1,3 @@
-// Constantes centralizadas (ver FRONTEND_ARCHITECTURE.md §10).
-// La URL de la API NO vive aquí: viene de la config de entorno (src/config/env.ts).
-
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
@@ -8,8 +5,10 @@ export const API_ENDPOINTS = {
     LOGOUT: '/auth/logout',
     ME: '/auth/me',
     MY_PERMISSIONS: '/auth/me/permissions',
+    CHANGE_PASSWORD: '/auth/me/change-password',
   },
   COMPANIES: '/companies',
+  PERMISSIONS: '/permissions',
   company: (companyId: string) => `/companies/${companyId}`,
   companyModules: (companyId: string) => `/companies/${companyId}/modules`,
   companyUsers: (companyId: string) => `/companies/${companyId}/users`,
@@ -17,7 +16,15 @@ export const API_ENDPOINTS = {
     `/companies/${companyId}/users/${userId}`,
   companyUserRoles: (companyId: string, userId: string) =>
     `/companies/${companyId}/users/${userId}/roles`,
+  companyUserChangePassword: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/change-password`,
+  companyUserDeactivate: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/deactivate`,
+  companyUserReactivate: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/reactivate`,
   companyRoles: (companyId: string) => `/companies/${companyId}/roles`,
+  companyRole: (companyId: string, roleId: string) =>
+    `/companies/${companyId}/roles/${roleId}`,
   companyRolePermissions: (companyId: string, roleId: string) =>
     `/companies/${companyId}/roles/${roleId}/permissions`,
 } as const
@@ -27,7 +34,6 @@ export const ROLES = {
   ADMIN: 'admin',
 } as const
 
-// Estados (espejan los smallint del backend: ver doc/sistemas/iam.md §4)
 export const ENTITY_STATUS = {
   ACTIVE: 1,
   SUSPENDED: 2,
@@ -37,8 +43,12 @@ export const ROUTES = {
   LOGIN: '/login',
   DASHBOARD: '/',
   COMPANIES: '/iam/companies',
+  COMPANY_DETAIL: '/iam/companies/$companyId',
   USERS: '/iam/users',
+  USER_DETAIL: '/iam/users/$userId',
   ROLES: '/iam/roles',
+  ROLE_DETAIL: '/iam/roles/$roleId',
+  PROFILE: '/profile',
 } as const
 
 export const STORAGE_KEYS = {

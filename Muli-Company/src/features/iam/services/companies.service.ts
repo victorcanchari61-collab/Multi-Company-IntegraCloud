@@ -2,6 +2,7 @@ import { api } from '@/lib/api'
 import { API_ENDPOINTS } from '@/lib/constants'
 import type {
   Company,
+  CompanyModules,
   CreateCompanyRequest,
   ListParams,
   PagedResult,
@@ -27,6 +28,9 @@ export const getCompanies = (params: ListParams = {}): Promise<PagedResult<Compa
 export const getCompany = (id: string): Promise<Company> =>
   api.get<Company>(API_ENDPOINTS.company(id))
 
+export const getCompanyModules = (companyId: string): Promise<CompanyModules> =>
+  api.get<CompanyModules>(API_ENDPOINTS.companyModules(companyId))
+
 export const createCompany = (data: CreateCompanyRequest): Promise<string> =>
   api.post<string>(API_ENDPOINTS.COMPANIES, data)
 
@@ -41,7 +45,13 @@ export const grantModules = (
   moduleIds: string[],
   grantedBy: string,
 ): Promise<void> =>
-  api.post<void>(API_ENDPOINTS.companyModules(companyId), { moduleIds, grantedBy })
+  api.post<void>(API_ENDPOINTS.companyModules(companyId), {
+    moduleIds,
+    grantedBy,
+  })
 
-export const revokeModules = (companyId: string, moduleIds: string[]): Promise<void> =>
+export const revokeModules = (
+  companyId: string,
+  moduleIds: string[],
+): Promise<void> =>
   api.delete<void>(API_ENDPOINTS.companyModules(companyId), { moduleIds })

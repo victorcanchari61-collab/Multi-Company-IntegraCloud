@@ -8,13 +8,17 @@ import { StatusBadge } from './StatusBadge'
 interface Options {
   pending: boolean
   onDeactivate: (user: User) => void
+  onReactivate: (user: User) => void
   onAssignRoles: (user: User) => void
+  onChangePassword: (user: User) => void
 }
 
 export function getUserColumns({
   pending,
   onDeactivate,
+  onReactivate,
   onAssignRoles,
+  onChangePassword,
 }: Options): ColumnDef<User, unknown>[] {
   return [
     {
@@ -45,21 +49,38 @@ export function getUserColumns({
       meta: { label: 'Acciones' },
       cell: ({ row }) => {
         const user = row.original
+        const isActive = user.status === ENTITY_STATUS.ACTIVE
         return (
-          <div className="flex justify-end gap-2">
+          <div className="flex justify-end gap-1">
             <Can permission="iam.users.assign_roles">
               <Button variant="outline" size="sm" onClick={() => onAssignRoles(user)}>
                 Roles
               </Button>
             </Can>
             <Can permission="iam.users.update">
-              <Button
-                variant="ghost"
-                size="sm"
-                disabled={pending || user.status !== ENTITY_STATUS.ACTIVE}
-                onClick={() => onDeactivate(user)}
-              >
-                Desactivar
+              {isActive ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  disabled={pending}
+                  onClick={() => onDeactivate(user)}
+                >
+                  Desactivar
+                </Button>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={pending}
+                  onClick={() => onReactivate(user)}
+                >
+                  Reactivar
+                </Button>
+              )}
+            </Can>
+            <Can permission="iam.users.update">
+              <Button variant="ghost" size="sm" onClick={() => onChangePassword(user)}>
+                Password
               </Button>
             </Can>
           </div>

@@ -13,4 +13,10 @@ internal sealed class UserRepository(IamDbContext context)
 
     public async Task<List<User>> GetByCompanyIdAsync(Guid companyId, CancellationToken ct = default)
         => await Context.Users.Where(u => u.CompanyId == companyId).ToListAsync(ct);
+
+    public async Task<User?> GetByIdWithRolesAsync(Guid userId, CancellationToken ct = default)
+        => await Context.Users
+            .Include(u => u.UserRoles)
+                .ThenInclude(ur => ur.Role)
+            .FirstOrDefaultAsync(u => u.Id == userId, ct);
 }

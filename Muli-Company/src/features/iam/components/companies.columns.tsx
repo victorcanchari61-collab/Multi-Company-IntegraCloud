@@ -8,11 +8,13 @@ import { StatusBadge } from './StatusBadge'
 interface Options {
   pending: boolean
   onToggleStatus: (company: Company) => void
+  onViewDetail: (company: Company) => void
 }
 
 export function getCompanyColumns({
   pending,
   onToggleStatus,
+  onViewDetail,
 }: Options): ColumnDef<Company, unknown>[] {
   return [
     {
@@ -20,7 +22,14 @@ export function getCompanyColumns({
       accessorKey: 'name',
       header: 'Empresa',
       meta: { label: 'Empresa', hideOnMobile: true },
-      cell: ({ row }) => <span className="font-medium">{row.original.name}</span>,
+      cell: ({ row }) => (
+        <button
+          className="font-medium hover:underline text-left"
+          onClick={() => onViewDetail(row.original)}
+        >
+          {row.original.name}
+        </button>
+      ),
     },
     {
       id: 'slug',
@@ -35,7 +44,7 @@ export function getCompanyColumns({
       header: 'RUC',
       meta: { label: 'RUC' },
       cell: ({ row }) => (
-        <span className="text-muted-foreground">{row.original.taxId ?? '—'}</span>
+        <span className="text-muted-foreground">{row.original.taxId ?? '\u2014'}</span>
       ),
     },
     {
@@ -54,16 +63,23 @@ export function getCompanyColumns({
         const company = row.original
         const active = company.status === ENTITY_STATUS.ACTIVE
         return (
-          <Can permission="iam.companies.update">
-            <Button
-              variant={active ? 'ghost' : 'outline'}
-              size="sm"
-              disabled={pending}
-              onClick={() => onToggleStatus(company)}
-            >
-              {active ? 'Suspender' : 'Activar'}
-            </Button>
-          </Can>
+          <div className="flex justify-end gap-2">
+            <Can permission="iam.companies.view">
+              <Button variant="outline" size="sm" onClick={() => onViewDetail(company)}>
+                Detalle
+              </Button>
+            </Can>
+            <Can permission="iam.companies.update">
+              <Button
+                variant={active ? 'ghost' : 'outline'}
+                size="sm"
+                disabled={pending}
+                onClick={() => onToggleStatus(company)}
+              >
+                {active ? 'Suspender' : 'Activar'}
+              </Button>
+            </Can>
+          </div>
         )
       },
     },

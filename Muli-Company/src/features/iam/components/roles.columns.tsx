@@ -1,15 +1,17 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Can } from '@/features/auth/components/Can'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, ShieldCheck, Trash2 } from 'lucide-react'
 import type { Role } from '../types/iam'
 
 interface Options {
+  onPermissions: (role: Role) => void
   onEdit: (role: Role) => void
   onDelete: (role: Role) => void
 }
 
 export function getRoleColumns({
+  onPermissions,
   onEdit,
   onDelete,
 }: Options): ColumnDef<Role, unknown>[] {
@@ -41,6 +43,17 @@ export function getRoleColumns({
         const role = row.original
         return (
           <div className="flex justify-end gap-1">
+            <Can permission="iam.roles.assign_permissions">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                title="Permisos"
+                onClick={() => onPermissions(role)}
+              >
+                <ShieldCheck className="text-primary" />
+                <span className="sr-only">Permisos</span>
+              </Button>
+            </Can>
             <Can permission="iam.roles.update">
               <Button variant="ghost" size="icon-sm" title="Editar" onClick={() => onEdit(role)}>
                 <Pencil className="size-4 text-amber-500" />

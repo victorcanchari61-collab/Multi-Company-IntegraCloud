@@ -30,4 +30,17 @@ public sealed class Role : AggregateRoot
         Name = name;
         Description = description;
     }
+
+    /// <summary>Reemplaza el conjunto de permisos del rol (agrega los nuevos, quita los que ya no están).
+    /// Requiere que RolePermissions esté cargada.</summary>
+    public void SetPermissions(IEnumerable<Guid> permissionIds)
+    {
+        var target = permissionIds.Distinct().ToHashSet();
+
+        foreach (var rp in RolePermissions.Where(rp => !target.Contains(rp.PermissionId)).ToList())
+            RolePermissions.Remove(rp);
+
+        foreach (var permissionId in target.Where(id => RolePermissions.All(rp => rp.PermissionId != id)))
+            RolePermissions.Add(new RolePermission(Id, permissionId));
+    }
 }

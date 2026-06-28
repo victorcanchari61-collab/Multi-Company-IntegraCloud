@@ -14,7 +14,6 @@ import CompaniesPage from '@/features/iam/pages/CompaniesPage'
 import CompanyDetailPage from '@/features/iam/pages/CompanyDetailPage'
 import UsersPage from '@/features/iam/pages/UsersPage'
 import RolesPage from '@/features/iam/pages/RolesPage'
-import RoleDetailPage from '@/features/iam/pages/RoleDetailPage'
 import PermissionsPage from '@/features/iam/pages/PermissionsPage'
 import ProfilePage from '@/features/iam/pages/ProfilePage'
 import UnitsPage from '@/features/erp/pages/UnitsPage'
@@ -78,13 +77,6 @@ const rolesRoute = createRoute({
   validateSearch: validateCompanyId,
 })
 
-const roleDetailRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: ROUTES.ROLE_DETAIL,
-  component: RoleDetailPage,
-  validateSearch: validateCompanyId,
-})
-
 const permissionsRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.PERMISSIONS,
@@ -112,7 +104,6 @@ const routeTree = rootRoute.addChildren([
     companyDetailRoute,
     usersRoute,
     rolesRoute,
-    roleDetailRoute,
     permissionsRoute,
     profileRoute,
     erpUnitsRoute,

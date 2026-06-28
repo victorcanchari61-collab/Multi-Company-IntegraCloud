@@ -267,3 +267,11 @@ C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuilduser\Backend-API.runtimeconfig.json
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuilduser\Backend-API.dll
 C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuilduser\Backend-API.pdb
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\appsettings.Development.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\appsettings.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend-API.staticwebassets.endpoints.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend-API.exe
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend-API.deps.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend-API.runtimeconfig.json
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend-API.dll
+C:\Users\victorraul\AppData\Local\Temp\claude\d--Multi-Company-IntegraCloud\78e3c930-9eeb-4d4c-afd6-967f28a4ea27\scratchpad\apibuildrole\Backend-API.pdb

@@ -108,6 +108,10 @@ export function UserFormDialog({ companyId, user, onClose }: Props) {
     if (detail) setSelectedRoles(new Set(detail.roles.map((r) => r.roleId)))
   }, [detail])
 
+  // En edición no se puede guardar hasta que los roles actuales estén cargados
+  // (evita que un guardado prematuro borre los roles del usuario).
+  const rolesReady = !isEdit || detail !== undefined
+
   const createForm = useForm<CreateFormData>({
     resolver: zodResolver(createSchema),
     defaultValues: { fullName: '', email: '', password: '' },
@@ -222,8 +226,8 @@ export function UserFormDialog({ companyId, user, onClose }: Props) {
                 <Button type="button" variant="outline" onClick={onClose}>
                   Cancelar
                 </Button>
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Guardando…' : 'Guardar'}
+                <Button type="submit" disabled={isPending || !rolesReady}>
+                  {isPending ? 'Guardando…' : !rolesReady ? 'Cargando…' : 'Guardar'}
                 </Button>
               </DialogFooter>
             </form>

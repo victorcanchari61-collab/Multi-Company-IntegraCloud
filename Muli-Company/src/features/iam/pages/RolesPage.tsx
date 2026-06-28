@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { X, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -19,6 +18,7 @@ import { useActiveCompanyId } from '../hooks/useActiveCompanyId'
 import { useRoles, useDeleteRole } from '../queries/useRoles'
 import { getRoleColumns } from '../components/roles.columns'
 import { RoleFormDialog } from '../components/RoleFormDialog'
+import { RolePermissionsDialog } from '../components/RolePermissionsDialog'
 import type { Role } from '../types/iam'
 
 export default function RolesPage() {
@@ -64,9 +64,9 @@ function RolesContent({
   search: string
   setSearch: (s: string) => void
 }) {
-  const navigate = useNavigate()
   const { data: roles, isLoading } = useRoles(companyId)
   const deleteRole = useDeleteRole(companyId)
+  const [permsTarget, setPermsTarget] = useState<Role | null>(null)
 
   const filtered = useMemo(() => {
     if (!roles) return []
@@ -94,6 +94,7 @@ function RolesContent({
   const columns = useMemo(
     () =>
       getRoleColumns({
+        onPermissions: setPermsTarget,
         onEdit: setEditTarget,
         onDelete: setDeleteTarget,
       }),
@@ -138,9 +139,7 @@ function RolesContent({
         loading={isLoading}
         getRowId={(r) => r.id}
         mobileTitle={(r) => r.name}
-        onRowClick={(role) => {
-          navigate({ to: '/iam/roles/$roleId', params: { roleId: role.id }, search: { companyId } })
-        }}
+        onRowClick={(role) => setPermsTarget(role)}
         emptyMessage={
           search
             ? 'No hay roles que coincidan con la b&uacute;squeda.'
@@ -182,6 +181,12 @@ function RolesContent({
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <RolePermissionsDialog
+        companyId={companyId}
+        role={permsTarget}
+        onClose={() => setPermsTarget(null)}
+      />
     </div>
   )
 }

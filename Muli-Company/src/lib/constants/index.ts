@@ -13,6 +13,11 @@ export const API_ENDPOINTS = {
     ruc: (ruc: string) => `/lookup/ruc/${ruc}`,
     dni: (dni: string) => `/lookup/dni/${dni}`,
   },
+  ERP: {
+    units: '/erp/units',
+    unit: (id: string) => `/erp/units/${id}`,
+    unitStatus: (id: string) => `/erp/units/${id}/status`,
+  },
   company: (companyId: string) => `/companies/${companyId}`,
   companyModules: (companyId: string) => `/companies/${companyId}/modules`,
   companyUsers: (companyId: string) => `/companies/${companyId}/users`,
@@ -53,6 +58,7 @@ export const ROUTES = {
   ROLES: '/iam/roles',
   ROLE_DETAIL: '/iam/roles/$roleId',
   PROFILE: '/profile',
+  ERP_UNITS: '/erp/unidades',
 } as const
 
 export const STORAGE_KEYS = {

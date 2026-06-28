@@ -24,7 +24,7 @@ import { useAllPermissions } from '../queries/usePermissions'
 import { Can } from '@/features/auth/components/Can'
 
 export default function RoleDetailPage() {
-  const { roleId } = useParams({ from: '/iam/roles/$roleId' as any })
+  const { roleId } = useParams({ strict: false }) as { roleId: string }
   const companyId = useActiveCompanyId()
   const navigate = useNavigate()
 

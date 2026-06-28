@@ -44,6 +44,8 @@ public static class DependencyInjection
         services.AddScoped<ICompanyRepository, CompanyRepository>();
         services.AddScoped<ICompanyModuleAccessRepository, CompanyModuleAccessRepository>();
         services.AddScoped<ICompanyBillingCredentialRepository, CompanyBillingCredentialRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IUnitOfMeasureRepository,
+            Backend.Infrastructure.ERP.Repositories.UnitOfMeasureRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

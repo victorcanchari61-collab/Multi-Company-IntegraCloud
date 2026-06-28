@@ -4,6 +4,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   LayoutDashboard,
+  Ruler,
   ShieldCheck,
   UserCircle,
   Users,
@@ -19,24 +20,32 @@ interface NavItem {
   to: string
   label: string
   icon: LucideIcon
-  permission?: string
 }
 
-const NAV: NavItem[] = [
+// Menú del DUEÑO DEL SISTEMA: administra la plataforma (empresas, licencias…).
+const OWNER_NAV: NavItem[] = [
   { to: ROUTES.DASHBOARD, label: 'Inicio', icon: LayoutDashboard },
-  { to: ROUTES.COMPANIES, label: 'Empresas', icon: Building2, permission: 'iam.companies.read' },
-  { to: ROUTES.USERS, label: 'Usuarios', icon: Users, permission: 'iam.users.read' },
-  { to: ROUTES.ROLES, label: 'Roles', icon: ShieldCheck, permission: 'iam.roles.read' },
+  { to: ROUTES.COMPANIES, label: 'Empresas', icon: Building2 },
+  { to: ROUTES.PROFILE, label: 'Mi perfil', icon: UserCircle },
+]
+
+// Menú de los USUARIOS DE UNA EMPRESA: operan su propia empresa.
+const COMPANY_NAV: NavItem[] = [
+  { to: ROUTES.DASHBOARD, label: 'Inicio', icon: LayoutDashboard },
+  { to: ROUTES.ERP_UNITS, label: 'Unidades', icon: Ruler },
+  { to: ROUTES.USERS, label: 'Usuarios', icon: Users },
+  { to: ROUTES.ROLES, label: 'Roles', icon: ShieldCheck },
   { to: ROUTES.PROFILE, label: 'Mi perfil', icon: UserCircle },
 ]
 
 export function Sidebar() {
-  const { can, isOwner } = usePermissions()
+  const { isOwner } = usePermissions()
   const collapsed = useSidebarStore((s) => s.collapsed)
   const hidden = useSidebarStore((s) => s.hidden)
   const toggleCollapsed = useSidebarStore((s) => s.toggleCollapsed)
 
-  const items = NAV.filter((item) => !item.permission || isOwner || can(item.permission))
+  // Dos experiencias separadas: dueño del sistema vs. usuario de empresa.
+  const items = isOwner ? OWNER_NAV : COMPANY_NAV
 
   return (
     <aside

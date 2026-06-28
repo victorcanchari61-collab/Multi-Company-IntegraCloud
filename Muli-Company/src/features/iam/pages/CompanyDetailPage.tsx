@@ -11,7 +11,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { Can } from '@/features/auth/components/Can'
 
 export default function CompanyDetailPage() {
-  const { companyId } = useParams({ from: '/iam/companies/$companyId' as any })
+  const { companyId } = useParams({ strict: false }) as { companyId: string }
   const navigate = useNavigate()
   const user = useAuthStore((s) => s.user)
   const { data: company, isLoading: loadingCompany } = useCompany(companyId)

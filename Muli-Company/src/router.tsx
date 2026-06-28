@@ -16,6 +16,7 @@ import UsersPage from '@/features/iam/pages/UsersPage'
 import RolesPage from '@/features/iam/pages/RolesPage'
 import RoleDetailPage from '@/features/iam/pages/RoleDetailPage'
 import ProfilePage from '@/features/iam/pages/ProfilePage'
+import UnitsPage from '@/features/erp/pages/UnitsPage'
 
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 
@@ -79,6 +80,12 @@ const profileRoute = createRoute({
   component: ProfilePage,
 })
 
+const erpUnitsRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: ROUTES.ERP_UNITS,
+  component: UnitsPage,
+})
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
   protectedRoute.addChildren([
@@ -89,6 +96,7 @@ const routeTree = rootRoute.addChildren([
     rolesRoute,
     roleDetailRoute,
     profileRoute,
+    erpUnitsRoute,
   ]),
 ])
 

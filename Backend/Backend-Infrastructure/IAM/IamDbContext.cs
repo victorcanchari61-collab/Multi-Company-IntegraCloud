@@ -1,3 +1,4 @@
+using Backend.Domain.ERP.Entities;
 using Backend.Domain.IAM.Entities;
 using Backend.Infrastructure.IAM.Configurations;
 using Backend.SharedKernel;
@@ -21,6 +22,9 @@ public sealed class IamDbContext : DbContext, IUnitOfWork
     public DbSet<RolePermission> RolePermissions => Set<RolePermission>();
     public DbSet<UserRole> UserRoles => Set<UserRole>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+    // ── ERP / Maestros ──
+    public DbSet<UnitOfMeasure> UnitsOfMeasure => Set<UnitOfMeasure>();
 
     public IamDbContext(DbContextOptions<IamDbContext> options) : base(options) { }
 

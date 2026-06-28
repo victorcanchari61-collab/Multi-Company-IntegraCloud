@@ -90,6 +90,7 @@ export interface CreateCompanyRequest {
   name: string
   slug: string
   legalName?: string | null
+  logoUrl?: string | null
   email?: string | null
   phone?: string | null
   website?: string | null
@@ -100,6 +101,13 @@ export interface CreateCompanyRequest {
   taxpayerType?: number
   accountingRequired?: boolean
   settlementCurrency?: string
+  // Credenciales de facturación electrónica (se guardan cifradas en secrets.*)
+  solUser?: string | null
+  solPassword?: string | null
+  certificatePassword?: string | null
+  certificateFileName?: string | null
+  /** Contenido del .pem/.pfx en base64 (sin el prefijo data:). */
+  certificateContent?: string | null
 }
 
 export interface CreateUserRequest {

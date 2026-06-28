@@ -82,7 +82,7 @@ export default function PermissionsPage() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Permisos</h1>
           <p className="text-sm text-muted-foreground">
-            Catálogo de todos los permisos disponibles en la plataforma.
+            Permisos disponibles para asignar a los roles.
           </p>
         </div>
       </div>

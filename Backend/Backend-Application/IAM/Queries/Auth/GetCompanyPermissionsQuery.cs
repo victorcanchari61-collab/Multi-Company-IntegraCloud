@@ -10,6 +10,8 @@ public sealed class GetCompanyPermissionsQueryHandler(
     IPermissionRepository permissionRepository,
     IUserRepository userRepository,
     IRoleRepository roleRepository,
+    IModuleRepository moduleRepository,
+    ISystemRepository systemRepository,
     ICompanyModuleAccessRepository accessRepository)
     : IRequestHandler<GetCompanyPermissionsQuery, Result<List<string>>>
 {
@@ -22,8 +24,22 @@ public sealed class GetCompanyPermissionsQueryHandler(
 
         var companyId = user.CompanyId ?? request.CompanyId;
         var userRoles = await roleRepository.GetByCompanyIdAsync(companyId, ct);
-        var permittedModuleIds = (await accessRepository.GetByCompanyIdAsync(companyId, ct))
-            .Select(a => a.ModuleId)
+
+        var allModules = await moduleRepository.GetAllAsync(ct);
+        var iam = (await systemRepository.GetAllAsync(ct)).FirstOrDefault(s => s.Code == "IAM");
+
+        // Módulos efectivos = IAM base (siempre, sin "companies") + módulos licenciados.
+        // "companies" es solo del dueño → nunca efectivo para una empresa.
+        var baseModuleIds = allModules
+            .Where(m => iam is not null && m.SystemId == iam.Id && m.Code != "companies")
+            .Select(m => m.Id);
+        var grantedModuleIds = (await accessRepository.GetByCompanyIdAsync(companyId, ct))
+            .Select(a => a.ModuleId);
+        var companiesModuleIds = allModules.Where(m => m.Code == "companies").Select(m => m.Id).ToHashSet();
+
+        var permittedModuleIds = baseModuleIds
+            .Concat(grantedModuleIds)
+            .Where(id => !companiesModuleIds.Contains(id))
             .ToHashSet();
 
         var permissionIds = userRoles

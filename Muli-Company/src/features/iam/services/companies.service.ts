@@ -6,6 +6,7 @@ import type {
   CreateCompanyRequest,
   ListParams,
   PagedResult,
+  UpdateCompanyRequest,
 } from '../types/iam'
 
 function queryString(params: Record<string, string | number | undefined>): string {
@@ -33,6 +34,9 @@ export const getCompanyModules = (companyId: string): Promise<CompanyModules> =>
 
 export const createCompany = (data: CreateCompanyRequest): Promise<string> =>
   api.post<string>(API_ENDPOINTS.COMPANIES, data)
+
+export const updateCompany = (id: string, data: UpdateCompanyRequest): Promise<void> =>
+  api.put<void>(API_ENDPOINTS.company(id), data)
 
 export const suspendCompany = (id: string): Promise<void> =>
   api.post<void>(`${API_ENDPOINTS.company(id)}/suspend`)

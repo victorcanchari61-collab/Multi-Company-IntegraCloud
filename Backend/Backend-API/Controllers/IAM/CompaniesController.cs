@@ -33,6 +33,13 @@ public sealed class CompaniesController(IMediator mediator, TenantContext tenant
         return result.IsSuccess ? Ok(result.Value) : ToError(result.Error!.Value);
     }
 
+    [HttpPut("{id:guid}")]
+    public async Task<IActionResult> Update(Guid id, UpdateCompanyCommand command, CancellationToken ct)
+    {
+        var result = await mediator.Send(command with { Id = id }, ct);
+        return result.IsSuccess ? NoContent() : ToError(result.Error!.Value);
+    }
+
     [HttpPost("{id:guid}/suspend")]
     public async Task<IActionResult> Suspend(Guid id, CancellationToken ct)
     {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Infrastructure.IAM;
 
-public sealed class IamDbContext : DbContext
+public sealed class IamDbContext : DbContext, IUnitOfWork
 {
     public DbSet<SystemEntity> Systems => Set<SystemEntity>();
     public DbSet<Module> Modules => Set<Module>();

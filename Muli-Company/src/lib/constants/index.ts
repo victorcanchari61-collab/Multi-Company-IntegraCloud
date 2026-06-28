@@ -9,6 +9,10 @@ export const API_ENDPOINTS = {
   },
   COMPANIES: '/companies',
   PERMISSIONS: '/permissions',
+  LOOKUP: {
+    ruc: (ruc: string) => `/lookup/ruc/${ruc}`,
+    dni: (dni: string) => `/lookup/dni/${dni}`,
+  },
   company: (companyId: string) => `/companies/${companyId}`,
   companyModules: (companyId: string) => `/companies/${companyId}/modules`,
   companyUsers: (companyId: string) => `/companies/${companyId}/users`,

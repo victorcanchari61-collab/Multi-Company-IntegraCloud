@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 
@@ -15,6 +15,7 @@ export default function CompaniesPage() {
   const navigate = useNavigate()
   const { data, isLoading } = useCompanies({ page: 1, size: 50 })
   const setStatus = useSetCompanyStatus()
+  const [editing, setEditing] = useState<Company | null>(null)
 
   const onToggleStatus = (company: Company) =>
     setStatus.mutate(
@@ -31,6 +32,7 @@ export default function CompaniesPage() {
         pending: setStatus.isPending,
         onToggleStatus,
         onViewDetail: (company) => navigate({ to: '/iam/companies/$companyId', params: { companyId: company.id } }),
+        onEdit: setEditing,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [setStatus.isPending, navigate],
@@ -58,6 +60,10 @@ export default function CompaniesPage() {
         mobileTitle={(c) => c.name}
         emptyMessage="No hay empresas registradas."
       />
+
+      {editing && (
+        <CompanyFormDialog company={editing} onClose={() => setEditing(null)} />
+      )}
     </div>
   )
 }

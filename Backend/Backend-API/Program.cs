@@ -2,6 +2,7 @@ using System.Text;
 using Backend.Application.IAM;
 using Backend.Domain.IAM.Services;
 using Backend.Infrastructure.IAM;
+using Backend.Infrastructure.IAM.Services;
 using Backend_API.Middleware;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,14 @@ builder.Services.AddScoped<TenantContext>();
 
 builder.Services.AddIamInfrastructure(builder.Configuration);
 builder.Services.AddIamApplication();
+
+// Proxy de consulta RUC/DNI (apisperu): el token vive aquí, no en el cliente.
+builder.Services.AddHttpClient<IDocumentLookupService, ApisPeruDocumentLookupService>((sp, client) =>
+{
+    var url = sp.GetRequiredService<IConfiguration>()["ApisPeru:Url"]
+        ?? throw new InvalidOperationException("ApisPeru:Url not configured.");
+    client.BaseAddress = new Uri(url.TrimEnd('/') + "/");
+});
 
 var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>() ?? [];
 builder.Services.AddCors(options =>

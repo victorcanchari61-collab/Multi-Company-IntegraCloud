@@ -110,6 +110,22 @@ export interface CreateCompanyRequest {
   certificateContent?: string | null
 }
 
+export interface UpdateCompanyRequest {
+  name: string
+  legalName?: string | null
+  logoUrl?: string | null
+  email?: string | null
+  phone?: string | null
+  website?: string | null
+  address?: string | null
+  taxId?: string | null
+  taxAddress?: string | null
+  economicActivity?: string | null
+  taxpayerType?: number
+  accountingRequired?: boolean
+  settlementCurrency?: string
+}
+
 export interface CreateUserRequest {
   email: string
   fullName: string

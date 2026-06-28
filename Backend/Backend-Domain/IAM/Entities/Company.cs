@@ -71,4 +71,35 @@ public sealed class Company : AggregateRoot
 
     public void Suspend() => Status = 2;
     public void Activate() => Status = 1;
+
+    /// <summary>Actualiza el perfil de la empresa. El slug (subdominio) es inmutable.</summary>
+    public void Update(
+        string name,
+        string? legalName,
+        string? logoUrl,
+        string? email,
+        string? phone,
+        string? website,
+        string? address,
+        string? taxId,
+        string? taxAddress,
+        string? economicActivity,
+        int taxpayerType,
+        bool accountingRequired,
+        string settlementCurrency)
+    {
+        Name = name;
+        LegalName = legalName;
+        LogoUrl = logoUrl;
+        Email = email;
+        Phone = phone;
+        Website = website;
+        Address = address;
+        TaxId = taxId;
+        TaxAddress = taxAddress;
+        EconomicActivity = economicActivity;
+        TaxpayerType = taxpayerType;
+        AccountingRequired = accountingRequired;
+        SettlementCurrency = settlementCurrency;
+    }
 }

@@ -23,6 +23,10 @@ public static class DependencyInjection
             options.UseNpgsql(pgConnection, npgsql =>
                 npgsql.MigrationsAssembly(typeof(IamDbContext).Assembly.FullName)));
 
+        // El DbContext actúa como Unit of Work para el pipeline de comandos.
+        services.AddScoped<Backend.SharedKernel.IUnitOfWork>(
+            sp => sp.GetRequiredService<IamDbContext>());
+
         services.AddSingleton<IConnectionMultiplexer>(
             ConnectionMultiplexer.Connect(new ConfigurationOptions
             {

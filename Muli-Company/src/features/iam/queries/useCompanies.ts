@@ -8,8 +8,9 @@ import {
   grantModules,
   revokeModules,
   suspendCompany,
+  updateCompany,
 } from '../services/companies.service'
-import type { ListParams } from '../types/iam'
+import type { ListParams, UpdateCompanyRequest } from '../types/iam'
 
 export const companyKeys = {
   all: ['companies'] as const,
@@ -42,6 +43,15 @@ export function useCreateCompany() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: createCompany,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: companyKeys.all }),
+  })
+}
+
+export function useUpdateCompany() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: UpdateCompanyRequest }) =>
+      updateCompany(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: companyKeys.all }),
   })
 }

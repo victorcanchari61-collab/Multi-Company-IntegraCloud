@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { toast } from 'sonner'
-import { ImageIcon, Plus, Upload } from 'lucide-react'
+import { ImageIcon, Plus, Search, Upload } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -26,7 +26,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { ApiError } from '@/lib/api'
-import { useCreateCompany } from '../queries/useCompanies'
+import { lookupRuc } from '@/lib/lookup'
+import { useCreateCompany, useUpdateCompany } from '../queries/useCompanies'
+import type { Company } from '../types/iam'
 
 const schema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(150),
@@ -59,27 +61,36 @@ type FormData = z.infer<typeof schema>
 
 const empty = (value?: string) => (value && value.trim() !== '' ? value.trim() : null)
 
-export function CompanyFormDialog() {
+interface Props {
+  /** Si se pasa, el diálogo entra en modo edición (controlado). */
+  company?: Company
+  onClose?: () => void
+}
+
+export function CompanyFormDialog({ company, onClose }: Props = {}) {
+  const isEdit = Boolean(company)
   const [open, setOpen] = useState(false)
-  const { mutate, isPending } = useCreateCompany()
+  const createMut = useCreateCompany()
+  const updateMut = useUpdateCompany()
+  const isPending = createMut.isPending || updateMut.isPending
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: '',
-      slug: '',
-      legalName: '',
-      logoUrl: '',
-      email: '',
-      phone: '',
-      website: '',
-      address: '',
-      taxId: '',
-      taxAddress: '',
-      economicActivity: '',
-      taxpayerType: 2,
-      accountingRequired: false,
-      settlementCurrency: 'PEN',
+      name: company?.name ?? '',
+      slug: company?.slug ?? '',
+      legalName: company?.legalName ?? '',
+      logoUrl: company?.logoUrl ?? '',
+      email: company?.email ?? '',
+      phone: company?.phone ?? '',
+      website: company?.website ?? '',
+      address: company?.address ?? '',
+      taxId: company?.taxId ?? '',
+      taxAddress: company?.taxAddress ?? '',
+      economicActivity: company?.economicActivity ?? '',
+      taxpayerType: company?.taxpayerType ?? 2,
+      accountingRequired: company?.accountingRequired ?? false,
+      settlementCurrency: company?.settlementCurrency ?? 'PEN',
       solUser: '',
       solPassword: '',
       certificatePassword: '',
@@ -92,6 +103,28 @@ export function CompanyFormDialog() {
   const logoInputRef = useRef<HTMLInputElement>(null)
   const certFileName = form.watch('certificateFileName')
   const logoUrl = form.watch('logoUrl')
+  const [rucLoading, setRucLoading] = useState(false)
+
+  const onBuscarRuc = async () => {
+    const ruc = form.getValues('taxId')?.trim()
+    if (!ruc) {
+      toast.error('Ingresa un RUC para consultar')
+      return
+    }
+    setRucLoading(true)
+    try {
+      const data = await lookupRuc(ruc)
+      form.setValue('legalName', data.razonSocial)
+      if (!form.getValues('name')?.trim())
+        form.setValue('name', data.nombreComercial || data.razonSocial)
+      if (data.direccion) form.setValue('taxAddress', data.direccion)
+      toast.success('Datos del RUC cargados')
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : 'No se pudo consultar el RUC')
+    } finally {
+      setRucLoading(false)
+    }
+  }
 
   const onCertificateFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -116,22 +149,44 @@ export function CompanyFormDialog() {
   }
 
   const onSubmit = (data: FormData) => {
-    mutate(
+    // Campos de perfil compartidos por crear y editar (el subdominio no se edita).
+    const profile = {
+      name: data.name,
+      legalName: empty(data.legalName),
+      logoUrl: empty(data.logoUrl),
+      email: empty(data.email),
+      phone: empty(data.phone),
+      website: empty(data.website),
+      address: empty(data.address),
+      taxId: empty(data.taxId),
+      taxAddress: empty(data.taxAddress),
+      economicActivity: empty(data.economicActivity),
+      taxpayerType: data.taxpayerType,
+      accountingRequired: data.accountingRequired,
+      settlementCurrency: data.settlementCurrency,
+    }
+
+    if (isEdit && company) {
+      updateMut.mutate(
+        { id: company.id, data: profile },
+        {
+          onSuccess: () => {
+            toast.success('Empresa actualizada')
+            onClose?.()
+          },
+          onError: (error) =>
+            toast.error(
+              error instanceof ApiError ? error.message : 'No se pudo actualizar la empresa',
+            ),
+        },
+      )
+      return
+    }
+
+    createMut.mutate(
       {
-        name: data.name,
+        ...profile,
         slug: data.slug,
-        legalName: empty(data.legalName),
-        logoUrl: empty(data.logoUrl),
-        email: empty(data.email),
-        phone: empty(data.phone),
-        website: empty(data.website),
-        address: empty(data.address),
-        taxId: empty(data.taxId),
-        taxAddress: empty(data.taxAddress),
-        economicActivity: empty(data.economicActivity),
-        taxpayerType: data.taxpayerType,
-        accountingRequired: data.accountingRequired,
-        settlementCurrency: data.settlementCurrency,
         solUser: empty(data.solUser),
         solPassword: empty(data.solPassword),
         certificatePassword: empty(data.certificatePassword),
@@ -152,14 +207,23 @@ export function CompanyFormDialog() {
 
   return (
     <>
-      <Button onClick={() => setOpen(true)}>
-        <Plus className="size-4" /> Nueva empresa
-      </Button>
-      <Dialog open={open} onOpenChange={setOpen}>
+      {!isEdit && (
+        <Button onClick={() => setOpen(true)}>
+          <Plus className="size-4" /> Nueva empresa
+        </Button>
+      )}
+      <Dialog
+        open={isEdit ? true : open}
+        onOpenChange={isEdit ? (o) => !o && onClose?.() : setOpen}
+      >
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Nueva empresa</DialogTitle>
-            <DialogDescription>Registra una empresa (tenant) en la plataforma.</DialogDescription>
+            <DialogTitle>{isEdit ? 'Editar empresa' : 'Nueva empresa'}</DialogTitle>
+            <DialogDescription>
+              {isEdit
+                ? 'Actualiza los datos de la empresa.'
+                : 'Registra una empresa (tenant) en la plataforma.'}
+            </DialogDescription>
           </DialogHeader>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
@@ -167,7 +231,7 @@ export function CompanyFormDialog() {
                 <TabsList className="w-full">
                   <TabsTrigger value="generales">Generales</TabsTrigger>
                   <TabsTrigger value="facturacion">Facturación</TabsTrigger>
-                  <TabsTrigger value="certificado">Certificado</TabsTrigger>
+                  {!isEdit && <TabsTrigger value="certificado">Certificado</TabsTrigger>}
                   <TabsTrigger value="branding">Branding</TabsTrigger>
                 </TabsList>
 
@@ -195,7 +259,7 @@ export function CompanyFormDialog() {
                           <FormItem>
                             <FormLabel>Subdominio</FormLabel>
                             <FormControl>
-                              <Input placeholder="mi-empresa" {...field} />
+                              <Input placeholder="mi-empresa" disabled={isEdit} {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -291,7 +355,19 @@ export function CompanyFormDialog() {
                           <FormItem>
                             <FormLabel>RUC</FormLabel>
                             <FormControl>
-                              <Input placeholder="20123456789" {...field} />
+                              <div className="flex gap-2">
+                                <Input placeholder="20123456789" {...field} />
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  onClick={onBuscarRuc}
+                                  disabled={rucLoading}
+                                  title="Consultar en SUNAT"
+                                >
+                                  <Search className="size-4" />
+                                  {rucLoading ? 'Buscando…' : 'Buscar'}
+                                </Button>
+                              </div>
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -387,6 +463,7 @@ export function CompanyFormDialog() {
                   </TabsContent>
 
                   {/* ── Certificado SUNAT ── */}
+                  {!isEdit && (
                   <TabsContent value="certificado" className="space-y-4">
                     <p className="text-xs text-muted-foreground">
                       Credenciales para emitir comprobantes electrónicos. Se almacenan cifradas.
@@ -469,6 +546,7 @@ export function CompanyFormDialog() {
                       />
                     </div>
                   </TabsContent>
+                  )}
 
                   {/* ── Branding ── */}
                   <TabsContent value="branding" className="space-y-4">
@@ -536,8 +614,19 @@ export function CompanyFormDialog() {
               </Tabs>
 
               <DialogFooter>
+                {isEdit && (
+                  <Button type="button" variant="outline" onClick={onClose}>
+                    Cancelar
+                  </Button>
+                )}
                 <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Creando…' : 'Crear empresa'}
+                  {isPending
+                    ? isEdit
+                      ? 'Guardando…'
+                      : 'Creando…'
+                    : isEdit
+                      ? 'Guardar cambios'
+                      : 'Crear empresa'}
                 </Button>
               </DialogFooter>
             </form>

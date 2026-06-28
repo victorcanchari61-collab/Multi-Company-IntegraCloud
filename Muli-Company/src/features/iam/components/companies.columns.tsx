@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { Ban, Eye, Power } from 'lucide-react'
+import { Ban, Eye, Pencil, Power } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ENTITY_STATUS } from '@/lib/constants'
 import { Can } from '@/features/auth/components/Can'
@@ -10,12 +10,14 @@ interface Options {
   pending: boolean
   onToggleStatus: (company: Company) => void
   onViewDetail: (company: Company) => void
+  onEdit: (company: Company) => void
 }
 
 export function getCompanyColumns({
   pending,
   onToggleStatus,
   onViewDetail,
+  onEdit,
 }: Options): ColumnDef<Company, unknown>[] {
   return [
     {
@@ -77,6 +79,17 @@ export function getCompanyColumns({
               >
                 <Eye className="text-primary" />
                 <span className="sr-only">Ver detalle</span>
+              </Button>
+            </Can>
+            <Can permission="iam.companies.update">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                title="Editar"
+                onClick={() => onEdit(company)}
+              >
+                <Pencil className="text-foreground" />
+                <span className="sr-only">Editar</span>
               </Button>
             </Can>
             <Can permission="iam.companies.update">

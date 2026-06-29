@@ -85,6 +85,10 @@ export interface Product {
   salePrice: number | null
   costPrice: number | null
   isActive: boolean
+  ticketDescription?: string | null
+  unitsContained?: number | null
+  stockMin?: number | null
+  stockMax?: number | null
 }
 
 export interface ProductRequest {
@@ -99,4 +103,9 @@ export interface ProductRequest {
   unitOfMeasureId?: string | null
   salePrice?: number | null
   costPrice?: number | null
+  ticketDescription?: string | null
+  unitsContained?: number | null
+  stockMin?: number | null
+  stockMax?: number | null
+  isActive?: boolean
 }

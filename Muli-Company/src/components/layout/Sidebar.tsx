@@ -45,6 +45,14 @@ const MODULE_LABELS: Record<string, string> = {
   productos: 'Productos',
 }
 
+const HIDDEN_SUBMODULE_CODES = new Set([
+  'categorias',
+  'subcategorias',
+  'marcas',
+  'submarcas',
+  'unidades',
+])
+
 const linkBase =
   'flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700'
 
@@ -108,7 +116,9 @@ export function Sidebar() {
                 .map((m) => ({
                   ...m,
                   submodules: m.submodules.filter(
-                    (s) => !s.requiredPermission || can(s.requiredPermission),
+                    (s) =>
+                      !HIDDEN_SUBMODULE_CODES.has(s.code) &&
+                      (!s.requiredPermission || can(s.requiredPermission)),
                   ),
                 })),
             }))

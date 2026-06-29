@@ -76,12 +76,7 @@ export const ROUTES = {
   ROLE_DETAIL: '/iam/roles/$roleId',
   PERMISSIONS: '/iam/permissions',
   PROFILE: '/profile',
-  ERP_UNITS: '/erp/unidades',
   ERP_PRODUCTS: '/erp/productos',
-  ERP_CATEGORIES: '/erp/categorias',
-  ERP_SUBCATEGORIES: '/erp/subcategorias',
-  ERP_BRANDS: '/erp/marcas',
-  ERP_SUBBRANDS: '/erp/submarcas',
 } as const
 
 export const STORAGE_KEYS = {

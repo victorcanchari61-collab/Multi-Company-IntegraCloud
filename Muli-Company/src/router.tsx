@@ -16,12 +16,7 @@ import UsersPage from '@/features/iam/pages/UsersPage'
 import RolesPage from '@/features/iam/pages/RolesPage'
 import PermissionsPage from '@/features/iam/pages/PermissionsPage'
 import ProfilePage from '@/features/iam/pages/ProfilePage'
-import UnitsPage from '@/features/erp/pages/UnitsPage'
 import ProductsPage from '@/features/erp/pages/ProductsPage'
-import CategoriesPage from '@/features/erp/pages/CategoriesPage'
-import SubcategoriesPage from '@/features/erp/pages/SubcategoriesPage'
-import BrandsPage from '@/features/erp/pages/BrandsPage'
-import SubbrandsPage from '@/features/erp/pages/SubbrandsPage'
 
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 
@@ -95,40 +90,10 @@ const profileRoute = createRoute({
   component: ProfilePage,
 })
 
-const erpUnitsRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: ROUTES.ERP_UNITS,
-  component: UnitsPage,
-})
-
 const erpProductsRoute = createRoute({
   getParentRoute: () => protectedRoute,
   path: ROUTES.ERP_PRODUCTS,
   component: ProductsPage,
-})
-
-const erpCategoriesRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: ROUTES.ERP_CATEGORIES,
-  component: CategoriesPage,
-})
-
-const erpSubcategoriesRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: ROUTES.ERP_SUBCATEGORIES,
-  component: SubcategoriesPage,
-})
-
-const erpBrandsRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: ROUTES.ERP_BRANDS,
-  component: BrandsPage,
-})
-
-const erpSubbrandsRoute = createRoute({
-  getParentRoute: () => protectedRoute,
-  path: ROUTES.ERP_SUBBRANDS,
-  component: SubbrandsPage,
 })
 
 const routeTree = rootRoute.addChildren([
@@ -141,12 +106,7 @@ const routeTree = rootRoute.addChildren([
     rolesRoute,
     permissionsRoute,
     profileRoute,
-    erpUnitsRoute,
     erpProductsRoute,
-    erpCategoriesRoute,
-    erpSubcategoriesRoute,
-    erpBrandsRoute,
-    erpSubbrandsRoute,
   ]),
 ])
 

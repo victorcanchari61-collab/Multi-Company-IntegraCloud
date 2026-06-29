@@ -41,6 +41,10 @@ const MODULE_ICONS: Record<string, LucideIcon> = {
   units: Ruler,
 }
 
+const MODULE_LABELS: Record<string, string> = {
+  productos: 'Productos',
+}
+
 const linkBase =
   'flex items-center gap-3 rounded-md px-3 py-2 text-sm text-foreground transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700'
 
@@ -138,10 +142,9 @@ export function Sidebar() {
                             <Link
                               to={module.route}
                               className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
-                              onClick={() => setTimeout(() => toggle(modKey), 0)}
                             >
                               <ModIcon className="size-3.5 shrink-0" />
-                              <span className="flex-1 truncate text-left">{module.label}</span>
+                              <span className="flex-1 truncate text-left">{MODULE_LABELS[module.code] ?? module.label}</span>
                             </Link>
                           ) : (
                             <button
@@ -150,7 +153,7 @@ export function Sidebar() {
                               className="flex w-full items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/90 transition-colors hover:bg-blue-50 hover:text-blue-700"
                             >
                               <ModIcon className="size-3.5 shrink-0" />
-                              <span className="flex-1 truncate text-left">{module.label}</span>
+                              <span className="flex-1 truncate text-left">{MODULE_LABELS[module.code] ?? module.label}</span>
                             </button>
                           )
                           return (
@@ -195,7 +198,7 @@ export function Sidebar() {
                             className="flex items-center gap-2 rounded-md px-3 py-1.5 text-sm text-foreground/80 transition-colors hover:bg-blue-50 hover:text-blue-700 [&.active]:bg-blue-100 [&.active]:font-medium [&.active]:text-blue-700"
                           >
                             <ModIcon className="size-3.5 shrink-0" />
-                            <span className="truncate">{module.label}</span>
+                            <span className="truncate">{MODULE_LABELS[module.code] ?? module.label}</span>
                           </Link>
                         )
                       })}

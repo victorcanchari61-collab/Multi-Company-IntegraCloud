@@ -14,13 +14,14 @@ public sealed class GetProductsQueryHandler(IProductRepository repository)
     {
         var products = await repository.GetByCompanyAsync(request.CompanyId, ct);
         var dtos = products.Select(p => new ProductDto(
-            p.Id, p.Name, p.Description, p.Sku, p.Barcode,
+            p.Id, p.Name, p.Description, p.TicketDescription, p.Sku, p.Barcode,
             p.CategoryId, p.Category?.Name,
             p.SubcategoryId, p.Subcategory?.Name,
             p.BrandId, p.Brand?.Name,
             p.SubbrandId, p.Subbrand?.Name,
             p.UnitOfMeasureId, p.UnitOfMeasure?.Name,
-            p.SalePrice, p.CostPrice, p.IsActive
+            p.SalePrice, p.CostPrice,
+            p.StockMin, p.StockMax, p.IsActive
         )).ToList();
         return Result<List<ProductDto>>.Success(dtos);
     }

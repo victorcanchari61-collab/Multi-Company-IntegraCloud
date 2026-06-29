@@ -31,6 +31,11 @@ public sealed class IamDbContext : DbContext, IUnitOfWork
     public DbSet<Brand> Brands => Set<Brand>();
     public DbSet<Subbrand> Subbrands => Set<Subbrand>();
     public DbSet<Product> Products => Set<Product>();
+    public DbSet<ProductPresentation> ProductPresentations => Set<ProductPresentation>();
+    public DbSet<PriceList> PriceLists => Set<PriceList>();
+    public DbSet<Currency> Currencies => Set<Currency>();
+    public DbSet<ProductPrice> ProductPrices => Set<ProductPrice>();
+    public DbSet<ProductLot> ProductLots => Set<ProductLot>();
 
     public IamDbContext(DbContextOptions<IamDbContext> options) : base(options) { }
 

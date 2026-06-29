@@ -57,6 +57,16 @@ public static class DependencyInjection
             Backend.Infrastructure.ERP.Repositories.SubbrandRepository>();
         services.AddScoped<Backend.Domain.ERP.Repositories.IProductRepository,
             Backend.Infrastructure.ERP.Repositories.ProductRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IProductPresentationRepository,
+            Backend.Infrastructure.ERP.Repositories.ProductPresentationRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IPriceListRepository,
+            Backend.Infrastructure.ERP.Repositories.PriceListRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.ICurrencyRepository,
+            Backend.Infrastructure.ERP.Repositories.CurrencyRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IProductPriceRepository,
+            Backend.Infrastructure.ERP.Repositories.ProductPriceRepository>();
+        services.AddScoped<Backend.Domain.ERP.Repositories.IProductLotRepository,
+            Backend.Infrastructure.ERP.Repositories.ProductLotRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

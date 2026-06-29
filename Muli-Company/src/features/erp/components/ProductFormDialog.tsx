@@ -76,7 +76,6 @@ const schema = z.object({
   salePrice: priceField,
   costPrice: priceField,
   ticketDescription: z.string().max(500).optional(),
-  unitsContained: z.string().optional(),
   stockMin: z.string().optional(),
   stockMax: z.string().optional(),
   loteNumber: z.string().optional(),
@@ -137,7 +136,6 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
       salePrice: '',
       costPrice: '',
       ticketDescription: '',
-      unitsContained: '',
       stockMin: '',
       stockMax: '',
       loteNumber: '',
@@ -181,7 +179,6 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
         salePrice: data.salePrice && data.salePrice.trim() !== '' ? Number(data.salePrice) : null,
         costPrice: data.costPrice && data.costPrice.trim() !== '' ? Number(data.costPrice) : null,
         ticketDescription: data.ticketDescription?.trim() || null,
-        unitsContained: data.unitsContained ? Number(data.unitsContained) : null,
         stockMin: data.stockMin ? Number(data.stockMin) : null,
         stockMax: data.stockMax ? Number(data.stockMax) : null,
       }
@@ -571,19 +568,6 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                 }
                               />
                             </div>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="unitsContained"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>U. contenidas</FormLabel>
-                            <FormControl>
-                              <Input type="number" step="0.01" min="0" placeholder="1.00" {...field} />
-                            </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}

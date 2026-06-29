@@ -15,6 +15,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.CompanyId).HasColumnName("company_id").IsRequired();
         builder.Property(x => x.Name).HasColumnName("name").HasMaxLength(200).IsRequired();
         builder.Property(x => x.Description).HasColumnName("description").HasMaxLength(2000);
+        builder.Property(x => x.TicketDescription).HasColumnName("ticket_description").HasMaxLength(500);
         builder.Property(x => x.Sku).HasColumnName("sku").HasMaxLength(50);
         builder.Property(x => x.Barcode).HasColumnName("barcode").HasMaxLength(50);
         builder.Property(x => x.CategoryId).HasColumnName("category_id");
@@ -24,6 +25,8 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.UnitOfMeasureId).HasColumnName("unit_of_measure_id");
         builder.Property(x => x.SalePrice).HasColumnName("sale_price").HasPrecision(18, 4);
         builder.Property(x => x.CostPrice).HasColumnName("cost_price").HasPrecision(18, 4);
+        builder.Property(x => x.StockMin).HasColumnName("stock_min").HasPrecision(18, 4);
+        builder.Property(x => x.StockMax).HasColumnName("stock_max").HasPrecision(18, 4);
         builder.Property(x => x.IsActive).HasColumnName("is_active").IsRequired().HasDefaultValue(true);
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
 

@@ -104,6 +104,90 @@ namespace Backend.Infrastructure.IAM.Migrations
                     b.ToTable("categories", "erp");
                 });
 
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Currency", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasColumnName("code");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Symbol")
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)")
+                        .HasColumnName("symbol");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId", "Code")
+                        .IsUnique();
+
+                    b.ToTable("currencies", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.PriceList", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("description");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("both")
+                        .HasColumnName("type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("price_lists", "erp");
+                });
+
             modelBuilder.Entity("Backend.Domain.ERP.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -163,6 +247,16 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("sku");
 
+                    b.Property<decimal?>("StockMax")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("stock_max");
+
+                    b.Property<decimal?>("StockMin")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("stock_min");
+
                     b.Property<Guid?>("SubbrandId")
                         .HasColumnType("uuid")
                         .HasColumnName("subbrand_id");
@@ -170,6 +264,11 @@ namespace Backend.Infrastructure.IAM.Migrations
                     b.Property<Guid?>("SubcategoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("subcategory_id");
+
+                    b.Property<string>("TicketDescription")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("ticket_description");
 
                     b.Property<Guid?>("UnitOfMeasureId")
                         .HasColumnType("uuid")
@@ -194,6 +293,154 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .HasFilter("\"sku\" IS NOT NULL");
 
                     b.ToTable("products", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductLot", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateOnly?>("ExpiryDate")
+                        .HasColumnType("date")
+                        .HasColumnName("expiry_date");
+
+                    b.Property<decimal>("InitialStock")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("initial_stock");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("number");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId", "Number")
+                        .IsUnique();
+
+                    b.ToTable("product_lots", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductPresentation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<decimal>("Factor")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("factor");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("is_active");
+
+                    b.Property<bool>("IsBase")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_base");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<int>("SortOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0)
+                        .HasColumnName("sort_order");
+
+                    b.Property<Guid?>("UnitOfMeasureId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("unit_of_measure_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UnitOfMeasureId");
+
+                    b.HasIndex("ProductId", "Name")
+                        .IsUnique();
+
+                    b.ToTable("product_presentations", "erp");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductPrice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("company_id");
+
+                    b.Property<Guid>("CurrencyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("currency_id");
+
+                    b.Property<Guid>("PresentationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("presentation_id");
+
+                    b.Property<Guid>("PriceListId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("price_list_id");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("product_id");
+
+                    b.Property<decimal?>("PurchasePrice")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("purchase_price");
+
+                    b.Property<decimal?>("SalePrice")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("numeric(18,4)")
+                        .HasColumnName("sale_price");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("PresentationId");
+
+                    b.HasIndex("PriceListId");
+
+                    b.HasIndex("ProductId", "PresentationId", "PriceListId", "CurrencyId")
+                        .IsUnique();
+
+                    b.ToTable("product_prices", "erp");
                 });
 
             modelBuilder.Entity("Backend.Domain.ERP.Entities.Subbrand", b =>
@@ -971,6 +1218,69 @@ namespace Backend.Infrastructure.IAM.Migrations
                     b.Navigation("UnitOfMeasure");
                 });
 
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductLot", b =>
+                {
+                    b.HasOne("Backend.Domain.ERP.Entities.Product", "Product")
+                        .WithMany("Lots")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductPresentation", b =>
+                {
+                    b.HasOne("Backend.Domain.ERP.Entities.Product", "Product")
+                        .WithMany("Presentations")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Domain.ERP.Entities.UnitOfMeasure", "UnitOfMeasure")
+                        .WithMany()
+                        .HasForeignKey("UnitOfMeasureId");
+
+                    b.Navigation("Product");
+
+                    b.Navigation("UnitOfMeasure");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductPrice", b =>
+                {
+                    b.HasOne("Backend.Domain.ERP.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Domain.ERP.Entities.ProductPresentation", "Presentation")
+                        .WithMany()
+                        .HasForeignKey("PresentationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Domain.ERP.Entities.PriceList", "PriceList")
+                        .WithMany()
+                        .HasForeignKey("PriceListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Backend.Domain.ERP.Entities.Product", "Product")
+                        .WithMany("Prices")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("Presentation");
+
+                    b.Navigation("PriceList");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Backend.Domain.ERP.Entities.Subbrand", b =>
                 {
                     b.HasOne("Backend.Domain.ERP.Entities.Brand", "Brand")
@@ -1170,6 +1480,15 @@ namespace Backend.Infrastructure.IAM.Migrations
                     b.Navigation("Products");
 
                     b.Navigation("Subcategories");
+                });
+
+            modelBuilder.Entity("Backend.Domain.ERP.Entities.Product", b =>
+                {
+                    b.Navigation("Lots");
+
+                    b.Navigation("Presentations");
+
+                    b.Navigation("Prices");
                 });
 
             modelBuilder.Entity("Backend.Domain.ERP.Entities.Subbrand", b =>

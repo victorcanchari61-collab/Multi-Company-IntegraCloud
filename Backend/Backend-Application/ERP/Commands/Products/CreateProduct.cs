@@ -6,9 +6,10 @@ using MediatR;
 namespace Backend.Application.ERP.Commands.Products;
 
 public sealed record CreateProductCommand(
-    Guid CompanyId, string Name, string? Description, string? Sku, string? Barcode,
+    Guid CompanyId, string Name, string? Description, string? TicketDescription, string? Sku, string? Barcode,
     Guid? CategoryId, Guid? SubcategoryId, Guid? BrandId, Guid? SubbrandId,
-    Guid? UnitOfMeasureId, decimal? SalePrice, decimal? CostPrice)
+    Guid? UnitOfMeasureId, decimal? SalePrice, decimal? CostPrice,
+    decimal? StockMin, decimal? StockMax)
     : IRequest<Result<Guid>>;
 
 public sealed class CreateProductCommandHandler(IProductRepository repository)
@@ -25,10 +26,11 @@ public sealed class CreateProductCommandHandler(IProductRepository repository)
 
         var product = new Product(
             Guid.NewGuid(), request.CompanyId, request.Name.Trim(), request.Description?.Trim(),
-            request.Sku?.Trim(), request.Barcode?.Trim(),
+            request.TicketDescription?.Trim(), request.Sku?.Trim(), request.Barcode?.Trim(),
             request.CategoryId, request.SubcategoryId,
             request.BrandId, request.SubbrandId,
-            request.UnitOfMeasureId, request.SalePrice, request.CostPrice);
+            request.UnitOfMeasureId, request.SalePrice, request.CostPrice,
+            request.StockMin, request.StockMax);
 
         await repository.AddAsync(product, ct);
         return Result<Guid>.Success(product.Id);

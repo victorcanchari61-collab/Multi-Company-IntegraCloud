@@ -5,9 +5,10 @@ using MediatR;
 namespace Backend.Application.ERP.Commands.Products;
 
 public sealed record UpdateProductCommand(
-    Guid Id, Guid CompanyId, string Name, string? Description, string? Sku, string? Barcode,
+    Guid Id, Guid CompanyId, string Name, string? Description, string? TicketDescription, string? Sku, string? Barcode,
     Guid? CategoryId, Guid? SubcategoryId, Guid? BrandId, Guid? SubbrandId,
-    Guid? UnitOfMeasureId, decimal? SalePrice, decimal? CostPrice)
+    Guid? UnitOfMeasureId, decimal? SalePrice, decimal? CostPrice,
+    decimal? StockMin, decimal? StockMax)
     : IRequest<Result>;
 
 public sealed class UpdateProductCommandHandler(IProductRepository repository)
@@ -27,11 +28,12 @@ public sealed class UpdateProductCommandHandler(IProductRepository repository)
         }
 
         product.Update(
-            request.Name.Trim(), request.Description?.Trim(),
+            request.Name.Trim(), request.Description?.Trim(), request.TicketDescription?.Trim(),
             request.Sku?.Trim(), request.Barcode?.Trim(),
             request.CategoryId, request.SubcategoryId,
             request.BrandId, request.SubbrandId,
-            request.UnitOfMeasureId, request.SalePrice, request.CostPrice);
+            request.UnitOfMeasureId, request.SalePrice, request.CostPrice,
+            request.StockMin, request.StockMax);
 
         repository.Update(product);
         return Result.Success();

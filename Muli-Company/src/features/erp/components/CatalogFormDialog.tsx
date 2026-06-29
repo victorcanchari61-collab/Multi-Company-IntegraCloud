@@ -117,7 +117,7 @@ export function CatalogFormDialog<T extends Entity>({
               {parentField && (
                 <div>
                   <FormLabel>{parentField.label}</FormLabel>
-                  <Select value={parentField.value} onValueChange={parentField.onChange}>
+                  <Select value={parentField.value} onValueChange={(v) => parentField.onChange(v ?? '')}>
                     <SelectTrigger>
                       <SelectValue placeholder={`Seleccionar ${parentField.label.toLowerCase()}`} />
                     </SelectTrigger>

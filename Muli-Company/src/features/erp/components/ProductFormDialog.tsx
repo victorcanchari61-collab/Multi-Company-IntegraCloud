@@ -33,7 +33,13 @@ import {
 import { ApiError } from '@/lib/api'
 import { useBrands, useCategories } from '../queries/useProducts'
 import { useUnits } from '../queries/useUnits'
-import type { Product } from '../types/erp'
+import type { Product, ProductRequest } from '../types/erp'
+
+// Los precios se manejan como string en el form (input numérico) y se convierten al enviar.
+const priceField = z
+  .string()
+  .optional()
+  .refine((v) => !v || (!Number.isNaN(Number(v)) && Number(v) >= 0), 'Número inválido (≥ 0)')
 
 const schema = z.object({
   name: z.string().min(1, 'El nombre es requerido').max(200),
@@ -43,8 +49,8 @@ const schema = z.object({
   categoryId: z.string().optional(),
   brandId: z.string().optional(),
   unitOfMeasureId: z.string().optional(),
-  salePrice: z.coerce.number().min(0, 'No puede ser negativo').optional(),
-  costPrice: z.coerce.number().min(0, 'No puede ser negativo').optional(),
+  salePrice: priceField,
+  costPrice: priceField,
 })
 
 type FormData = z.infer<typeof schema>
@@ -52,8 +58,8 @@ type FormData = z.infer<typeof schema>
 interface Props {
   product?: Product | null
   onClose?: () => void
-  onCreate: (data: FormData) => Promise<unknown>
-  onUpdate: (id: string, data: FormData) => Promise<unknown>
+  onCreate: (data: ProductRequest) => Promise<unknown>
+  onUpdate: (id: string, data: ProductRequest) => Promise<unknown>
 }
 
 export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Props) {
@@ -75,8 +81,8 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
       categoryId: '',
       brandId: '',
       unitOfMeasureId: '',
-      salePrice: undefined,
-      costPrice: undefined,
+      salePrice: '',
+      costPrice: '',
     },
   })
 
@@ -90,8 +96,8 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
         categoryId: product.categoryId ?? '',
         brandId: product.brandId ?? '',
         unitOfMeasureId: product.unitOfMeasureId ?? '',
-        salePrice: product.salePrice ?? undefined,
-        costPrice: product.costPrice ?? undefined,
+        salePrice: product.salePrice != null ? String(product.salePrice) : '',
+        costPrice: product.costPrice != null ? String(product.costPrice) : '',
       })
     }
   }, [product, form])
@@ -107,16 +113,16 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
         categoryId: data.categoryId || null,
         brandId: data.brandId || null,
         unitOfMeasureId: data.unitOfMeasureId || null,
-        salePrice: data.salePrice ?? null,
-        costPrice: data.costPrice ?? null,
+        salePrice: data.salePrice && data.salePrice.trim() !== '' ? Number(data.salePrice) : null,
+        costPrice: data.costPrice && data.costPrice.trim() !== '' ? Number(data.costPrice) : null,
       }
 
       if (isEdit && product) {
-        await onUpdate(product.id, payload as unknown as FormData)
+        await onUpdate(product.id, payload)
         toast.success('Producto actualizado')
         onClose?.()
       } else {
-        await onCreate(payload as unknown as FormData)
+        await onCreate(payload)
         toast.success('Producto creado')
         form.reset()
         setOpen(false)
@@ -209,7 +215,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Categoría</FormLabel>
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v ?? '')}>
                         <SelectTrigger>
                           <SelectValue placeholder="Seleccionar" />
                         </SelectTrigger>
@@ -229,7 +235,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Marca</FormLabel>
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v ?? '')}>
                         <SelectTrigger>
                           <SelectValue placeholder="Seleccionar" />
                         </SelectTrigger>
@@ -251,7 +257,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Unidad de medida</FormLabel>
-                      <Select value={field.value} onValueChange={field.onChange}>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v ?? '')}>
                         <SelectTrigger>
                           <SelectValue placeholder="Seleccionar" />
                         </SelectTrigger>

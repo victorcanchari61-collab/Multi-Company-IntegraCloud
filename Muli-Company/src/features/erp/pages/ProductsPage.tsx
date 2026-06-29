@@ -1,9 +1,7 @@
 import { useState } from 'react'
-import { toast } from 'sonner'
 import { Boxes, FolderTree, ListTree, ShieldCheck, Tags } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { DataTable } from '@/components/data-table/DataTable'
-import { ApiError } from '@/lib/api'
 import { CatalogFormDialog } from '../components/CatalogFormDialog'
 import { ProductFormDialog } from '../components/ProductFormDialog'
 import {
@@ -118,7 +116,7 @@ export default function ProductsPage() {
               />
             </div>
             <DataTable
-              columns={getCategoryColumns({ onEdit: setEditCat })}
+              columns={getCategoryColumns({ onEdit: (item) => setEditCat(item as Category) })}
               data={categories ?? []}
               loading={catLoading}
               getRowId={(r) => r.id}
@@ -158,7 +156,7 @@ export default function ProductsPage() {
               />
             </div>
             <DataTable
-              columns={getSubcategoryColumns({ onEdit: setEditSubcat })}
+              columns={getSubcategoryColumns({ onEdit: (item) => setEditSubcat(item as Subcategory) })}
               data={subcategories ?? []}
               loading={subcatLoading}
               getRowId={(r) => r.id}
@@ -185,7 +183,7 @@ export default function ProductsPage() {
               />
             </div>
             <DataTable
-              columns={getBrandColumns({ onEdit: setEditBrand })}
+              columns={getBrandColumns({ onEdit: (item) => setEditBrand(item as Brand) })}
               data={brands ?? []}
               loading={brandLoading}
               getRowId={(r) => r.id}
@@ -225,7 +223,7 @@ export default function ProductsPage() {
               />
             </div>
             <DataTable
-              columns={getSubbrandColumns({ onEdit: setEditSubbrand })}
+              columns={getSubbrandColumns({ onEdit: (item) => setEditSubbrand(item as Subbrand) })}
               data={subbrands ?? []}
               loading={subbrandLoading}
               getRowId={(r) => r.id}

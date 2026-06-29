@@ -21,7 +21,10 @@ public sealed class GetProductsQueryHandler(IProductRepository repository)
             p.SubbrandId, p.Subbrand?.Name,
             p.UnitOfMeasureId, p.UnitOfMeasure?.Name,
             p.SalePrice, p.CostPrice,
-            p.StockMin, p.StockMax, p.IsActive
+            p.StockMin, p.StockMax,
+            p.LoteNumber, p.LoteExpiry,
+            p.LoteStock, p.LoteStockFraction,
+            p.TechnicalAction, p.IsActive
         )).ToList();
         return Result<List<ProductDto>>.Success(dtos);
     }

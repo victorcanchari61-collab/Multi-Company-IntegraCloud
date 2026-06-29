@@ -3,6 +3,7 @@ using System;
 using Backend.Infrastructure.IAM;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Backend.Infrastructure.IAM.Migrations
 {
     [DbContext(typeof(IamDbContext))]
-    partial class IamDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260629022539_AddProductLoteAndTechnicalAction")]
+    partial class AddProductLoteAndTechnicalAction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -370,16 +373,6 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("company_id");
 
-                    b.Property<Guid?>("ComplementaryProductId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("complementary_product_id");
-
-                    b.Property<int>("ComplementaryQuantity")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0)
-                        .HasColumnName("complementary_quantity");
-
                     b.Property<decimal>("Factor")
                         .HasPrecision(18, 4)
                         .HasColumnType("numeric(18,4)")
@@ -396,13 +389,6 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .HasColumnType("boolean")
                         .HasDefaultValue(false)
                         .HasColumnName("is_base");
-
-                    b.Property<decimal>("MarkupPercentage")
-                        .ValueGeneratedOnAdd()
-                        .HasPrecision(18, 4)
-                        .HasColumnType("numeric(18,4)")
-                        .HasDefaultValue(0m)
-                        .HasColumnName("markup_percentage");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -425,8 +411,6 @@ namespace Backend.Infrastructure.IAM.Migrations
                         .HasColumnName("unit_of_measure_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ComplementaryProductId");
 
                     b.HasIndex("UnitOfMeasureId");
 
@@ -1274,11 +1258,6 @@ namespace Backend.Infrastructure.IAM.Migrations
 
             modelBuilder.Entity("Backend.Domain.ERP.Entities.ProductPresentation", b =>
                 {
-                    b.HasOne("Backend.Domain.ERP.Entities.Product", "ComplementaryProduct")
-                        .WithMany()
-                        .HasForeignKey("ComplementaryProductId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("Backend.Domain.ERP.Entities.Product", "Product")
                         .WithMany("Presentations")
                         .HasForeignKey("ProductId")
@@ -1288,8 +1267,6 @@ namespace Backend.Infrastructure.IAM.Migrations
                     b.HasOne("Backend.Domain.ERP.Entities.UnitOfMeasure", "UnitOfMeasure")
                         .WithMany()
                         .HasForeignKey("UnitOfMeasureId");
-
-                    b.Navigation("ComplementaryProduct");
 
                     b.Navigation("Product");
 

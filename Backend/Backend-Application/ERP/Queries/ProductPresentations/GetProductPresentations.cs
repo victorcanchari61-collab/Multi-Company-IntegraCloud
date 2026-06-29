@@ -16,7 +16,9 @@ public sealed class GetProductPresentationsQueryHandler(IProductPresentationRepo
         var dtos = presentations.Select(p => new ProductPresentationDto(
             p.Id, p.ProductId, p.Name,
             p.UnitOfMeasureId, p.UnitOfMeasure?.Name,
-            p.Factor, p.IsBase, p.SortOrder, p.IsActive
+            p.Factor, p.IsBase, p.SortOrder, p.IsActive,
+            p.ComplementaryProductId, p.ComplementaryProduct != null ? p.ComplementaryProduct.Name : null,
+            p.ComplementaryQuantity, p.MarkupPercentage
         )).ToList();
         return Result<List<ProductPresentationDto>>.Success(dtos);
     }

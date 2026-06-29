@@ -20,9 +20,13 @@ public sealed class ProductPresentationConfiguration : IEntityTypeConfiguration<
         builder.Property(x => x.IsBase).HasColumnName("is_base").IsRequired().HasDefaultValue(false);
         builder.Property(x => x.SortOrder).HasColumnName("sort_order").IsRequired().HasDefaultValue(0);
         builder.Property(x => x.IsActive).HasColumnName("is_active").IsRequired().HasDefaultValue(true);
+        builder.Property(x => x.ComplementaryProductId).HasColumnName("complementary_product_id");
+        builder.Property(x => x.ComplementaryQuantity).HasColumnName("complementary_quantity").HasDefaultValue(0);
+        builder.Property(x => x.MarkupPercentage).HasColumnName("markup_percentage").HasPrecision(18, 4).HasDefaultValue(0);
 
         builder.HasOne(x => x.Product).WithMany(p => p.Presentations).HasForeignKey(x => x.ProductId);
         builder.HasOne(x => x.UnitOfMeasure).WithMany().HasForeignKey(x => x.UnitOfMeasureId);
+        builder.HasOne(x => x.ComplementaryProduct).WithMany().HasForeignKey(x => x.ComplementaryProductId).OnDelete(DeleteBehavior.SetNull);
 
         builder.HasIndex(x => new { x.ProductId, x.Name }).IsUnique();
     }

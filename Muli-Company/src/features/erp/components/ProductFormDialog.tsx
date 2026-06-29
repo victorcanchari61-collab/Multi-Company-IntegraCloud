@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState, useEffect } from 'react'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -53,7 +53,12 @@ import {
   useSubcategories,
 } from '../queries/useProducts'
 import { useCreateUnit, useUnits } from '../queries/useUnits'
-import type { Product, ProductRequest } from '../types/erp'
+import { useProductPresentations, useCreateProductPresentation, useUpdateProductPresentation, useDeleteProductPresentation } from '../queries/usePresentations'
+import { useProductPrices, useSetProductPrices } from '../queries/useProductPrices'
+import { usePriceLists } from '../queries/usePriceLists'
+import { useCurrencies } from '../queries/useCurrencies'
+import { ProductSearchDialog } from './ProductSearchDialog'
+import type { Product, ProductRequest, ProductPriceEntry } from '../types/erp'
 
 const priceField = z
   .string()
@@ -84,9 +89,12 @@ const schema = z.object({
   loteStockFraction: z.string().optional(),
   technicalAction: z.string().max(2000).optional(),
   priceRows: z.array(z.object({
+    id: z.string().optional(),
     formatoVenta: z.string().optional(),
     factor: z.string().optional(),
+    unitOfMeasureId: z.string().optional(),
     productoC: z.string().optional(),
+    complementaryProductId: z.string().optional(),
     cantidadC: z.string().optional(),
     precioCompra: z.string().optional(),
     porcentajeVenta: z.string().optional(),
@@ -106,43 +114,54 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
   const isEdit = Boolean(product)
   const [open, setOpen] = useState(false)
   const [saving, setSaving] = useState(false)
+  const [searchRowIdx, setSearchRowIdx] = useState<number | null>(null)
+  const imageInputRef = useRef<HTMLInputElement>(null)
+  const pdfInputRef = useRef<HTMLInputElement>(null)
 
   const { data: categories } = useCategories()
   const { data: subcategories } = useSubcategories()
   const { data: brands } = useBrands()
   const { data: subbrands } = useSubbrands()
   const { data: units } = useUnits()
+  const { data: priceLists } = usePriceLists()
+  const { data: currencies } = useCurrencies()
+  const { data: presentations } = useProductPresentations(product?.id ?? '')
+  const { data: productPrices } = useProductPrices(product?.id ?? '')
   const createCat = useCreateCategory()
   const createSubcat = useCreateSubcategory()
   const createBrand = useCreateBrand()
   const createSubbrand = useCreateSubbrand()
   const createUnit = useCreateUnit()
+  const createPresentation = useCreateProductPresentation(product?.id ?? '')
+  const updatePresentation = useUpdateProductPresentation(product?.id ?? '')
+  const deletePresentation = useDeleteProductPresentation(product?.id ?? '')
+  const setPrices = useSetProductPrices(product?.id ?? '')
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
-      name: '',
-      description: '',
+      name: product?.name ?? '',
+      description: product?.description ?? '',
       code: '',
-      autoCode: true,
-      sku: '',
-      barcode: '',
-      isActive: 'true',
-      categoryId: '',
-      subcategoryId: '',
-      brandId: '',
-      subbrandId: '',
-      unitOfMeasureId: '',
-      salePrice: '',
-      costPrice: '',
-      ticketDescription: '',
-      stockMin: '',
-      stockMax: '',
-      loteNumber: '',
-      loteExpiry: '',
-      loteStock: '',
-      loteStockFraction: '',
-      technicalAction: '',
+      autoCode: !product,
+      sku: product?.sku ?? '',
+      barcode: product?.barcode ?? '',
+      isActive: product ? (product.isActive ? 'true' : 'false') : 'true',
+      categoryId: product?.categoryId ?? '',
+      subcategoryId: product?.subcategoryId ?? '',
+      brandId: product?.brandId ?? '',
+      subbrandId: product?.subbrandId ?? '',
+      unitOfMeasureId: product?.unitOfMeasureId ?? '',
+      salePrice: product?.salePrice?.toString() ?? '',
+      costPrice: product?.costPrice?.toString() ?? '',
+      ticketDescription: product?.ticketDescription ?? '',
+      stockMin: product?.stockMin?.toString() ?? '',
+      stockMax: product?.stockMax?.toString() ?? '',
+      loteNumber: product?.loteNumber ?? '',
+      loteExpiry: product?.loteExpiry ?? '',
+      loteStock: product?.loteStock?.toString() ?? '',
+      loteStockFraction: product?.loteStockFraction?.toString() ?? '',
+      technicalAction: product?.technicalAction ?? '',
       priceRows: [],
     },
   })
@@ -161,6 +180,29 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
     if (!brandId || !subbrands) return []
     return subbrands.filter((s) => s.brandId === brandId)
   }, [brandId, subbrands])
+
+  // ── Load presentations into priceRows on edit ──
+  useEffect(() => {
+    if (!presentations || !isEdit) return
+    const rows = presentations.filter(p => p.isActive).map((p) => {
+      const price = productPrices?.find(pp => pp.presentationId === p.id)
+      return {
+        id: p.id,
+        formatoVenta: p.name,
+        factor: p.factor.toString(),
+        unitOfMeasureId: p.unitOfMeasureId ?? '',
+        productoC: p.complementaryProductName ?? '',
+        complementaryProductId: p.complementaryProductId ?? '',
+        cantidadC: p.complementaryQuantity > 0 ? p.complementaryQuantity.toString() : '',
+        precioCompra: price?.purchasePrice?.toString() ?? '',
+        porcentajeVenta: p.markupPercentage > 0 ? p.markupPercentage.toString() : '',
+      }
+    })
+    form.setValue('priceRows', rows)
+  }, [presentations, productPrices, isEdit, form])
+
+  const defaultPriceListId = priceLists?.[0]?.id ?? ''
+  const defaultCurrencyId = currencies?.[0]?.id ?? ''
 
   const onSubmit = async (data: FormData) => {
     setSaving(true)
@@ -181,15 +223,84 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
         ticketDescription: data.ticketDescription?.trim() || null,
         stockMin: data.stockMin ? Number(data.stockMin) : null,
         stockMax: data.stockMax ? Number(data.stockMax) : null,
+        loteNumber: data.loteNumber?.trim() || null,
+        loteExpiry: data.loteExpiry?.trim() || null,
+        loteStock: data.loteStock && data.loteStock.trim() !== '' ? Number(data.loteStock) : null,
+        loteStockFraction: data.loteStockFraction && data.loteStockFraction.trim() !== '' ? Number(data.loteStockFraction) : null,
+        technicalAction: data.technicalAction?.trim() || null,
       }
 
       if (isEdit && product) {
         await onUpdate(product.id, payload)
-        toast.success('Producto actualizado')
-        onClose?.()
       } else {
         await onCreate(payload)
-        toast.success('Producto creado')
+      }
+
+      // ── Sync presentations ──
+      const rows = data.priceRows ?? []
+      const existingIds = new Set((presentations ?? []).filter(p => p.isActive).map(p => p.id))
+      const submittedIds = new Set(rows.map(r => r.id).filter(Boolean))
+
+      // Delete removed presentations
+      for (const pres of presentations ?? []) {
+        if (pres.isActive && !submittedIds.has(pres.id)) {
+          await deletePresentation.mutateAsync(pres.id)
+        }
+      }
+
+      // Create or update presentations
+      let presentationIds: string[] = []
+      for (const row of rows) {
+        const name = row.formatoVenta?.trim()
+        if (!name) continue
+        const factor = row.factor && row.factor.trim() !== '' ? Number(row.factor) : 1
+        const unitId = row.unitOfMeasureId || null
+        const complementaryId = row.complementaryProductId?.trim() || null
+        const complementaryQuantity = row.cantidadC && row.cantidadC.trim() !== '' ? Number(row.cantidadC) : 0
+        const markupPercentage = row.porcentajeVenta && row.porcentajeVenta.trim() !== '' ? Number(row.porcentajeVenta) : 0
+        if (row.id && existingIds.has(row.id)) {
+          await updatePresentation.mutateAsync({
+            id: row.id,
+            data: {
+              name, unitOfMeasureId: unitId, factor, isBase: false, sortOrder: 0,
+              complementaryProductId: complementaryId,
+              complementaryQuantity,
+              markupPercentage,
+            },
+          })
+          presentationIds.push(row.id)
+        } else {
+          const newId = await createPresentation.mutateAsync({
+            name, unitOfMeasureId: unitId, factor, isBase: false, sortOrder: 0,
+            complementaryProductId: complementaryId,
+            complementaryQuantity,
+            markupPercentage,
+          }) as unknown as string
+          presentationIds.push(newId)
+        }
+      }
+
+      // ── Upsert prices ──
+      if (defaultPriceListId && defaultCurrencyId && presentationIds.length > 0) {
+        const entries: ProductPriceEntry[] = rows
+          .filter(r => r.id || !r.id)
+          .map((r, i) => ({
+            presentationId: presentationIds[i] ?? r.id ?? '',
+            priceListId: defaultPriceListId,
+            currencyId: defaultCurrencyId,
+            purchasePrice: r.precioCompra && r.precioCompra.trim() !== '' ? Number(r.precioCompra) : null,
+            salePrice: null,
+          }))
+          .filter(e => e.presentationId)
+        if (entries.length > 0) {
+          await setPrices.mutateAsync(entries)
+        }
+      }
+
+      toast.success(isEdit ? 'Producto actualizado' : 'Producto creado')
+      if (isEdit) {
+        onClose?.()
+      } else {
         form.reset()
         setOpen(false)
       }
@@ -386,6 +497,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                   field.onChange(v)
                                   form.setValue('subcategoryId', '')
                                 }}
+                                items={categories?.map((c) => ({ value: c.id, label: c.name })) ?? []}
                               >
                                 <SelectTrigger className="flex-1">
                                   <SelectValue placeholder="Seleccionar categoría" />
@@ -424,6 +536,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                 value={field.value ?? ''}
                                 onValueChange={field.onChange}
                                 disabled={!catId}
+                                items={filteredSubcategories.map((s) => ({ value: s.id, label: s.name }))}
                               >
                                 <SelectTrigger className="flex-1">
                                   <SelectValue placeholder="Seleccionar subcategoría" />
@@ -467,6 +580,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                   field.onChange(v)
                                   form.setValue('subbrandId', '')
                                 }}
+                                items={brands?.map((b) => ({ value: b.id, label: b.name })) ?? []}
                               >
                                 <SelectTrigger className="flex-1">
                                   <SelectValue placeholder="Seleccionar marca" />
@@ -505,6 +619,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                 value={field.value ?? ''}
                                 onValueChange={field.onChange}
                                 disabled={!brandId}
+                                items={filteredSubbrands.map((s) => ({ value: s.id, label: s.name }))}
                               >
                                 <SelectTrigger className="flex-1">
                                   <SelectValue placeholder="Seleccionar submarca" />
@@ -545,6 +660,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                               <Select
                                 value={field.value ?? ''}
                                 onValueChange={field.onChange}
+                                items={units?.map((u) => ({ value: u.id, label: `${u.name} (${u.abbreviation})` })) ?? []}
                               >
                                 <SelectTrigger className="flex-1">
                                   <SelectValue placeholder="UND" />
@@ -702,7 +818,7 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                     <div className="flex items-center justify-between">
                       <span className="text-sm font-semibold">Detalle de precios</span>
                       <Button type="button" variant="outline" size="sm" onClick={() => append({
-                        formatoVenta: '', factor: '', productoC: '', cantidadC: '', precioCompra: '', porcentajeVenta: '',
+                        formatoVenta: '', factor: '', productoC: '', complementaryProductId: '', cantidadC: '', precioCompra: '', porcentajeVenta: '',
                       })}>
                         <Plus className="size-3.5 mr-1" /> Agregar unidad derivada
                       </Button>
@@ -745,6 +861,8 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                     <SelectItem value="BOLSA">BOLSA</SelectItem>
                                     <SelectItem value="PACK">PACK</SelectItem>
                                     <SelectItem value="DOCENA">DOCENA</SelectItem>
+                                    <SelectItem value="UNIDAD">UNIDAD</SelectItem>
+                                    <SelectItem value="MEDIA_DOCENA">MEDIA DOCENA</SelectItem>
                                   </SelectContent>
                                 </Select>
                               </TableCell>
@@ -767,7 +885,9 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                                     value={form.watch(`priceRows.${idx}.productoC`) ?? ''}
                                     onChange={(e) => form.setValue(`priceRows.${idx}.productoC`, e.target.value)}
                                   />
-                                  <Search className="size-3.5 text-muted-foreground shrink-0" />
+                                  <button type="button" onClick={() => setSearchRowIdx(idx)}>
+                                    <Search className="size-3.5 text-muted-foreground shrink-0" />
+                                  </button>
                                 </div>
                               </TableCell>
                               <TableCell>
@@ -821,9 +941,21 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                           Imagen del producto{' '}
                           <span className="text-muted-foreground">(opcional)</span>
                         </FormLabel>
-                        <div className="mt-2 border-2 border-dashed border-muted-foreground/30 rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors">
+                        <div
+                          className="mt-2 border-2 border-dashed border-muted-foreground/30 rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                          onClick={() => imageInputRef.current?.click()}
+                          onKeyDown={(e) => { if (e.key === 'Enter') imageInputRef.current?.click() }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          <input
+                            ref={imageInputRef}
+                            type="file"
+                            accept="image/png,image/jpeg,image/webp"
+                            className="hidden"
+                          />
                           <Upload className="size-8 mx-auto text-muted-foreground mb-2" />
-                          <Button type="button" variant="secondary" size="sm" className="pointer-events-none">
+                          <Button type="button" variant="secondary" size="sm">
                             <Upload className="size-3.5 mr-1" /> Subir imagen
                           </Button>
                           <p className="text-xs text-muted-foreground mt-2">PNG, JPG o WebP</p>
@@ -834,9 +966,21 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
                           Ficha técnica{' '}
                           <span className="text-muted-foreground">(opcional)</span>
                         </FormLabel>
-                        <div className="mt-2 border-2 border-dashed border-muted-foreground/30 rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors">
+                        <div
+                          className="mt-2 border-2 border-dashed border-muted-foreground/30 rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+                          onClick={() => pdfInputRef.current?.click()}
+                          onKeyDown={(e) => { if (e.key === 'Enter') pdfInputRef.current?.click() }}
+                          role="button"
+                          tabIndex={0}
+                        >
+                          <input
+                            ref={pdfInputRef}
+                            type="file"
+                            accept="application/pdf"
+                            className="hidden"
+                          />
                           <Upload className="size-8 mx-auto text-muted-foreground mb-2" />
-                          <Button type="button" variant="secondary" size="sm" className="pointer-events-none">
+                          <Button type="button" variant="secondary" size="sm">
                             <Upload className="size-3.5 mr-1" /> Subir ficha técnica
                           </Button>
                           <p className="text-xs text-muted-foreground mt-2">PDF</p>
@@ -883,6 +1027,21 @@ export function ProductFormDialog({ product, onClose, onCreate, onUpdate }: Prop
           </Form>
         </DialogContent>
       </Dialog>
+
+      <ProductSearchDialog
+        open={searchRowIdx !== null}
+        onOpenChange={(o) => { if (!o) setSearchRowIdx(null) }}
+        onSelect={(product) => {
+          if (searchRowIdx !== null) {
+            form.setValue(`priceRows.${searchRowIdx}.productoC`, product.name)
+            form.setValue(`priceRows.${searchRowIdx}.complementaryProductId`, product.id)
+            if (product.salePrice != null) {
+              form.setValue(`priceRows.${searchRowIdx}.precioCompra`, product.salePrice.toString())
+            }
+            setSearchRowIdx(null)
+          }
+        }}
+      />
     </>
   )
 }

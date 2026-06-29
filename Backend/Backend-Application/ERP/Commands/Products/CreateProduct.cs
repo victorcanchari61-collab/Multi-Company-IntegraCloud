@@ -9,7 +9,10 @@ public sealed record CreateProductCommand(
     Guid CompanyId, string Name, string? Description, string? TicketDescription, string? Sku, string? Barcode,
     Guid? CategoryId, Guid? SubcategoryId, Guid? BrandId, Guid? SubbrandId,
     Guid? UnitOfMeasureId, decimal? SalePrice, decimal? CostPrice,
-    decimal? StockMin, decimal? StockMax)
+    decimal? StockMin, decimal? StockMax,
+    string? LoteNumber, DateOnly? LoteExpiry,
+    decimal? LoteStock, decimal? LoteStockFraction,
+    string? TechnicalAction)
     : IRequest<Result<Guid>>;
 
 public sealed class CreateProductCommandHandler(IProductRepository repository)
@@ -30,7 +33,10 @@ public sealed class CreateProductCommandHandler(IProductRepository repository)
             request.CategoryId, request.SubcategoryId,
             request.BrandId, request.SubbrandId,
             request.UnitOfMeasureId, request.SalePrice, request.CostPrice,
-            request.StockMin, request.StockMax);
+            request.StockMin, request.StockMax,
+            request.LoteNumber?.Trim(), request.LoteExpiry,
+            request.LoteStock, request.LoteStockFraction,
+            request.TechnicalAction?.Trim());
 
         await repository.AddAsync(product, ct);
         return Result<Guid>.Success(product.Id);

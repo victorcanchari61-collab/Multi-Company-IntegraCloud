@@ -134,6 +134,7 @@ export default function ProductsPage() {
         <TabsContent value="productos" className="space-y-4 pt-4">
           <div className="flex justify-end">
             <ProductFormDialog
+              key={editProduct?.id ?? 'create-product'}
               product={editProduct}
               onClose={() => setEditProduct(null)}
               onCreate={(data) => createProduct.mutateAsync(data)}

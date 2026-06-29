@@ -6,7 +6,8 @@ using MediatR;
 namespace Backend.Application.ERP.Commands.ProductPresentations;
 
 public sealed record CreateProductPresentationCommand(
-    Guid CompanyId, Guid ProductId, string Name, Guid? UnitOfMeasureId, decimal Factor, bool IsBase, int SortOrder)
+    Guid CompanyId, Guid ProductId, string Name, Guid? UnitOfMeasureId, decimal Factor, bool IsBase, int SortOrder,
+    Guid? ComplementaryProductId = null, int ComplementaryQuantity = 0, decimal MarkupPercentage = 0)
     : IRequest<Result<Guid>>;
 
 public sealed class CreateProductPresentationCommandHandler(IProductPresentationRepository repository)
@@ -17,7 +18,8 @@ public sealed class CreateProductPresentationCommandHandler(IProductPresentation
         var presentation = new ProductPresentation(
             Guid.NewGuid(), request.CompanyId, request.ProductId,
             request.Name.Trim(), request.UnitOfMeasureId, request.Factor,
-            request.IsBase, request.SortOrder);
+            request.IsBase, request.SortOrder,
+            request.ComplementaryProductId, request.ComplementaryQuantity, request.MarkupPercentage);
 
         await repository.AddAsync(presentation, ct);
         return Result<Guid>.Success(presentation.Id);

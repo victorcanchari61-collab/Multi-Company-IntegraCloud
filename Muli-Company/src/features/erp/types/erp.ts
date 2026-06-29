@@ -87,6 +87,11 @@ export interface Product {
   costPrice: number | null
   stockMin?: number | null
   stockMax?: number | null
+  loteNumber?: string | null
+  loteExpiry?: string | null
+  loteStock?: number | null
+  loteStockFraction?: number | null
+  technicalAction?: string | null
   isActive: boolean
 }
 
@@ -105,6 +110,11 @@ export interface ProductRequest {
   costPrice?: number | null
   stockMin?: number | null
   stockMax?: number | null
+  loteNumber?: string | null
+  loteExpiry?: string | null
+  loteStock?: number | null
+  loteStockFraction?: number | null
+  technicalAction?: string | null
   isActive?: boolean
 }
 
@@ -120,6 +130,10 @@ export interface ProductPresentation {
   isBase: boolean
   sortOrder: number
   isActive: boolean
+  complementaryProductId: string | null
+  complementaryProductName?: string | null
+  complementaryQuantity: number
+  markupPercentage: number
 }
 
 export interface ProductPresentationRequest {
@@ -128,6 +142,9 @@ export interface ProductPresentationRequest {
   factor: number
   isBase: boolean
   sortOrder: number
+  complementaryProductId?: string | null
+  complementaryQuantity?: number
+  markupPercentage?: number
 }
 
 // ── Listas de precios ──

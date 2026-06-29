@@ -12,6 +12,7 @@ internal sealed class ProductPresentationRepository(IamDbContext context)
     public async Task<List<ProductPresentation>> GetByProductAsync(Guid productId, CancellationToken ct = default)
         => await Context.Set<ProductPresentation>()
             .Include(p => p.UnitOfMeasure)
+            .Include(p => p.ComplementaryProduct)
             .Where(p => p.ProductId == productId)
             .OrderBy(p => p.SortOrder)
             .ToListAsync(ct);

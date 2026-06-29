@@ -12,11 +12,16 @@ public sealed record ProductDto(
     Guid? SubbrandId, string? SubbrandName,
     Guid? UnitOfMeasureId, string? UnitOfMeasureName,
     decimal? SalePrice, decimal? CostPrice,
-    decimal? StockMin, decimal? StockMax, bool IsActive);
+    decimal? StockMin, decimal? StockMax,
+    string? LoteNumber, DateOnly? LoteExpiry,
+    decimal? LoteStock, decimal? LoteStockFraction,
+    string? TechnicalAction, bool IsActive);
 public sealed record ProductPresentationDto(
     Guid Id, Guid ProductId, string Name,
     Guid? UnitOfMeasureId, string? UnitOfMeasureName,
-    decimal Factor, bool IsBase, int SortOrder, bool IsActive);
+    decimal Factor, bool IsBase, int SortOrder, bool IsActive,
+    Guid? ComplementaryProductId, string? ComplementaryProductName,
+    int ComplementaryQuantity, decimal MarkupPercentage);
 public sealed record PriceListDto(Guid Id, string Name, string? Description, string Type, bool IsActive);
 public sealed record CurrencyDto(Guid Id, string Code, string Name, string? Symbol, bool IsActive);
 public sealed record ProductPriceDto(

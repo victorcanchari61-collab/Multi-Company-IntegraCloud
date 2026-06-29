@@ -8,7 +8,10 @@ public sealed record UpdateProductCommand(
     Guid Id, Guid CompanyId, string Name, string? Description, string? TicketDescription, string? Sku, string? Barcode,
     Guid? CategoryId, Guid? SubcategoryId, Guid? BrandId, Guid? SubbrandId,
     Guid? UnitOfMeasureId, decimal? SalePrice, decimal? CostPrice,
-    decimal? StockMin, decimal? StockMax)
+    decimal? StockMin, decimal? StockMax,
+    string? LoteNumber, DateOnly? LoteExpiry,
+    decimal? LoteStock, decimal? LoteStockFraction,
+    string? TechnicalAction)
     : IRequest<Result>;
 
 public sealed class UpdateProductCommandHandler(IProductRepository repository)
@@ -33,7 +36,10 @@ public sealed class UpdateProductCommandHandler(IProductRepository repository)
             request.CategoryId, request.SubcategoryId,
             request.BrandId, request.SubbrandId,
             request.UnitOfMeasureId, request.SalePrice, request.CostPrice,
-            request.StockMin, request.StockMax);
+            request.StockMin, request.StockMax,
+            request.LoteNumber?.Trim(), request.LoteExpiry,
+            request.LoteStock, request.LoteStockFraction,
+            request.TechnicalAction?.Trim());
 
         repository.Update(product);
         return Result.Success();

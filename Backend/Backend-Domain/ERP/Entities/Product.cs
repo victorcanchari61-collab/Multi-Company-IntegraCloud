@@ -24,6 +24,11 @@ public sealed class Product : AggregateRoot
     public decimal? CostPrice { get; private set; }
     public decimal? StockMin { get; private set; }
     public decimal? StockMax { get; private set; }
+    public string? LoteNumber { get; private set; }
+    public DateOnly? LoteExpiry { get; private set; }
+    public decimal? LoteStock { get; private set; }
+    public decimal? LoteStockFraction { get; private set; }
+    public string? TechnicalAction { get; private set; }
     public bool IsActive { get; private set; } = true;
     public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
@@ -40,7 +45,10 @@ public sealed class Product : AggregateRoot
         Guid? brandId, Guid? subbrandId,
         Guid? unitOfMeasureId,
         decimal? salePrice, decimal? costPrice,
-        decimal? stockMin, decimal? stockMax) : base(id)
+        decimal? stockMin, decimal? stockMax,
+        string? loteNumber, DateOnly? loteExpiry,
+        decimal? loteStock, decimal? loteStockFraction,
+        string? technicalAction) : base(id)
     {
         CompanyId = companyId;
         Name = name;
@@ -57,6 +65,11 @@ public sealed class Product : AggregateRoot
         CostPrice = costPrice;
         StockMin = stockMin;
         StockMax = stockMax;
+        LoteNumber = loteNumber;
+        LoteExpiry = loteExpiry;
+        LoteStock = loteStock;
+        LoteStockFraction = loteStockFraction;
+        TechnicalAction = technicalAction;
     }
 
     public void Update(
@@ -66,7 +79,10 @@ public sealed class Product : AggregateRoot
         Guid? brandId, Guid? subbrandId,
         Guid? unitOfMeasureId,
         decimal? salePrice, decimal? costPrice,
-        decimal? stockMin, decimal? stockMax)
+        decimal? stockMin, decimal? stockMax,
+        string? loteNumber, DateOnly? loteExpiry,
+        decimal? loteStock, decimal? loteStockFraction,
+        string? technicalAction)
     {
         Name = name;
         Description = description;
@@ -82,6 +98,11 @@ public sealed class Product : AggregateRoot
         CostPrice = costPrice;
         StockMin = stockMin;
         StockMax = stockMax;
+        LoteNumber = loteNumber;
+        LoteExpiry = loteExpiry;
+        LoteStock = loteStock;
+        LoteStockFraction = loteStockFraction;
+        TechnicalAction = technicalAction;
     }
 
     public void Activate() => IsActive = true;

@@ -27,6 +27,11 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.Property(x => x.CostPrice).HasColumnName("cost_price").HasPrecision(18, 4);
         builder.Property(x => x.StockMin).HasColumnName("stock_min").HasPrecision(18, 4);
         builder.Property(x => x.StockMax).HasColumnName("stock_max").HasPrecision(18, 4);
+        builder.Property(x => x.LoteNumber).HasColumnName("lote_number").HasMaxLength(50);
+        builder.Property(x => x.LoteExpiry).HasColumnName("lote_expiry").HasColumnType("date");
+        builder.Property(x => x.LoteStock).HasColumnName("lote_stock").HasPrecision(18, 4);
+        builder.Property(x => x.LoteStockFraction).HasColumnName("lote_stock_fraction").HasPrecision(18, 4);
+        builder.Property(x => x.TechnicalAction).HasColumnName("technical_action").HasMaxLength(2000);
         builder.Property(x => x.IsActive).HasColumnName("is_active").IsRequired().HasDefaultValue(true);
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
 

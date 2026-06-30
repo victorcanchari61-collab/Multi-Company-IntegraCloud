@@ -1,49 +1,51 @@
 import { useState } from 'react'
 import { DataTable } from '@/components/data-table/DataTable'
-import { CatalogFormDialog } from '../components/CatalogFormDialog'
-import { getSubbrandColumns } from '../components/catalog.columns'
+import { CatalogFormDialog } from '../../components/CatalogFormDialog'
+import { getSubbrandColumns } from '../../components/catalog.columns'
+import { CatalogStatsCard } from '../../components/catalog/CatalogStatsCard'
+import { CatalogFilterBar } from '../../components/catalog/CatalogFilterBar'
+import { useCatalogCrud } from '../../hooks/useCatalogCrud'
 import {
   useBrands,
   useCreateSubbrand,
   useSubbrands,
   useUpdateSubbrand,
-} from '../queries/useProducts'
-import type { Subbrand } from '../types/erp'
+} from '../../queries/useProducts'
+import type { Subbrand } from '../../types/erp'
 
-export default function SubbrandsPage() {
+export function SubbrandsSection() {
   const { data: subbrands, isLoading } = useSubbrands()
   const { data: brands } = useBrands()
   const createSubbrand = useCreateSubbrand()
   const updateSubbrand = useUpdateSubbrand()
-  const [edit, setEdit] = useState<Subbrand | null>(null)
+
+  const { search, setSearch, editing, setEditing, filtered, stats } =
+    useCatalogCrud<Subbrand>(subbrands)
   const [parent, setParent] = useState('')
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold">Submarcas</h1>
-          <p className="text-sm text-muted-foreground">
-            Subdivisiones dentro de una marca (ej: Nike Air, Nike SB).
-          </p>
-        </div>
+    <div className="space-y-4">
+      <CatalogStatsCard stats={stats} />
+
+      <div className="flex items-center justify-between gap-3">
+        <CatalogFilterBar value={search} onChange={setSearch} placeholder="Buscar submarca…" />
         <CatalogFormDialog<Subbrand>
-          entity={edit}
+          entity={editing}
           onClose={() => {
-            setEdit(null)
+            setEditing(null)
             setParent('')
           }}
           onCreate={(data) =>
             createSubbrand.mutateAsync({ ...data, brandId: parent, description: data.description })
           }
           onUpdate={(id, data) =>
-            updateSubbrand.mutateAsync({ id, data: { ...data, brandId: edit?.brandId ?? '' } })
+            updateSubbrand.mutateAsync({ id, data: { ...data, brandId: editing?.brandId ?? '' } })
           }
           title="Submarca"
           description="Subdivisión de una marca existente."
           triggerLabel="Nueva submarca"
           parentField={
-            edit
+            editing
               ? undefined
               : {
                   label: 'Marca',
@@ -54,9 +56,10 @@ export default function SubbrandsPage() {
           }
         />
       </div>
+
       <DataTable
-        columns={getSubbrandColumns({ onEdit: (item) => setEdit(item as Subbrand) })}
-        data={subbrands ?? []}
+        columns={getSubbrandColumns({ onEdit: (item) => setEditing(item as Subbrand) })}
+        data={filtered}
         loading={isLoading}
         getRowId={(r) => r.id}
         mobileTitle={(r) => r.name}

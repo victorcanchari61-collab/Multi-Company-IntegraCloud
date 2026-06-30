@@ -21,13 +21,12 @@ public sealed class GetCompanyMenuQueryHandler(
         ["IAM:users"] = ("/iam/users", "Usuarios", "iam.users.read"),
         ["IAM:roles"] = ("/iam/roles", "Roles", "iam.roles.read"),
         ["IAM:permissions"] = ("/iam/permissions", "Permisos", "iam.permissions.read"),
+        // Productos es un hub con pestañas internas (catálogos, precios, monedas) → enlace único.
+        ["ERP:productos"] = ("/erp/productos", "Productos", "erp.productos.read"),
     };
 
     // Módulos GRUPO (con submódulos) que también tienen una página principal.
-    private static readonly Dictionary<string, string> GroupModuleRoute = new()
-    {
-        ["ERP:productos"] = "/erp/productos",
-    };
+    private static readonly Dictionary<string, string> GroupModuleRoute = new();
 
     public async Task<Result<List<MenuSectionDto>>> Handle(GetCompanyMenuQuery request, CancellationToken ct)
     {

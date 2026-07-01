@@ -148,7 +148,7 @@ export function PricingTab({ api }: { api: ProductFormApi }) {
           <Plus className="size-3.5 mr-1" /> Agregar unidad derivada
         </Button>
       </div>
-      <div className="rounded-lg border bg-card shadow-sm">
+      <div className="overflow-hidden rounded-lg bg-card shadow-sm">
         <Table>
           <TableHeader className="[&_tr]:border-b-0">
             <TableRow className="bg-primary hover:bg-primary">

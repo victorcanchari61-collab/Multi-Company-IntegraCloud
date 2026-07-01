@@ -17,6 +17,7 @@ import RolesPage from '@/features/iam/pages/RolesPage'
 import PermissionsPage from '@/features/iam/pages/PermissionsPage'
 import ProfilePage from '@/features/iam/pages/ProfilePage'
 import ProductsPage from '@/features/erp/pages/ProductsPage'
+import InventoryPage from '@/features/erp/pages/InventoryPage'
 
 const rootRoute = createRootRoute({ component: () => <Outlet /> })
 
@@ -96,6 +97,12 @@ const erpProductsRoute = createRoute({
   component: ProductsPage,
 })
 
+const erpInventoryRoute = createRoute({
+  getParentRoute: () => protectedRoute,
+  path: ROUTES.ERP_INVENTORY,
+  component: InventoryPage,
+})
+
 const routeTree = rootRoute.addChildren([
   loginRoute,
   protectedRoute.addChildren([
@@ -107,6 +114,7 @@ const routeTree = rootRoute.addChildren([
     permissionsRoute,
     profileRoute,
     erpProductsRoute,
+    erpInventoryRoute,
   ]),
 ])
 

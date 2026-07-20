@@ -1,0 +1,177 @@
+export const API_ENDPOINTS = {
+  AUTH: {
+    LOGIN: '/auth/login',
+    REFRESH: '/auth/refresh',
+    LOGOUT: '/auth/logout',
+    ME: '/auth/me',
+    MY_PERMISSIONS: '/auth/me/permissions',
+    CHANGE_PASSWORD: '/auth/me/change-password',
+  },
+  COMPANIES: '/companies',
+  PERMISSIONS: '/permissions',
+  LOOKUP: {
+    ruc: (ruc: string) => `/lookup/ruc/${ruc}`,
+    dni: (dni: string) => `/lookup/dni/${dni}`,
+  },
+  ERP: {
+    // ── Inventory ──
+    warehouses: '/erp/warehouses',
+    warehouse: (id: string) => `/erp/warehouses/${id}`,
+    warehouseStatus: (id: string) => `/erp/warehouses/${id}/status`,
+    stockByWarehouse: (warehouseId: string) => `/erp/stock/warehouse/${warehouseId}`,
+    stockMovement: '/erp/stock/movement',
+    stockMovements: '/erp/stock/movements',
+    transfers: '/erp/transfers',
+    transfer: (id: string) => `/erp/transfers/${id}`,
+    transferComplete: (id: string) => `/erp/transfers/${id}/complete`,
+    transferCancel: (id: string) => `/erp/transfers/${id}/cancel`,
+    kardexByProduct: (productId: string) => `/erp/kardex/product/${productId}`,
+
+    stockValuation: '/erp/stock/valuation',
+    stockLowReorder: '/erp/stock/low-reorder',
+    stockLevels: (id: string) => `/erp/stock/${id}/levels`,
+    stockReservations: '/erp/stock/reservations',
+    stockReservationRelease: (id: string) => `/erp/stock/reservations/${id}/release`,
+    locations: (warehouseId: string) => `/erp/warehouses/${warehouseId}/locations`,
+    location: (warehouseId: string, id: string) => `/erp/warehouses/${warehouseId}/locations/${id}`,
+    serialsByProduct: (productId: string) => `/erp/serials/product/${productId}`,
+    serialsByWarehouse: (warehouseId: string) => `/erp/serials/warehouse/${warehouseId}`,
+    serials: '/erp/serials',
+    serialStatus: (id: string) => `/erp/serials/${id}/status`,
+    physicalCounts: '/erp/stock/physical-counts',
+    physicalCount: (id: string) => `/erp/stock/physical-counts/${id}`,
+    physicalCountLines: (id: string) => `/erp/stock/physical-counts/${id}/lines`,
+    physicalCountLineRecord: (lineId: string) => `/erp/stock/physical-counts/lines/${lineId}`,
+    physicalCountComplete: (id: string) => `/erp/stock/physical-counts/${id}/complete`,
+    physicalCountApprove: (id: string) => `/erp/stock/physical-counts/${id}/approve`,
+    physicalCountCancel: (id: string) => `/erp/stock/physical-counts/${id}/cancel`,
+
+    units: '/erp/units',
+    unit: (id: string) => `/erp/units/${id}`,
+    unitStatus: (id: string) => `/erp/units/${id}/status`,
+    categories: '/erp/categories',
+    category: (id: string) => `/erp/categories/${id}`,
+    subcategories: '/erp/subcategories',
+    subcategory: (id: string) => `/erp/subcategories/${id}`,
+    subcategoryByCategory: (categoryId: string) => `/erp/subcategories/by-category/${categoryId}`,
+    brands: '/erp/brands',
+    brand: (id: string) => `/erp/brands/${id}`,
+    subbrands: '/erp/subbrands',
+    subbrand: (id: string) => `/erp/subbrands/${id}`,
+    subbrandByBrand: (brandId: string) => `/erp/subbrands/by-brand/${brandId}`,
+    products: '/erp/products',
+    product: (id: string) => `/erp/products/${id}`,
+    productStatus: (id: string) => `/erp/products/${id}/status`,
+    productMedia: (id: string) => `/erp/products/${id}/media`,
+    productPresentations: (productId: string) => `/erp/products/${productId}/presentations`,
+    productPresentation: (productId: string, id: string) => `/erp/products/${productId}/presentations/${id}`,
+    productLots: (productId: string) => `/erp/products/${productId}/lots`,
+    productLot: (productId: string, id: string) => `/erp/products/${productId}/lots/${id}`,
+    productPrices: (productId: string) => `/erp/products/${productId}/prices`,
+    priceLists: '/erp/price-lists',
+    priceList: (id: string) => `/erp/price-lists/${id}`,
+    priceListStatus: (id: string) => `/erp/price-lists/${id}/status`,
+    currencies: '/erp/currencies',
+    currency: (id: string) => `/erp/currencies/${id}`,
+    currencyStatus: (id: string) => `/erp/currencies/${id}/status`,
+  },
+  company: (companyId: string) => `/companies/${companyId}`,
+  companyModules: (companyId: string) => `/companies/${companyId}/modules`,
+  companyAccess: (companyId: string) => `/companies/${companyId}/access`,
+  companySystems: (companyId: string) => `/companies/${companyId}/systems`,
+  companySystem: (companyId: string, systemId: string) =>
+    `/companies/${companyId}/systems/${systemId}`,
+  companyUsers: (companyId: string) => `/companies/${companyId}/users`,
+  companyUser: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}`,
+  companyUserRoles: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/roles`,
+  companyUserChangePassword: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/change-password`,
+  companyUserDeactivate: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/deactivate`,
+  companyUserReactivate: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/reactivate`,
+  companyRoles: (companyId: string) => `/companies/${companyId}/roles`,
+  companyRole: (companyId: string, roleId: string) =>
+    `/companies/${companyId}/roles/${roleId}`,
+  companyRolePermissions: (companyId: string, roleId: string) =>
+    `/companies/${companyId}/roles/${roleId}/permissions`,
+  companyRoleRestrictions: (companyId: string, roleId: string) =>
+    `/companies/${companyId}/roles/${roleId}/restrictions`,
+  companyRoleRestriction: (companyId: string, roleId: string, restrictedKey: string) =>
+    `/companies/${companyId}/roles/${roleId}/restrictions/${encodeURIComponent(restrictedKey)}`,
+  companyUserRestrictions: (companyId: string, userId: string) =>
+    `/companies/${companyId}/users/${userId}/restrictions`,
+  companyUserRestriction: (companyId: string, userId: string, restrictedKey: string) =>
+    `/companies/${companyId}/users/${userId}/restrictions/${encodeURIComponent(restrictedKey)}`,
+  companyCargos: (companyId: string) => `/companies/${companyId}/cargos`,
+  companyCargo: (companyId: string, cargoId: string) => `/companies/${companyId}/cargos/${cargoId}`,
+  notifications: '/notifications',
+  notificationRead: (id: string) => `/notifications/${id}/read`,
+  notificationReadAll: '/notifications/read-all',
+  notificationUnreadCount: '/notifications/unread-count',
+} as const
+
+export const ROLES = {
+  OWNER: 'owner',
+  ADMIN: 'admin',
+} as const
+
+export const ENTITY_STATUS = {
+  ACTIVE: 1,
+  SUSPENDED: 2,
+} as const
+
+export const ROUTES = {
+  LOGIN: '/login',
+  DASHBOARD: '/',
+  COMPANIES: '/iam/companies',
+  COMPANY_DETAIL: '/iam/companies/$companyId',
+  USERS: '/iam/users',
+  USER_DETAIL: '/iam/users/$userId',
+  ROLES: '/iam/roles',
+  ROLE_DETAIL: '/iam/roles/$roleId',
+  PERMISSIONS: '/iam/permissions',
+  PROFILE: '/profile',
+  ORGANIGRAMA: '/iam/organigrama',
+  NOTIFICATIONS: '/notifications',
+  ERP: '/erp',
+  ERP_PRODUCTS: '/erp/productos',
+  ERP_COMPRAS: '/erp/compras',
+  ERP_COMPRAS_ORDENES: '/erp/compras/ordenes-compra',
+  ERP_COMPRAS_PROVEEDORES: '/erp/compras/proveedores',
+  ERP_COMPRAS_SOLICITUDES: '/erp/compras/solicitudes',
+  ERP_COMPRAS_EVALUACION: '/erp/compras/evaluacion',
+  ERP_COMPRAS_CONTRATOS: '/erp/compras/contratos',
+  ERP_INVENTORY: '/erp/inventario',
+  ERP_INVENTORY_ALMACENES: '/erp/inventario/almacenes',
+  ERP_INVENTORY_STOCK: '/erp/inventario/stock',
+  ERP_INVENTORY_MOVIMIENTOS: '/erp/inventario/movimientos',
+  ERP_INVENTORY_TRANSFERENCIAS: '/erp/inventario/transferencias',
+  ERP_INVENTORY_REPORTES: '/erp/inventario/reportes',
+  ERP_INVENTORY_KARDEX: '/erp/inventario/kardex',
+  ERP_INVENTORY_RESERVAS: '/erp/inventario/reservas',
+  ERP_INVENTORY_VALORIZACION: '/erp/inventario/valorizacion',
+  ERP_INVENTORY_REPOSICION: '/erp/inventario/reposicion',
+  ERP_INVENTORY_AJUSTES: '/erp/inventario/ajustes',
+  ERP_INVENTORY_COSTO_PROMEDIO: '/erp/inventario/costo-promedio',
+  ERP_INVENTORY_UBICACIONES: '/erp/inventario/ubicaciones',
+  ERP_INVENTORY_LOTES_SERIES: '/erp/inventario/lotes-series',
+  ERP_INVENTORY_CONTEOS: '/erp/inventario/conteos',
+  ERP_VENTAS: '/erp/ventas',
+  ERP_VENTAS_COTIZACIONES: '/erp/ventas/cotizaciones',
+  ERP_VENTAS_ORDENES: '/erp/ventas/ordenes-venta',
+  ERP_VENTAS_CLIENTES: '/erp/ventas/clientes',
+  ERP_VENTAS_LISTAS: '/erp/ventas/listas-precios',
+  ERP_VENTAS_CONDICIONES: '/erp/ventas/condiciones-comerciales',
+  ERP_VENTAS_COMISIONES: '/erp/ventas/comisiones-vendedores',
+} as const
+
+export const STORAGE_KEYS = {
+  AUTH: 'integracloud.auth',
+  REMEMBER_EMAIL: 'integracloud.remember_email',
+  SIDEBAR: 'integracloud.sidebar',
+} as const
+
+export const APP_NAME = 'BRAVIC SYSTEMS'

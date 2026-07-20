@@ -1,0 +1,67 @@
+<app-dialog [open]="open()" (openChange)="openChange.emit($event)">
+  <h2 class="mb-4 text-lg font-bold text-foreground">
+    {{ isEdit() ? 'Editar usuario' : 'Nuevo usuario' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div>
+      <label appLabel for="fullName">Nombre completo</label>
+      <input appInput id="fullName" type="text" formControlName="fullName" autocomplete="name" />
+      @if (form.controls.fullName.invalid && form.controls.fullName.touched) {
+        <p class="mt-1 text-xs text-destructive">Ingresa el nombre completo.</p>
+      }
+    </div>
+
+    <div>
+      <label appLabel for="email">Correo</label>
+      <input appInput id="email" type="email" formControlName="email" autocomplete="email" />
+      @if (form.controls.email.invalid && form.controls.email.touched) {
+        <p class="mt-1 text-xs text-destructive">Ingresa un correo válido.</p>
+      }
+    </div>
+
+    @if (!isEdit()) {
+      <div>
+        <label appLabel for="password">Contraseña</label>
+        <input appInput id="password" type="password" formControlName="password" autocomplete="new-password" />
+        @if (form.controls.password.invalid && form.controls.password.touched) {
+          <p class="mt-1 text-xs text-destructive">Mínimo 8 caracteres.</p>
+        }
+      </div>
+    }
+
+    <div>
+      <p appLabel>Roles</p>
+      @if (!rolesReady()) {
+        <p class="text-sm text-muted-foreground">Cargando roles…</p>
+      } @else if (roles().length === 0) {
+        <p class="text-sm text-muted-foreground">Esta empresa todavía no tiene roles creados.</p>
+      } @else {
+        <div class="max-h-40 space-y-2 overflow-y-auto rounded-lg border border-border p-3">
+          @for (role of roles(); track role.id) {
+            <label class="flex items-center gap-2 text-sm text-foreground">
+              <input
+                type="checkbox"
+                appCheckbox
+                [checked]="selectedRoleIds().has(role.id)"
+                (change)="toggleRole(role.id, $any($event.target).checked)"
+              />
+              {{ role.name }}
+            </label>
+          }
+        </div>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+    }
+
+    <div class="flex justify-end gap-2 pt-2">
+      <button appButton variant="outline" type="button" (click)="openChange.emit(false)">Cancelar</button>
+      <button appButton variant="primary" type="submit" [disabled]="saving() || !rolesReady()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+</app-dialog>

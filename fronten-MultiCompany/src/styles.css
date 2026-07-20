@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@theme inline {
+  /* Paleta "Spacer" — azul royal sobre superficies claras.
+     Mismos tokens que Muli-Company/src/index.css, para mantener paridad visual. */
+  --color-background: #eef2f7;
+  --color-foreground: #1e293b;
+  --color-card: #ffffff;
+  --color-card-foreground: #1e293b;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1e293b;
+  --color-primary: #2563eb;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #e8f1ff;
+  --color-secondary-foreground: #1e3a8a;
+  --color-muted: #f1f5fb;
+  --color-muted-foreground: #94a3b8;
+  --color-accent: #3b82f6;
+  --color-accent-foreground: #ffffff;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-success: #16a34a;
+  --color-success-foreground: #ffffff;
+  --color-border: #d4ddec;
+  --color-input: #d4ddec;
+  --color-ring: #2563eb;
+  --radius: 0.625rem;
+
+  /* Marca: tonos del degradado del panel azul. */
+  --color-brand-from: #1e3a8a;
+  --color-brand-via: #2563eb;
+  --color-brand-to: #3b82f6;
+}
+
+:root {
+  --brand-gradient: linear-gradient(160deg, #1e3a8a 0%, #2563eb 48%, #3b82f6 100%);
+}
+
+@utility bg-brand-gradient {
+  background-image: var(--brand-gradient);
+}
+
+body {
+  margin: 0;
+}

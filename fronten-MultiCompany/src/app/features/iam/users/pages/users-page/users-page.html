@@ -1,0 +1,130 @@
+@if (!companyId) {
+  <app-card>
+    <p class="text-sm text-muted-foreground">No hay una empresa activa para gestionar usuarios.</p>
+  </app-card>
+} @else {
+  <div class="space-y-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <h1 class="text-xl font-bold text-foreground">Usuarios</h1>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <input appInput type="search" placeholder="Buscar por nombre o correo…" [formControl]="search" class="sm:w-64" />
+        <button appButton variant="primary" type="button" *appCan="'iam.users.create'" (click)="openCreateDialog()">
+          Nuevo usuario
+        </button>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+    }
+
+    <app-card class="!p-0 overflow-hidden">
+      <!-- Desktop -->
+      <table class="hidden w-full text-left text-sm md:table">
+        <thead class="border-b border-border bg-muted/50 text-xs uppercase tracking-wide text-muted-foreground">
+          <tr>
+            <th class="cursor-pointer select-none px-4 py-3" (click)="toggleSort('fullName')">Nombre completo</th>
+            <th class="cursor-pointer select-none px-4 py-3" (click)="toggleSort('email')">Correo</th>
+            <th class="cursor-pointer select-none px-4 py-3" (click)="toggleSort('status')">Estado</th>
+            <th class="px-4 py-3">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (loading()) {
+            @for (i of [1, 2, 3, 4, 5]; track i) {
+              <tr class="border-b border-border">
+                <td class="px-4 py-3"><div appSkeleton class="h-4 w-40"></div></td>
+                <td class="px-4 py-3"><div appSkeleton class="h-4 w-48"></div></td>
+                <td class="px-4 py-3"><div appSkeleton class="h-4 w-16"></div></td>
+                <td class="px-4 py-3"><div appSkeleton class="h-4 w-24"></div></td>
+              </tr>
+            }
+          } @else if (sortedUsers().length === 0) {
+            <tr>
+              <td colspan="4" class="px-4 py-8 text-center text-sm text-muted-foreground">
+                No se encontraron usuarios.
+              </td>
+            </tr>
+          } @else {
+            @for (user of sortedUsers(); track user.id) {
+              <tr class="border-b border-border last:border-0">
+                <td class="px-4 py-3 font-medium text-foreground">{{ user.fullName }}</td>
+                <td class="px-4 py-3 text-muted-foreground">{{ user.email }}</td>
+                <td class="px-4 py-3">
+                  <app-badge [variant]="user.status === ENTITY_STATUS.ACTIVE ? 'success' : 'destructive'">
+                    {{ user.status === ENTITY_STATUS.ACTIVE ? 'Activo' : 'Anulado' }}
+                  </app-badge>
+                </td>
+                <td class="px-4 py-3">
+                  <div class="flex flex-wrap gap-2">
+                    <button appButton variant="outline" size="sm" type="button" *appCan="'iam.users.edit'" (click)="openEditDialog(user)">
+                      Editar
+                    </button>
+                    <button appButton variant="outline" size="sm" type="button" *appCan="'iam.users.edit'" (click)="openPasswordDialog(user)">
+                      Contraseña
+                    </button>
+                    <button appButton variant="outline" size="sm" type="button" *appCan="'iam.users.edit'" (click)="toggleStatus(user)">
+                      {{ user.status === ENTITY_STATUS.ACTIVE ? 'Desactivar' : 'Reactivar' }}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+
+      <!-- Mobile -->
+      <div class="divide-y divide-border md:hidden">
+        @if (loading()) {
+          @for (i of [1, 2, 3]; track i) {
+            <div class="space-y-2 p-4">
+              <div appSkeleton class="h-4 w-40"></div>
+              <div appSkeleton class="h-3 w-48"></div>
+            </div>
+          }
+        } @else if (sortedUsers().length === 0) {
+          <p class="p-4 text-center text-sm text-muted-foreground">No se encontraron usuarios.</p>
+        } @else {
+          @for (user of sortedUsers(); track user.id) {
+            <div class="space-y-2 p-4">
+              <div class="flex items-center justify-between">
+                <p class="font-medium text-foreground">{{ user.fullName }}</p>
+                <app-badge [variant]="user.status === ENTITY_STATUS.ACTIVE ? 'success' : 'destructive'">
+                  {{ user.status === ENTITY_STATUS.ACTIVE ? 'Activo' : 'Anulado' }}
+                </app-badge>
+              </div>
+              <p class="text-sm text-muted-foreground">{{ user.email }}</p>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <button appButton variant="outline" size="sm" type="button" *appCan="'iam.users.edit'" (click)="openEditDialog(user)">
+                  Editar
+                </button>
+                <button appButton variant="outline" size="sm" type="button" *appCan="'iam.users.edit'" (click)="openPasswordDialog(user)">
+                  Contraseña
+                </button>
+                <button appButton variant="outline" size="sm" type="button" *appCan="'iam.users.edit'" (click)="toggleStatus(user)">
+                  {{ user.status === ENTITY_STATUS.ACTIVE ? 'Desactivar' : 'Reactivar' }}
+                </button>
+              </div>
+            </div>
+          }
+        }
+      </div>
+    </app-card>
+  </div>
+
+  <app-user-form-dialog
+    [open]="formDialogOpen()"
+    (openChange)="formDialogOpen.set($event)"
+    [companyId]="companyId"
+    [userId]="editingUserId()"
+    (saved)="loadUsers()"
+  />
+
+  <app-change-password-dialog
+    [open]="passwordDialogOpen()"
+    (openChange)="passwordDialogOpen.set($event)"
+    [companyId]="companyId"
+    [userId]="passwordUserId()"
+  />
+}

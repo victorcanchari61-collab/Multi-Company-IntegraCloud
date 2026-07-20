@@ -1,0 +1,1 @@
+Empresa : admin@acme.com contraseñ: Admin123!, login: http://localhost:5173/login?empresa=test-acme

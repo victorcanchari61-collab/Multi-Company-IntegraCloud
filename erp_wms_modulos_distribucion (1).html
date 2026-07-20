@@ -1,0 +1,103 @@
+
+<style>
+  .root { padding: 1.5rem 1rem; font-family: var(--font-sans); }
+  .systems { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .system-card { border: 1px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow: hidden; }
+  .system-header { padding: 0.75rem 1rem; font-size: 15px; font-weight: 500; color: var(--color-text-primary); border-bottom: 1px solid var(--color-border-tertiary); }
+  .erp-header { background: #E6F1FB; color: #042C53; }
+  .wms-header { background: #E1F5EE; color: #04342C; }
+  @media (prefers-color-scheme: dark) {
+    .erp-header { background: #0C447C; color: #B5D4F4; }
+    .wms-header { background: #085041; color: #9FE1CB; }
+  }
+  .modules { padding: 0.75rem 0; }
+  .module { margin: 0 0.75rem 0.5rem; border-radius: 8px; overflow: hidden; border: 1px solid var(--color-border-tertiary); }
+  .module-title { padding: 0.45rem 0.75rem; font-size: 13px; font-weight: 500; color: var(--color-text-primary); cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; }
+  .module-title:hover { background: var(--color-background-secondary); }
+  .erp .module-title { border-left: 3px solid #378ADD; }
+  .wms .module-title { border-left: 3px solid #1D9E75; }
+  .chevron { font-size: 10px; color: var(--color-text-tertiary); transition: transform 0.2s; }
+  .chevron.open { transform: rotate(90deg); }
+  .submodules { display: none; background: var(--color-background-secondary); border-top: 1px solid var(--color-border-tertiary); padding: 0.4rem 0; }
+  .submodules.open { display: block; }
+  .sub { padding: 0.3rem 1rem 0.3rem 1.5rem; font-size: 12px; color: var(--color-text-secondary); display: flex; align-items: center; gap: 0.4rem; }
+  .sub::before { content: ''; width: 4px; height: 4px; border-radius: 50%; background: var(--color-text-tertiary); flex-shrink: 0; }
+  .badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; margin-left: auto; }
+  .shared-badge { background: #FAEEDA; color: #633806; }
+  @media (prefers-color-scheme: dark) { .shared-badge { background: #412402; color: #FAC775; } }
+  .legend { margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; font-size: 11px; color: var(--color-text-secondary); padding: 0 0.25rem; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 2px; background: #FAEEDA; border: 1px solid #EF9F27; flex-shrink: 0; }
+</style>
+<div class="root">
+  <div class="systems">
+    <div class="system-card erp">
+      <div class="system-header erp-header">ERP — Enterprise Resource Planning</div>
+      <div class="modules" id="erp-modules"></div>
+    </div>
+    <div class="system-card wms">
+      <div class="system-header wms-header">WMS — Warehouse Management System</div>
+      <div class="modules" id="wms-modules"></div>
+    </div>
+  </div>
+  <div class="legend">
+    <div class="legend-dot"></div>
+    <span>Módulo con datos compartidos entre sistemas (dueño indicado en el módulo)</span>
+  </div>
+</div>
+
+<script>
+const erp = [
+  { name: "Ventas", subs: ["Cotizaciones", "Órdenes de venta", "Clientes", "Listas de precios", "Condiciones comerciales", "Comisiones de vendedores"] },
+  { name: "Compras", subs: ["Órdenes de compra", "Proveedores", "Solicitudes de compra", "Evaluación de proveedores", "Contratos de compra"] },
+  { name: "Inventario", note: "Valor contable", subs: ["Valorización de stock", "Costo promedio / PEPS", "Ajustes de inventario", "Kárdex contable", "Niveles de reposición"] },
+  { name: "Catálogo de productos", note: "Dueño: ERP", subs: ["Ficha maestra del producto", "Unidades de medida", "Categorías y familias", "Precio de venta", "Costo estándar", "Código de barras / SKU"] },
+  { name: "Facturación", subs: ["Emisión de facturas", "Notas de crédito / débito", "Cuentas por cobrar", "Seguimiento de pagos", "Factura electrónica"] },
+  { name: "Contabilidad", subs: ["Plan de cuentas", "Asientos contables", "Libro mayor", "Balance general", "Estado de resultados", "Cierre contable"] },
+  { name: "Finanzas", subs: ["Tesorería", "Flujo de caja", "Cuentas por pagar", "Conciliación bancaria", "Presupuestos"] },
+  { name: "Clientes (CRM)", note: "Dueño: ERP", subs: ["Ficha de cliente", "Historial de compras", "Crédito asignado", "Contactos", "Segmentación"] },
+  { name: "Proveedores", note: "Dueño: ERP", subs: ["Ficha de proveedor", "RUC / datos fiscales", "Condiciones de pago", "Historial de compras", "Líneas de crédito"] },
+  { name: "Reportes y BI", subs: ["Ventas por período", "Margen por producto", "Rotación de inventario", "Cuentas por cobrar aging", "KPIs financieros"] },
+];
+
+const wms = [
+  { name: "Recepción", subs: ["Muelle de entrada", "Verificación vs orden de compra", "Control de calidad", "Etiquetado y codificación", "Devoluciones de clientes"] },
+  { name: "Almacenamiento", subs: ["Ubicaciones (pasillo/estante/nivel)", "Zonas de almacén", "Reglas de ubicación", "Gestión de lotes y series", "Fechas de vencimiento", "Control de temperatura"] },
+  { name: "Inventario físico", note: "Ubicación física", subs: ["Stock por ubicación", "Conteos cíclicos", "Inventario general", "Diferencias y ajustes físicos", "Trazabilidad de movimientos"] },
+  { name: "Picking", subs: ["Órdenes de picking", "Asignación de operarios", "Rutas de picking optimizadas", "Picking por lote / zona", "Confirmación con escáner"] },
+  { name: "Packing", subs: ["Verificación de bultos", "Empaque por tipo de producto", "Generación de packing list", "Peso y dimensiones", "Etiquetas de envío"] },
+  { name: "Despacho", subs: ["Órdenes de salida", "Asignación de transportista", "Guías de remisión", "Manifiestos de carga", "Confirmación de envío"] },
+  { name: "Logística inversa", subs: ["Devoluciones de clientes", "Inspección de retorno", "Reingreso al stock", "Productos dañados / merma"] },
+  { name: "Transportistas", note: "Dueño: WMS", subs: ["Ficha de transportista", "Vehículos", "Rutas asignadas", "Tarifas de flete", "Seguimiento de entregas"] },
+  { name: "Productos (atributos WMS)", note: "Lee de ERP", subs: ["Dimensiones y peso", "Tipo de almacenamiento", "Fragilidad / peligrosidad", "Cantidad por pallet", "Imagen de ubicación"] },
+  { name: "Reportes operativos", subs: ["Ocupación del almacén", "Productividad por operario", "Tiempo de ciclo", "Tasa de error de picking", "Movimientos por período"] },
+];
+
+function build(data, containerId, cls) {
+  const container = document.getElementById(containerId);
+  data.forEach((mod, i) => {
+    const id = `${cls}-${i}`;
+    const div = document.createElement('div');
+    div.className = 'module';
+    const hasNote = mod.note;
+    div.innerHTML = `
+      <div class="module-title" onclick="toggle('${id}')">
+        <span>${mod.name}${hasNote ? ` <span class="badge shared-badge">${mod.note}</span>` : ''}</span>
+        <span class="chevron" id="chev-${id}">▶</span>
+      </div>
+      <div class="submodules" id="${id}">
+        ${mod.subs.map(s => `<div class="sub">${s}</div>`).join('')}
+      </div>`;
+    container.appendChild(div);
+  });
+}
+
+function toggle(id) {
+  const el = document.getElementById(id);
+  const chev = document.getElementById(`chev-${id}`);
+  el.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+build(erp, 'erp-modules', 'erp');
+build(wms, 'wms-modules', 'wms');
+</script>

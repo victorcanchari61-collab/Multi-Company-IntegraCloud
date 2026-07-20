@@ -1,0 +1,137 @@
+<div class="flex min-h-svh items-center justify-center bg-background p-4">
+  <div class="grid w-full max-w-5xl overflow-hidden rounded-3xl bg-card shadow-2xl ring-1 ring-black/5 md:min-h-[40rem] md:grid-cols-2">
+    <!-- Panel de marca (azul degradado) -->
+    <div class="bg-brand-gradient relative hidden flex-col justify-between overflow-hidden p-10 text-white md:flex">
+      <div class="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-white/10 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-20 left-1/4 size-64 rounded-full bg-accent/30 blur-3xl"></div>
+
+      <span class="relative text-sm font-medium uppercase tracking-[0.2em] text-white/80">Bienvenido a</span>
+
+      <div class="relative flex flex-col items-center gap-4 text-center">
+        <span class="flex size-24 items-center justify-center overflow-hidden rounded-full bg-white shadow-xl">
+          <img [src]="brandLogo()" [alt]="brandName()" class="size-14 object-contain" />
+        </span>
+        <h2 class="text-3xl font-bold tracking-wide">{{ brandName() }}</h2>
+        <p class="max-w-xs text-sm leading-relaxed text-white/75">
+          @if (isTenant()) {
+            Accede a tu espacio de trabajo y gestiona la operación de tu empresa.
+          } @else {
+            Gestiona toda tu operación en un solo lugar: empresas, usuarios y el acceso a cada sistema de la
+            plataforma.
+          }
+        </p>
+      </div>
+
+      <div class="relative flex items-center gap-2 text-xs text-white/60">
+        <svg lucideShieldCheck class="size-4"></svg>
+        Acceso seguro · © {{ currentYear }} {{ isTenant() ? brandName() : 'Bravic Systems' }}
+      </div>
+
+      <svg
+        class="pointer-events-none absolute inset-y-0 right-0 hidden h-full w-24 translate-x-px text-card md:block"
+        viewBox="0 0 100 600"
+        preserveAspectRatio="none"
+        fill="currentColor"
+        aria-hidden="true"
+      >
+        <path opacity="0.4" d="M100 0 C 55 70, 75 150, 45 230 C 15 310, 70 390, 40 470 C 10 540, 60 580, 100 600 Z" />
+        <path opacity="0.7" d="M100 0 C 70 80, 85 160, 60 240 C 35 320, 80 400, 55 480 C 30 550, 75 585, 100 600 Z" />
+        <path d="M100 0 C 85 90, 95 170, 78 250 C 60 330, 92 410, 75 490 C 58 560, 88 590, 100 600 Z" />
+      </svg>
+    </div>
+
+    <!-- Panel de formulario -->
+    <div class="flex flex-col justify-center gap-7 p-8 sm:p-12">
+      <div class="flex items-center gap-2 md:hidden">
+        <span class="flex size-10 items-center justify-center overflow-hidden rounded-full bg-primary">
+          @if (branding()?.logoUrl) {
+            <img [src]="brandLogo()" [alt]="brandName()" class="size-full object-contain" />
+          } @else {
+            <svg lucideRocket class="size-5 text-primary-foreground"></svg>
+          }
+        </span>
+        <span class="font-semibold tracking-wide text-foreground">{{ brandName() }}</span>
+      </div>
+
+      <div class="space-y-1.5">
+        <h1 class="text-2xl font-bold text-foreground">Inicia sesión</h1>
+        <p class="text-sm text-muted-foreground">
+          @if (isTenant()) {
+            Ingresa tus credenciales para acceder a {{ brandName() }}.
+          } @else {
+            Ingresa tus credenciales para acceder a tu panel.
+          }
+        </p>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div>
+          <label appLabel for="email">Correo</label>
+          <input
+            appInput
+            id="email"
+            type="email"
+            formControlName="email"
+            autocomplete="email"
+            placeholder="tu@empresa.com"
+            class="h-11"
+          />
+          @if (form.controls.email.invalid && form.controls.email.touched) {
+            <p class="mt-1 text-xs text-destructive">Ingresa un correo válido.</p>
+          }
+        </div>
+
+        <div>
+          <label appLabel for="password">Contraseña</label>
+          <input
+            appInput
+            id="password"
+            type="password"
+            formControlName="password"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            class="h-11"
+          />
+          @if (form.controls.password.invalid && form.controls.password.touched) {
+            <p class="mt-1 text-xs text-destructive">La contraseña es requerida.</p>
+          }
+        </div>
+
+        @if (errorMessage()) {
+          <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+        }
+
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center gap-2 text-sm font-normal text-muted-foreground">
+            <input
+              type="checkbox"
+              appCheckbox
+              [checked]="remember()"
+              (change)="toggleRemember($any($event.target).checked)"
+            />
+            Recordar credenciales
+          </label>
+          <button
+            type="button"
+            (click)="showForgotPasswordHelp()"
+            class="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          >
+            ¿Olvidaste tu contraseña?
+          </button>
+        </div>
+
+        @if (forgotPasswordMessage()) {
+          <p class="text-xs text-muted-foreground">{{ forgotPasswordMessage() }}</p>
+        }
+
+        <button appButton variant="primary" type="submit" [disabled]="isPending()" class="w-full">
+          {{ isPending() ? 'Ingresando…' : 'Ingresar' }}
+        </button>
+      </form>
+
+      <p class="text-center text-xs text-muted-foreground">
+        ¿Problemas para entrar? <span class="font-medium text-foreground">Contacta a soporte</span>
+      </p>
+    </div>
+  </div>
+</div>

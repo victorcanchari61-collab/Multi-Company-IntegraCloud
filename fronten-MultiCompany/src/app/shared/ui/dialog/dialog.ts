@@ -2,11 +2,14 @@ import { Component, ElementRef, computed, effect, input, output, viewChild } fro
 
 export type DialogSize = 'sm' | 'md' | 'lg';
 
-// En rem, igual a los tope de max-w-sm/md/2xl de Tailwind.
-const SIZE_MAX_WIDTH_REM: Record<DialogSize, number> = {
-  sm: 24,
-  md: 28,
-  lg: 42,
+// Strings completos y literales (no armados con interpolación): Tailwind solo genera CSS para
+// nombres de clase que aparecen enteros en el código fuente. Antes esto era
+// `max-w-[min(${rem}rem,...)]`, una clase armada con una variable — Tailwind nunca la "veía" y
+// no generaba su CSS, por eso el modal perdía el tope de ancho y se estiraba a pantalla completa.
+const SIZE_CLASSES: Record<DialogSize, string> = {
+  sm: 'max-w-[min(24rem,calc(100vw-2rem))]',
+  md: 'max-w-[min(28rem,calc(100vw-2rem))]',
+  lg: 'max-w-[min(42rem,calc(100vw-2rem))]',
 };
 
 /**
@@ -32,17 +35,17 @@ export class Dialog {
 
   private readonly dialogEl = viewChild.required<ElementRef<HTMLDialogElement>>('dialogEl');
 
-  // w-full + max-w-[min(...)] (NO margin propio): <dialog>:modal centra vía margin:auto del
-  // user-agent. Fijar mx-4 pisaba ese auto y lo pegaba a la izquierda. min(Xrem, 100vw-2rem)
-  // dosifica el ancho máximo y deja 1rem de aire a cada lado en pantallas angostas, sin tocar
-  // el margin que hace el centrado.
-  protected readonly dialogClass = computed(() => {
-    const maxWidthRem = SIZE_MAX_WIDTH_REM[this.size()];
-    return (
-      `w-full max-w-[min(${maxWidthRem}rem,calc(100vw-2rem))] max-h-[85vh] overflow-y-auto rounded-xl border ` +
-      `border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/50`
-    );
-  });
+  // El centrado nativo de <dialog> vía margin:auto depende del user-agent y no es confiable
+  // (en la práctica centraba vertical pero dejaba el diálogo pegado a la izquierda). Se fija la
+  // posición explícitamente con top/left 50% + translate, la técnica estándar para centrar un
+  // elemento fixed sin depender de ningún comportamiento implícito del navegador. bottom-auto/
+  // right-auto/m-0 anulan el inset-block y el margin que pone el UA stylesheet de dialog:modal.
+  protected readonly dialogClass = computed(
+    () =>
+      `fixed top-1/2 left-1/2 right-auto bottom-auto m-0 -translate-x-1/2 -translate-y-1/2 ` +
+      `w-full ${SIZE_CLASSES[this.size()]} max-h-[85vh] overflow-y-auto rounded-xl border ` +
+      `border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/50`,
+  );
 
   constructor() {
     effect(() => {

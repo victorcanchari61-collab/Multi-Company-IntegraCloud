@@ -1,7 +1,7 @@
 import { Directive, computed, input } from '@angular/core';
 
 export type ButtonVariant = 'primary' | 'outline' | 'destructive' | 'ghost';
-export type ButtonSize = 'default' | 'sm' | 'icon';
+export type ButtonSize = 'default' | 'sm' | 'icon' | 'icon-sm';
 
 const BASE =
   'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition ' +
@@ -18,6 +18,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
   default: 'h-11 px-4 text-sm',
   sm: 'h-8 px-3 text-xs',
   icon: 'size-9',
+  'icon-sm': 'size-7',
 };
 
 /**

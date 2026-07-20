@@ -1,0 +1,75 @@
+<div class="space-y-4">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <h1 class="text-xl font-bold text-foreground">Empresas</h1>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <input appInput type="search" placeholder="Buscar por nombre o slug…" [formControl]="search" class="sm:w-64" />
+      <button appButton variant="primary" type="button" *appCan="'iam.companies.create'" (click)="openCreateDialog()">
+        Nueva empresa
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+  }
+
+  <app-data-table [columns]="columns" [data]="companies()" [loading]="loading()" emptyMessage="No se encontraron empresas.">
+    <ng-template appMobileTitle let-company>{{ company.name }}</ng-template>
+
+    <ng-template appCell="name" let-company>
+      <span class="font-medium text-foreground">{{ company.name }}</span>
+    </ng-template>
+
+    <ng-template appCell="slug" let-company>
+      <span class="text-muted-foreground">{{ company.slug }}</span>
+    </ng-template>
+
+    <ng-template appCell="taxId" let-company>
+      <span class="text-muted-foreground">{{ company.taxId || '—' }}</span>
+    </ng-template>
+
+    <ng-template appCell="status" let-company>
+      <app-badge [variant]="company.status === ENTITY_STATUS.ACTIVE ? 'success' : 'destructive'">
+        {{ company.status === ENTITY_STATUS.ACTIVE ? 'Activa' : 'Suspendida' }}
+      </app-badge>
+    </ng-template>
+
+    <ng-template appCell="actions" let-company>
+      <div class="flex gap-1">
+        <button
+          appButton
+          variant="outline"
+          size="icon-sm"
+          type="button"
+          title="Editar"
+          *appCan="'iam.companies.update'"
+          (click)="openEditDialog(company)"
+        >
+          <svg lucidePencil class="size-3.5"></svg>
+        </button>
+        <button
+          appButton
+          variant="outline"
+          size="icon-sm"
+          type="button"
+          [title]="company.status === ENTITY_STATUS.ACTIVE ? 'Suspender' : 'Reactivar'"
+          *appCan="'iam.companies.update'"
+          (click)="toggleStatus(company)"
+        >
+          @if (company.status === ENTITY_STATUS.ACTIVE) {
+            <svg lucideBan class="size-3.5"></svg>
+          } @else {
+            <svg lucideRotateCcw class="size-3.5"></svg>
+          }
+        </button>
+      </div>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-company-form-dialog
+  [open]="formDialogOpen()"
+  (openChange)="formDialogOpen.set($event)"
+  [companyId]="editingCompanyId()"
+  (saved)="loadCompanies()"
+/>

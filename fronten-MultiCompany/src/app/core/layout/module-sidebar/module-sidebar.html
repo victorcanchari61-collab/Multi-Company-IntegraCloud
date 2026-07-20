@@ -7,20 +7,6 @@
   </div>
 
   <nav class="flex-1 space-y-1 overflow-x-hidden overflow-y-auto px-1.5 pb-1.5 pt-3">
-    <!-- Volver al inicio -->
-    <a
-      routerLink="/"
-      routerLinkActive="bg-blue-600 font-medium text-white"
-      [routerLinkActiveOptions]="{ exact: true }"
-      title="Inicio"
-      [class]="inicioLinkClass()"
-    >
-      <app-sidebar-icon icon="dashboard" class="size-5 shrink-0" />
-      @if (!sidebarState.collapsed()) {
-        <span class="truncate">Inicio</span>
-      }
-    </a>
-
     @if (section(); as sec) {
       @if (sidebarState.collapsed()) {
         <!-- Contraído: solo iconos de módulo + flyout al hover -->

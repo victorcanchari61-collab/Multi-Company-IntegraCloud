@@ -1,0 +1,203 @@
+<div class="space-y-2">
+  <!-- Toolbar -->
+  <div class="flex items-center gap-2">
+    <div class="relative">
+      <button
+        appButton
+        variant="outline"
+        size="icon"
+        type="button"
+        title="Columnas"
+        (click)="toggleColumnsMenu()"
+      >
+        <svg lucideSlidersHorizontal class="size-3.5"></svg>
+      </button>
+      @if (columnsMenuOpen()) {
+        <div class="fixed inset-0 z-40" (click)="closeColumnsMenu()"></div>
+        <div class="absolute left-0 top-full z-50 mt-2 w-48 rounded-md border border-border bg-popover p-1.5 shadow-lg">
+          <p class="px-2 py-1 text-xs font-semibold text-muted-foreground">Mostrar columnas</p>
+          <div class="my-1 border-t border-border"></div>
+          @for (column of table.getAllLeafColumns(); track column.id) {
+            @if (column.getCanHide()) {
+              <label class="flex items-center gap-2 rounded px-2 py-1.5 text-sm text-foreground hover:bg-muted">
+                <input
+                  type="checkbox"
+                  appCheckbox
+                  [checked]="column.getIsVisible()"
+                  (change)="column.toggleVisibility($any($event.target).checked)"
+                />
+                {{ columnLabel(column) }}
+              </label>
+            }
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Desktop -->
+  <div class="hidden overflow-hidden rounded-lg bg-card shadow-sm md:block">
+    <div class="min-h-[250px] overflow-x-auto">
+      <table class="min-w-full" [style.width.px]="table.getCenterTotalSize()">
+        <thead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr class="flex bg-primary">
+              @for (header of headerGroup.headers; track header.id) {
+                <th
+                  class="relative flex h-[30px] shrink-0 items-center border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
+                  [style.width.px]="header.getSize()"
+                >
+                  <div class="flex w-full items-center gap-0.5">
+                    @if (header.column.getCanSort()) {
+                      <button
+                        type="button"
+                        (click)="$any(header.column.getToggleSortingHandler())($event)"
+                        class="flex flex-1 cursor-pointer select-none items-center gap-1 truncate"
+                      >
+                        <span class="truncate">{{ columnLabel(header.column) }}</span>
+                        <span class="shrink-0">
+                          @switch (header.column.getIsSorted()) {
+                            @case ('asc') {
+                              <svg lucideArrowUp class="size-3 shrink-0 text-primary-foreground"></svg>
+                            }
+                            @case ('desc') {
+                              <svg lucideArrowDown class="size-3 shrink-0 text-primary-foreground"></svg>
+                            }
+                            @default {
+                              <svg lucideArrowUpDown class="size-3 shrink-0 text-primary-foreground"></svg>
+                            }
+                          }
+                        </span>
+                      </button>
+                    } @else {
+                      <span class="flex flex-1 items-center gap-1 truncate">{{ columnLabel(header.column) }}</span>
+                    }
+
+                    @if (header.column.getCanFilter()) {
+                      <button
+                        type="button"
+                        (click)="toggleFilter(header.column.id, $event)"
+                        class="shrink-0 rounded p-0.5 hover:bg-primary-foreground/10"
+                      >
+                        <svg
+                          lucideListFilter
+                          class="size-3"
+                          [class.text-amber-300]="!!header.column.getFilterValue()"
+                          [class.text-primary-foreground]="!header.column.getFilterValue()"
+                        ></svg>
+                      </button>
+                    }
+                  </div>
+
+                  @if (header.column.getCanResize()) {
+                    <div
+                      (pointerdown)="onResizeStart($event, header.column.id)"
+                      (click)="$event.stopPropagation()"
+                      class="absolute right-0 top-0 z-10 h-full w-1.5 cursor-col-resize touch-none select-none bg-primary-foreground/0 transition-colors hover:bg-primary-foreground/40"
+                      [class.bg-primary-foreground/70]="header.column.getIsResizing()"
+                    ></div>
+                  }
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @if (loading()) {
+            @for (i of [1, 2, 3, 4, 5]; track i) {
+              <tr class="flex">
+                @for (col of table.getVisibleLeafColumns(); track col.id) {
+                  <td class="h-[32px] shrink-0 px-2 py-0 text-xs" [style.width.px]="col.getSize()">
+                    <div appSkeleton class="h-4 w-full"></div>
+                  </td>
+                }
+              </tr>
+            }
+          } @else if (table.getRowModel().rows.length === 0) {
+            <tr>
+              <td class="h-[250px] py-0 text-center text-sm text-muted-foreground">
+                {{ emptyMessage() }}
+              </td>
+            </tr>
+          } @else {
+            @for (row of table.getRowModel().rows; track row.id; let i = $index) {
+              <tr
+                class="dt-fade-in flex border-b border-border last:border-0 hover:bg-muted/40"
+                [style.animation-delay.ms]="i * 15"
+                (click)="onRowActivate(row.original, $event)"
+              >
+                @for (cell of row.getVisibleCells(); track cell.id) {
+                  <td class="h-[32px] shrink-0 px-2 py-0 text-xs text-foreground" [style.width.px]="cell.column.getSize()">
+                    <div class="flex items-center truncate">
+                      <ng-container
+                        *ngTemplateOutlet="cellTemplates().get(cell.column.id) ?? null; context: { $implicit: row.original }"
+                      />
+                    </div>
+                  </td>
+                }
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mobile -->
+  <div class="space-y-2 md:hidden">
+    @if (loading()) {
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div appSkeleton class="h-24 w-full rounded-lg"></div>
+      }
+    } @else if (table.getRowModel().rows.length === 0) {
+      <p class="py-8 text-center text-sm text-muted-foreground">{{ emptyMessage() }}</p>
+    } @else {
+      @for (row of table.getRowModel().rows; track row.id; let i = $index) {
+        <div
+          class="dt-fade-in rounded-lg bg-card p-3 shadow-sm ring-1 ring-black/5"
+          [style.animation-delay.ms]="i * 20"
+          (click)="onRowActivate(row.original, $event)"
+        >
+          @if (mobileTitleTemplate(); as titleTpl) {
+            <div class="mb-1.5 text-sm font-medium">
+              <ng-container *ngTemplateOutlet="titleTpl.templateRef; context: { $implicit: row.original }" />
+            </div>
+          }
+          <dl class="space-y-1">
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              @if (!cell.column.columnDef.meta?.hideOnMobile) {
+                <div class="flex items-center justify-between gap-3 text-xs">
+                  <dt class="text-muted-foreground">{{ columnLabel(cell.column) }}</dt>
+                  <dd class="text-right">
+                    <ng-container
+                      *ngTemplateOutlet="cellTemplates().get(cell.column.id) ?? null; context: { $implicit: row.original }"
+                    />
+                  </dd>
+                </div>
+              }
+            }
+          </dl>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Popover de filtro por columna -->
+  @if (filterOpenFor(); as filterId) {
+    <div class="fixed inset-0 z-40" (click)="closeFilter()"></div>
+    <div
+      class="fixed z-50 w-48 rounded-md border border-border bg-popover p-1.5 shadow-lg"
+      [style.top.px]="filterPos().top"
+      [style.left.px]="filterPos().left"
+    >
+      <input
+        appInput
+        type="text"
+        [value]="table.getColumn(filterId)?.getFilterValue() ?? ''"
+        (input)="table.getColumn(filterId)?.setFilterValue($any($event.target).value || undefined)"
+        placeholder="Filtrar…"
+        class="h-7 text-xs"
+      />
+    </div>
+  }
+</div>

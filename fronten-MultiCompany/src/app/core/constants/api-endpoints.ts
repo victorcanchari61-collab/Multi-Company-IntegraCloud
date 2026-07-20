@@ -12,6 +12,12 @@ export const API_ENDPOINTS = {
   companyBranding: (slug: string) => `/companies/branding/${slug}`,
   MENU: '/menu',
 
+  COMPANIES: '/companies',
+  company: (id: string) => `/companies/${id}`,
+  companySuspend: (id: string) => `/companies/${id}/suspend`,
+  companyActivate: (id: string) => `/companies/${id}/activate`,
+  lookupRuc: (ruc: string) => `/lookup/ruc/${ruc}`,
+
   companyUsers: (companyId: string) => `/companies/${companyId}/users`,
   companyUser: (companyId: string, userId: string) => `/companies/${companyId}/users/${userId}`,
   companyUserRoles: (companyId: string, userId: string) => `/companies/${companyId}/users/${userId}/roles`,

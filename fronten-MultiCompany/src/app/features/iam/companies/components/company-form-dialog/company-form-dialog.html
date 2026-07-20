@@ -1,0 +1,221 @@
+<app-dialog [open]="open()" (openChange)="openChange.emit($event)" size="lg">
+  <h2 class="mb-4 text-lg font-bold text-foreground">
+    {{ isEdit() ? 'Editar empresa' : 'Nueva empresa' }}
+  </h2>
+
+  <!-- Tabs -->
+  <div class="mb-4 flex flex-wrap gap-1 border-b border-border">
+    @for (tab of tabs; track tab.key) {
+      @if (tab.key !== 'administrador' || !isEdit()) {
+        <button
+          type="button"
+          (click)="setTab(tab.key)"
+          class="border-b-2 px-3 py-2 text-sm font-medium transition-colors"
+          [class]="
+            activeTab() === tab.key
+              ? 'border-primary text-primary'
+              : 'border-transparent text-muted-foreground hover:text-foreground'
+          "
+        >
+          {{ tab.label }}
+        </button>
+      }
+    }
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Generales -->
+    @if (activeTab() === 'generales') {
+      <div class="space-y-4">
+        <div>
+          <label appLabel for="name">Nombre</label>
+          <input appInput id="name" type="text" formControlName="name" />
+          @if (form.controls.name.invalid && form.controls.name.touched) {
+            <p class="mt-1 text-xs text-destructive">El nombre es requerido.</p>
+          }
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="slug">Slug</label>
+            <input appInput id="slug" type="text" formControlName="slug" placeholder="mi-empresa" />
+            @if (form.controls.slug.invalid && form.controls.slug.touched) {
+              <p class="mt-1 text-xs text-destructive">Solo minúsculas, números y guiones.</p>
+            }
+          </div>
+          <div>
+            <label appLabel for="legalName">Razón social</label>
+            <input appInput id="legalName" type="text" formControlName="legalName" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="email">Correo</label>
+            <input appInput id="email" type="email" formControlName="email" />
+            @if (form.controls.email.invalid && form.controls.email.touched) {
+              <p class="mt-1 text-xs text-destructive">Correo inválido.</p>
+            }
+          </div>
+          <div>
+            <label appLabel for="phone">Teléfono</label>
+            <input appInput id="phone" type="text" formControlName="phone" />
+          </div>
+        </div>
+        <div>
+          <label appLabel for="website">Sitio web</label>
+          <input appInput id="website" type="text" formControlName="website" placeholder="https://…" />
+          @if (form.controls.website.invalid && form.controls.website.touched) {
+            <p class="mt-1 text-xs text-destructive">URL inválida.</p>
+          }
+        </div>
+        <div>
+          <label appLabel for="address">Dirección</label>
+          <input appInput id="address" type="text" formControlName="address" />
+        </div>
+      </div>
+    }
+
+    <!-- Facturación -->
+    @if (activeTab() === 'facturacion') {
+      <div class="space-y-4">
+        <div>
+          <label appLabel for="taxId">RUC</label>
+          <div class="flex gap-2">
+            <input appInput id="taxId" type="text" formControlName="taxId" class="flex-1" />
+            <button appButton variant="outline" type="button" [disabled]="rucLoading()" (click)="onBuscarRuc()">
+              {{ rucLoading() ? 'Consultando…' : 'Consultar SUNAT' }}
+            </button>
+          </div>
+        </div>
+        <div>
+          <label appLabel for="taxpayerType">Tipo de contribuyente</label>
+          <select
+            id="taxpayerType"
+            formControlName="taxpayerType"
+            class="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
+          >
+            <option [ngValue]="TAXPAYER_TYPE.PERSONA_JURIDICA">Persona jurídica</option>
+            <option [ngValue]="TAXPAYER_TYPE.PERSONA_NATURAL">Persona natural</option>
+          </select>
+        </div>
+        <div>
+          <label appLabel for="taxAddress">Dirección fiscal</label>
+          <input appInput id="taxAddress" type="text" formControlName="taxAddress" />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="economicActivity">Actividad económica</label>
+            <input appInput id="economicActivity" type="text" formControlName="economicActivity" />
+          </div>
+          <div>
+            <label appLabel for="settlementCurrency">Moneda</label>
+            <input appInput id="settlementCurrency" type="text" formControlName="settlementCurrency" maxlength="3" />
+          </div>
+        </div>
+        <label class="flex items-center gap-2 text-sm text-foreground">
+          <input type="checkbox" appCheckbox formControlName="accountingRequired" />
+          Obligado a llevar contabilidad
+        </label>
+      </div>
+    }
+
+    <!-- Certificado -->
+    @if (activeTab() === 'certificado') {
+      <div class="space-y-4">
+        <div>
+          <label appLabel>Certificado digital</label>
+          <div class="flex items-center gap-3">
+            <input #certInput type="file" accept=".pem,.pfx,.p12" class="hidden" (change)="onCertificateFile($event)" />
+            <button appButton variant="outline" type="button" (click)="certInput.click()">Subir archivo</button>
+            <span class="truncate text-sm text-muted-foreground">
+              {{ form.controls.certificateFileName.value || 'Ningún archivo seleccionado' }}
+            </span>
+          </div>
+        </div>
+        <div>
+          <label appLabel for="certificatePassword">Contraseña del certificado</label>
+          <input appInput id="certificatePassword" type="password" formControlName="certificatePassword" />
+        </div>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="solUser">Usuario SOL</label>
+            <input appInput id="solUser" type="text" formControlName="solUser" />
+          </div>
+          <div>
+            <label appLabel for="solPassword">Clave SOL</label>
+            <input appInput id="solPassword" type="password" formControlName="solPassword" />
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Administrador (solo al crear) -->
+    @if (activeTab() === 'administrador' && !isEdit()) {
+      <div class="space-y-4">
+        <div>
+          <label appLabel for="adminFullName">Nombre completo</label>
+          <input appInput id="adminFullName" type="text" formControlName="adminFullName" />
+        </div>
+        <div>
+          <label appLabel for="adminEmail">Correo</label>
+          <input appInput id="adminEmail" type="email" formControlName="adminEmail" />
+          @if (form.controls.adminEmail.invalid && form.controls.adminEmail.touched) {
+            <p class="mt-1 text-xs text-destructive">El correo del administrador es requerido.</p>
+          }
+        </div>
+        <div>
+          <label appLabel for="adminPassword">Contraseña</label>
+          <input
+            appInput
+            id="adminPassword"
+            type="password"
+            formControlName="adminPassword"
+            placeholder="Mínimo 8 caracteres"
+          />
+          @if (form.controls.adminPassword.invalid && form.controls.adminPassword.touched) {
+            <p class="mt-1 text-xs text-destructive">Mínimo 8 caracteres.</p>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Branding -->
+    @if (activeTab() === 'branding') {
+      <div class="space-y-4">
+        <label appLabel>Logo</label>
+        <div class="flex items-center gap-4">
+          <span class="flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
+            @if (form.controls.logoUrl.value) {
+              <img [src]="form.controls.logoUrl.value" alt="Logo" class="size-full object-contain" />
+            } @else {
+              <span class="text-xs text-muted-foreground">Sin logo</span>
+            }
+          </span>
+          <div class="flex gap-2">
+            <input
+              #logoInput
+              type="file"
+              accept="image/png,image/jpeg,image/svg+xml,image/webp"
+              class="hidden"
+              (change)="onLogoFile($event)"
+            />
+            <button appButton variant="outline" type="button" (click)="logoInput.click()">Subir imagen</button>
+            @if (form.controls.logoUrl.value) {
+              <button appButton variant="ghost" type="button" (click)="removeLogo()">Quitar</button>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+    }
+
+    <div class="flex justify-end gap-2 border-t border-border pt-4">
+      <button appButton variant="outline" type="button" (click)="openChange.emit(false)">Cancelar</button>
+      <button appButton variant="primary" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+</app-dialog>

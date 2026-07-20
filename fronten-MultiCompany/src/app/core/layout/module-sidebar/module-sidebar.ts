@@ -78,12 +78,6 @@ export class ModuleSidebar {
     return this.sidebarState.collapsed() ? `${base} justify-center px-0` : base;
   });
 
-  protected readonly inicioLinkClass = computed(() => {
-    const base =
-      'flex items-center gap-2.5 rounded-md px-2.5 py-2.5 text-base text-slate-300 transition-colors hover:bg-white/10 hover:text-white';
-    return this.sidebarState.collapsed() ? `${base} justify-center px-0` : base;
-  });
-
   protected readonly toggleButtonClass = computed(() => {
     const base =
       'flex w-full items-center gap-2.5 rounded-md px-2.5 py-2.5 text-base text-slate-300 transition-colors hover:bg-white/10 hover:text-white';

@@ -38,14 +38,14 @@
   <!-- Desktop -->
   <div class="hidden overflow-hidden rounded-lg bg-card shadow-sm md:block">
     <div class="min-h-[250px] overflow-x-auto">
-      <table class="min-w-full" [style.width.px]="table.getCenterTotalSize()">
+      <table class="w-full min-w-full">
         <thead>
           @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
             <tr class="flex bg-primary">
               @for (header of headerGroup.headers; track header.id) {
                 <th
-                  class="relative flex h-[30px] shrink-0 items-center border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
-                  [style.width.px]="header.getSize()"
+                  class="relative flex h-[30px] items-center border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
+                  [style.flex]="'1 1 ' + header.getSize() + 'px'"
                 >
                   <div class="flex w-full items-center gap-0.5">
                     @if (header.column.getCanSort()) {
@@ -107,7 +107,7 @@
             @for (i of [1, 2, 3, 4, 5]; track i) {
               <tr class="flex">
                 @for (col of table.getVisibleLeafColumns(); track col.id) {
-                  <td class="h-[32px] shrink-0 px-2 py-0 text-xs" [style.width.px]="col.getSize()">
+                  <td class="h-[32px] px-2 py-0 text-xs" [style.flex]="'1 1 ' + col.getSize() + 'px'">
                     <div appSkeleton class="h-4 w-full"></div>
                   </td>
                 }
@@ -127,7 +127,10 @@
                 (click)="onRowActivate(row.original, $event)"
               >
                 @for (cell of row.getVisibleCells(); track cell.id) {
-                  <td class="h-[32px] shrink-0 px-2 py-0 text-xs text-foreground" [style.width.px]="cell.column.getSize()">
+                  <td
+                    class="h-[32px] px-2 py-0 text-xs text-foreground"
+                    [style.flex]="'1 1 ' + cell.column.getSize() + 'px'"
+                  >
                     <div class="flex items-center truncate">
                       <ng-container
                         *ngTemplateOutlet="cellTemplates().get(cell.column.id) ?? null; context: { $implicit: row.original }"

@@ -45,7 +45,7 @@
           *appCan="'iam.companies.update'"
           (click)="openEditDialog(company)"
         >
-          <svg lucidePencil class="size-3.5"></svg>
+          <svg lucidePencil class="size-3.5" [strokeWidth]="2.5"></svg>
         </button>
         <button
           appButton
@@ -57,9 +57,9 @@
           (click)="toggleStatus(company)"
         >
           @if (company.status === ENTITY_STATUS.ACTIVE) {
-            <svg lucideBan class="size-3.5"></svg>
+            <svg lucideBan class="size-3.5" [strokeWidth]="2.5"></svg>
           } @else {
-            <svg lucideRotateCcw class="size-3.5"></svg>
+            <svg lucideRotateCcw class="size-3.5" [strokeWidth]="2.5"></svg>
           }
         </button>
       </div>

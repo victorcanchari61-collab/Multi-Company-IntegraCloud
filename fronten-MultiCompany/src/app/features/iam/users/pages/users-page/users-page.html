@@ -46,7 +46,7 @@
             *appCan="'iam.users.edit'"
             (click)="openEditDialog(user)"
           >
-            <svg lucidePencil class="size-3.5"></svg>
+            <svg lucidePencil class="size-3.5" [strokeWidth]="2.5"></svg>
           </button>
           <button
             appButton
@@ -57,7 +57,7 @@
             *appCan="'iam.users.edit'"
             (click)="openPasswordDialog(user)"
           >
-            <svg lucideKeyRound class="size-3.5"></svg>
+            <svg lucideKeyRound class="size-3.5" [strokeWidth]="2.5"></svg>
           </button>
           <button
             appButton
@@ -69,9 +69,9 @@
             (click)="toggleStatus(user)"
           >
             @if (user.status === ENTITY_STATUS.ACTIVE) {
-              <svg lucideUserX class="size-3.5"></svg>
+              <svg lucideUserX class="size-3.5" [strokeWidth]="2.5"></svg>
             } @else {
-              <svg lucideUserCheck class="size-3.5"></svg>
+              <svg lucideUserCheck class="size-3.5" [strokeWidth]="2.5"></svg>
             }
           </button>
         </div>

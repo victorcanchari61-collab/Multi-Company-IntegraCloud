@@ -9,7 +9,7 @@ import { AuthState } from '@/app/core/state/auth.state';
 import { zodFieldValidator } from '@/app/shared/forms/zod-validator';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { CheckboxDirective } from '@/app/shared/ui/directives/checkbox.directive';
-import { InputDirective } from '@/app/shared/ui/directives/input.directive';
+import { Input } from '@/app/shared/ui/input/input';
 import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
 import { getTenantSlug } from '../../lib/tenant';
 import { loginSchema } from '../../models/login.schema';
@@ -29,7 +29,7 @@ function rememberedEmail(): string {
     LucideRocket,
     LucideShieldCheck,
     ButtonDirective,
-    InputDirective,
+    Input,
     LabelDirective,
     CheckboxDirective,
   ],

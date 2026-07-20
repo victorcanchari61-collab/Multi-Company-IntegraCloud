@@ -3,9 +3,9 @@ import { Component, effect, inject, input, output, signal } from '@angular/core'
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
-import { InputDirective } from '@/app/shared/ui/directives/input.directive';
 import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
 import { Dialog } from '@/app/shared/ui/dialog/dialog';
+import { Input } from '@/app/shared/ui/input/input';
 import { zodFieldValidator } from '@/app/shared/forms/zod-validator';
 import { changePasswordSchema } from '../../models/user.schema';
 import { UsersService } from '../../services/users.service';
@@ -21,7 +21,7 @@ function passwordsMatchValidator(): ValidatorFn {
 @Component({
   selector: 'app-change-password-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, Dialog, ButtonDirective, InputDirective, LabelDirective],
+  imports: [ReactiveFormsModule, Dialog, ButtonDirective, Input, LabelDirective],
   templateUrl: './change-password-dialog.html',
 })
 export class ChangePasswordDialog {

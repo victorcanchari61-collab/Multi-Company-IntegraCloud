@@ -5,9 +5,9 @@ import { ApiError } from '@/app/core/http/api-error';
 import { LookupService } from '@/app/core/services/lookup.service';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { CheckboxDirective } from '@/app/shared/ui/directives/checkbox.directive';
-import { InputDirective } from '@/app/shared/ui/directives/input.directive';
 import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
 import { Dialog } from '@/app/shared/ui/dialog/dialog';
+import { Input } from '@/app/shared/ui/input/input';
 import { TAXPAYER_TYPE } from '../../models/company.model';
 import { CompaniesService } from '../../services/companies.service';
 
@@ -41,7 +41,7 @@ function emptyToNull(value: string | null | undefined): string | null {
 @Component({
   selector: 'app-company-form-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, Dialog, ButtonDirective, InputDirective, LabelDirective, CheckboxDirective],
+  imports: [ReactiveFormsModule, Dialog, ButtonDirective, Input, LabelDirective, CheckboxDirective],
   templateUrl: './company-form-dialog.html',
 })
 export class CompanyFormDialog {

@@ -4,9 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { CheckboxDirective } from '@/app/shared/ui/directives/checkbox.directive';
-import { InputDirective } from '@/app/shared/ui/directives/input.directive';
 import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
 import { Dialog } from '@/app/shared/ui/dialog/dialog';
+import { Input } from '@/app/shared/ui/input/input';
 import { zodFieldValidator } from '@/app/shared/forms/zod-validator';
 import type { Role } from '../../../shared/models/iam.model';
 import { RolesService } from '../../../shared/services/roles.service';
@@ -16,7 +16,7 @@ import { UsersService } from '../../services/users.service';
 @Component({
   selector: 'app-user-form-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, Dialog, ButtonDirective, InputDirective, LabelDirective, CheckboxDirective],
+  imports: [ReactiveFormsModule, Dialog, ButtonDirective, Input, LabelDirective, CheckboxDirective],
   templateUrl: './user-form-dialog.html',
 })
 export class UserFormDialog {

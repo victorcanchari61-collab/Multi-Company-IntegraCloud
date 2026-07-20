@@ -2,10 +2,11 @@ import { Component, ElementRef, computed, effect, input, output, viewChild } fro
 
 export type DialogSize = 'sm' | 'md' | 'lg';
 
-const SIZE_CLASSES: Record<DialogSize, string> = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-2xl',
+// En rem, igual a los tope de max-w-sm/md/2xl de Tailwind.
+const SIZE_MAX_WIDTH_REM: Record<DialogSize, number> = {
+  sm: 24,
+  md: 28,
+  lg: 42,
 };
 
 /**
@@ -31,13 +32,17 @@ export class Dialog {
 
   private readonly dialogEl = viewChild.required<ElementRef<HTMLDialogElement>>('dialogEl');
 
-  // mx-4 + w-[calc(100%-2rem)] en vez de w-full: dejan el mismo aire (1rem) a cada lado en
-  // cualquier ancho de pantalla, sin depender del auto-centrado del navegador para <dialog>.
-  protected readonly dialogClass = computed(
-    () =>
-      `mx-4 w-[calc(100%-2rem)] ${SIZE_CLASSES[this.size()]} max-h-[85vh] overflow-y-auto rounded-xl border ` +
-      `border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/50`,
-  );
+  // w-full + max-w-[min(...)] (NO margin propio): <dialog>:modal centra vía margin:auto del
+  // user-agent. Fijar mx-4 pisaba ese auto y lo pegaba a la izquierda. min(Xrem, 100vw-2rem)
+  // dosifica el ancho máximo y deja 1rem de aire a cada lado en pantallas angostas, sin tocar
+  // el margin que hace el centrado.
+  protected readonly dialogClass = computed(() => {
+    const maxWidthRem = SIZE_MAX_WIDTH_REM[this.size()];
+    return (
+      `w-full max-w-[min(${maxWidthRem}rem,calc(100vw-2rem))] max-h-[85vh] overflow-y-auto rounded-xl border ` +
+      `border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/50`
+    );
+  });
 
   constructor() {
     effect(() => {

@@ -29,7 +29,7 @@
       <div class="space-y-4">
         <div>
           <label appLabel for="name">Nombre</label>
-          <input appInput id="name" type="text" formControlName="name" />
+          <app-input id="name" type="text" formControlName="name" [required]="true" />
           @if (form.controls.name.invalid && form.controls.name.touched) {
             <p class="mt-1 text-xs text-destructive">El nombre es requerido.</p>
           }
@@ -37,39 +37,39 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label appLabel for="slug">Slug</label>
-            <input appInput id="slug" type="text" formControlName="slug" placeholder="mi-empresa" />
+            <app-input id="slug" type="text" formControlName="slug" placeholder="mi-empresa" [required]="true" />
             @if (form.controls.slug.invalid && form.controls.slug.touched) {
               <p class="mt-1 text-xs text-destructive">Solo minúsculas, números y guiones.</p>
             }
           </div>
           <div>
             <label appLabel for="legalName">Razón social</label>
-            <input appInput id="legalName" type="text" formControlName="legalName" />
+            <app-input id="legalName" type="text" formControlName="legalName" />
           </div>
         </div>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label appLabel for="email">Correo</label>
-            <input appInput id="email" type="email" formControlName="email" />
+            <app-input id="email" type="email" formControlName="email" />
             @if (form.controls.email.invalid && form.controls.email.touched) {
               <p class="mt-1 text-xs text-destructive">Correo inválido.</p>
             }
           </div>
           <div>
             <label appLabel for="phone">Teléfono</label>
-            <input appInput id="phone" type="text" formControlName="phone" />
+            <app-input id="phone" type="text" formControlName="phone" />
           </div>
         </div>
         <div>
           <label appLabel for="website">Sitio web</label>
-          <input appInput id="website" type="text" formControlName="website" placeholder="https://…" />
+          <app-input id="website" type="text" formControlName="website" placeholder="https://…" />
           @if (form.controls.website.invalid && form.controls.website.touched) {
             <p class="mt-1 text-xs text-destructive">URL inválida.</p>
           }
         </div>
         <div>
           <label appLabel for="address">Dirección</label>
-          <input appInput id="address" type="text" formControlName="address" />
+          <app-input id="address" type="text" formControlName="address" />
         </div>
       </div>
     }
@@ -80,7 +80,7 @@
         <div>
           <label appLabel for="taxId">RUC</label>
           <div class="flex gap-2">
-            <input appInput id="taxId" type="text" formControlName="taxId" class="flex-1" />
+            <app-input id="taxId" type="text" formControlName="taxId" class="flex-1" />
             <button appButton variant="outline" type="button" [disabled]="rucLoading()" (click)="onBuscarRuc()">
               {{ rucLoading() ? 'Consultando…' : 'Consultar SUNAT' }}
             </button>
@@ -99,16 +99,22 @@
         </div>
         <div>
           <label appLabel for="taxAddress">Dirección fiscal</label>
-          <input appInput id="taxAddress" type="text" formControlName="taxAddress" />
+          <app-input id="taxAddress" type="text" formControlName="taxAddress" />
         </div>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label appLabel for="economicActivity">Actividad económica</label>
-            <input appInput id="economicActivity" type="text" formControlName="economicActivity" />
+            <app-input id="economicActivity" type="text" formControlName="economicActivity" />
           </div>
           <div>
             <label appLabel for="settlementCurrency">Moneda</label>
-            <input appInput id="settlementCurrency" type="text" formControlName="settlementCurrency" maxlength="3" />
+            <app-input
+              id="settlementCurrency"
+              type="text"
+              formControlName="settlementCurrency"
+              [maxLength]="3"
+              [required]="true"
+            />
           </div>
         </div>
         <label class="flex items-center gap-2 text-sm text-foreground">
@@ -133,16 +139,16 @@
         </div>
         <div>
           <label appLabel for="certificatePassword">Contraseña del certificado</label>
-          <input appInput id="certificatePassword" type="password" formControlName="certificatePassword" />
+          <app-input id="certificatePassword" type="password" formControlName="certificatePassword" />
         </div>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label appLabel for="solUser">Usuario SOL</label>
-            <input appInput id="solUser" type="text" formControlName="solUser" />
+            <app-input id="solUser" type="text" formControlName="solUser" />
           </div>
           <div>
             <label appLabel for="solPassword">Clave SOL</label>
-            <input appInput id="solPassword" type="password" formControlName="solPassword" />
+            <app-input id="solPassword" type="password" formControlName="solPassword" />
           </div>
         </div>
       </div>
@@ -153,23 +159,23 @@
       <div class="space-y-4">
         <div>
           <label appLabel for="adminFullName">Nombre completo</label>
-          <input appInput id="adminFullName" type="text" formControlName="adminFullName" />
+          <app-input id="adminFullName" type="text" formControlName="adminFullName" />
         </div>
         <div>
           <label appLabel for="adminEmail">Correo</label>
-          <input appInput id="adminEmail" type="email" formControlName="adminEmail" />
+          <app-input id="adminEmail" type="email" formControlName="adminEmail" [required]="true" />
           @if (form.controls.adminEmail.invalid && form.controls.adminEmail.touched) {
             <p class="mt-1 text-xs text-destructive">El correo del administrador es requerido.</p>
           }
         </div>
         <div>
           <label appLabel for="adminPassword">Contraseña</label>
-          <input
-            appInput
+          <app-input
             id="adminPassword"
             type="password"
             formControlName="adminPassword"
             placeholder="Mínimo 8 caracteres"
+            [required]="true"
           />
           @if (form.controls.adminPassword.invalid && form.controls.adminPassword.touched) {
             <p class="mt-1 text-xs text-destructive">Mínimo 8 caracteres.</p>

@@ -4,35 +4,35 @@
   }
 
   <div class="flex min-w-0 flex-1 flex-col">
-    <header class="relative flex h-16 items-center justify-between border-b border-white/10 bg-[#0b4c8c] px-5 text-white">
-      <div class="flex items-center gap-2.5">
+    <header class="relative flex h-14 items-center justify-between border-b border-white/10 bg-[#0b4c8c] px-4 text-white">
+      <div class="flex items-center gap-2">
         @if (activeSystemCode()) {
           <button
             type="button"
             (click)="sidebarState.toggleHidden()"
             [title]="sidebarState.hidden() ? 'Mostrar menú' : 'Ocultar menú'"
-            class="flex size-9 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
+            class="flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
           >
             @if (sidebarState.hidden()) {
-              <svg lucidePanelLeftOpen class="size-4"></svg>
+              <svg lucidePanelLeftOpen class="size-3.5"></svg>
             } @else {
-              <svg lucidePanelLeftClose class="size-4"></svg>
+              <svg lucidePanelLeftClose class="size-3.5"></svg>
             }
           </button>
         }
-        <span class="inline-flex size-9 items-center justify-center rounded-lg bg-white p-1">
+        <span class="inline-flex size-8 items-center justify-center rounded-lg bg-white p-1">
           <img src="/bravic-logo.png" alt="BRAVIC SYSTEMS" class="size-full object-contain" />
         </span>
-        <span class="text-sm font-semibold tracking-wide">BRAVIC SYSTEMS</span>
+        <span class="text-xs font-semibold tracking-wide">BRAVIC SYSTEMS</span>
       </div>
 
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center gap-2">
         <div class="hidden text-right sm:block">
-          <p class="text-xs font-medium leading-tight text-white">{{ authState.user()?.fullName }}</p>
-          <p class="text-[11px] text-white/80">{{ authState.user()?.isOwner ? 'Propietario' : 'Empresa' }}</p>
+          <p class="text-[11px] font-medium leading-tight text-white">{{ authState.user()?.fullName }}</p>
+          <p class="text-[10px] text-white/80">{{ authState.user()?.isOwner ? 'Propietario' : 'Empresa' }}</p>
         </div>
         <span
-          class="flex size-9 items-center justify-center rounded-full bg-primary-foreground text-xs font-semibold text-primary"
+          class="flex size-8 items-center justify-center rounded-full bg-primary-foreground text-[11px] font-semibold text-primary"
         >
           {{ initials(authState.user()?.fullName) }}
         </span>
@@ -40,27 +40,27 @@
         <a
           routerLink="/iam/users"
           title="IAM · Usuarios"
-          class="flex size-9 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
+          class="flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
         >
-          <svg lucideShieldCheck class="size-4"></svg>
+          <svg lucideShieldCheck class="size-3.5"></svg>
         </a>
 
         <button
           type="button"
           (click)="toggleSystemsMenu()"
           title="Acceso rápido a sistemas"
-          class="flex size-9 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
+          class="flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
         >
-          <svg lucideLayoutGrid class="size-4"></svg>
+          <svg lucideLayoutGrid class="size-3.5"></svg>
         </button>
 
         <button
           type="button"
           (click)="logout()"
           title="Cerrar sesión"
-          class="flex size-9 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
+          class="flex size-8 items-center justify-center rounded-md text-white transition-colors hover:bg-white/10"
         >
-          <svg lucideLogOut class="size-4"></svg>
+          <svg lucideLogOut class="size-3.5"></svg>
         </button>
       </div>
 

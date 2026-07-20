@@ -1,8 +1,8 @@
 <aside [class]="asideClass()">
   <div [class]="headerRowClass()">
-    <app-sidebar-icon [icon]="systemIcon()" class="size-6 shrink-0 text-white" />
+    <app-sidebar-icon [icon]="systemIcon()" class="size-5 shrink-0 text-white" />
     @if (!sidebarState.collapsed()) {
-      <span class="truncate text-base font-semibold tracking-wide">{{ section()?.systemName ?? systemCode() }}</span>
+      <span class="truncate text-sm font-semibold tracking-wide">{{ section()?.systemName ?? systemCode() }}</span>
     }
   </div>
 
@@ -18,7 +18,7 @@
             (mouseleave)="scheduleClose()"
             [class]="railButtonClass(module.code)"
           >
-            <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-4 shrink-0" />
+            <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-3.5 shrink-0" />
           </button>
         }
       } @else {
@@ -32,25 +32,25 @@
                     [routerLink]="module.route"
                     routerLinkActive="bg-blue-600 font-medium text-white"
                     [routerLinkActiveOptions]="{ exact: true }"
-                    class="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-base font-medium text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                    class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
                   >
-                    <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-5 shrink-0" />
+                    <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-4 shrink-0" />
                     <span class="flex-1 truncate text-left">{{ module.label }}</span>
                   </a>
                 } @else {
                   <button
                     type="button"
                     (click)="toggleOpen(module.code)"
-                    class="flex w-full items-center gap-2.5 rounded-md px-2.5 py-2 text-base font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
+                    class="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium text-slate-200 transition-colors hover:bg-white/10 hover:text-white"
                   >
-                    <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-5 shrink-0" />
+                    <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-4 shrink-0" />
                     <span class="flex-1 truncate text-left">{{ module.label }}</span>
                   </button>
                 }
                 <button
                   type="button"
                   (click)="toggleOpen(module.code)"
-                  class="flex size-7 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+                  class="flex size-6 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
                   [title]="isOpen(module.code) ? 'Contraer' : 'Expandir'"
                 >
                   <svg lucideChevronDown [class]="chevronClass(isOpen(module.code))"></svg>
@@ -63,7 +63,7 @@
                       [routerLink]="sub.route"
                       routerLinkActive="bg-blue-600 font-medium text-white"
                       [title]="sub.label"
-                      class="flex items-center gap-2 rounded-md py-1.5 pr-2.5 pl-3.5 text-base text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+                      class="flex items-center gap-2 rounded-md py-1 pr-2 pl-3 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
                     >
                       <span class="truncate">{{ sub.label }}</span>
                     </a>
@@ -76,9 +76,9 @@
               [routerLink]="module.route ?? '#'"
               routerLinkActive="bg-blue-600 font-medium text-white"
               [title]="module.label"
-              class="flex items-center gap-2.5 rounded-md px-2.5 py-2 text-base text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
+              class="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white"
             >
-              <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-5 shrink-0" />
+              <app-sidebar-icon [icon]="moduleIcon(module.code)" class="size-4 shrink-0" />
               <span class="truncate">{{ module.label }}</span>
             </a>
           }
@@ -95,9 +95,9 @@
       [class]="toggleButtonClass()"
     >
       @if (sidebarState.collapsed()) {
-        <svg lucideChevronsRight class="size-5 shrink-0"></svg>
+        <svg lucideChevronsRight class="size-4 shrink-0"></svg>
       } @else {
-        <svg lucideChevronsLeft class="size-4 shrink-0"></svg>
+        <svg lucideChevronsLeft class="size-3.5 shrink-0"></svg>
         <span>Contraer</span>
       }
     </button>
@@ -106,7 +106,7 @@
   <!-- Flyout del modo contraído: submódulos del módulo bajo el cursor -->
   @if (sidebarState.collapsed() && fly() && flyModule(); as module) {
     <div
-      class="sb-fly-in fixed z-[9999] w-56 rounded-lg border border-white/10 bg-[#0b4c8c] p-1.5 shadow-xl"
+      class="sb-fly-in fixed z-[9999] w-52 rounded-lg border border-white/10 bg-[#0b4c8c] p-1.5 shadow-xl"
       [style.top.px]="fly()!.top"
       [style.left.px]="fly()!.left"
       (mouseenter)="cancelClose()"

@@ -38,7 +38,7 @@
       <div class="flex gap-1">
         <button
           appButton
-          variant="outline"
+          variant="ghost-warning"
           size="icon-sm"
           type="button"
           title="Editar"
@@ -49,7 +49,7 @@
         </button>
         <button
           appButton
-          variant="outline"
+          [variant]="company.status === ENTITY_STATUS.ACTIVE ? 'ghost-destructive' : 'ghost-success'"
           size="icon-sm"
           type="button"
           [title]="company.status === ENTITY_STATUS.ACTIVE ? 'Suspender' : 'Reactivar'"

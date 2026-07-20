@@ -1,17 +1,31 @@
 import { Directive, computed, input } from '@angular/core';
 
-export type ButtonVariant = 'primary' | 'outline' | 'destructive' | 'ghost';
+export type ButtonVariant =
+  | 'primary'
+  | 'outline'
+  | 'destructive'
+  | 'ghost'
+  | 'ghost-primary'
+  | 'ghost-warning'
+  | 'ghost-destructive'
+  | 'ghost-success';
 export type ButtonSize = 'default' | 'sm' | 'icon' | 'icon-sm';
 
 const BASE =
   'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition ' +
   'disabled:cursor-not-allowed disabled:opacity-60';
 
+// Variantes "ghost-*": mismo look (sin borde, sin fondo en reposo) pero con un color semántico
+// fijo por tipo de acción. El color vive acá, una sola vez — nunca se define color en la vista.
 const VARIANT_CLASSES: Record<ButtonVariant, string> = {
   primary: 'bg-primary text-primary-foreground hover:opacity-90',
   outline: 'border border-input bg-background text-foreground hover:bg-muted',
   destructive: 'bg-destructive text-destructive-foreground hover:opacity-90',
   ghost: 'text-foreground hover:bg-muted',
+  'ghost-primary': 'text-primary hover:bg-primary/10',
+  'ghost-warning': 'text-amber-600 hover:bg-amber-600/10',
+  'ghost-destructive': 'text-destructive hover:bg-destructive/10',
+  'ghost-success': 'text-success hover:bg-success/10',
 };
 
 const SIZE_CLASSES: Record<ButtonSize, string> = {

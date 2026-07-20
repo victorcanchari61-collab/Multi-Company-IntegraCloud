@@ -39,7 +39,7 @@
         <div class="flex gap-1">
           <button
             appButton
-            variant="outline"
+            variant="ghost-warning"
             size="icon-sm"
             type="button"
             title="Editar"
@@ -50,7 +50,7 @@
           </button>
           <button
             appButton
-            variant="outline"
+            variant="ghost-primary"
             size="icon-sm"
             type="button"
             title="Cambiar contraseña"
@@ -61,7 +61,7 @@
           </button>
           <button
             appButton
-            variant="outline"
+            [variant]="user.status === ENTITY_STATUS.ACTIVE ? 'ghost-destructive' : 'ghost-success'"
             size="icon-sm"
             type="button"
             [title]="user.status === ENTITY_STATUS.ACTIVE ? 'Desactivar' : 'Reactivar'"

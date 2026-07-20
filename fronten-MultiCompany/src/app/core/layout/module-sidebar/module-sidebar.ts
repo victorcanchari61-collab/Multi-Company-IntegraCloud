@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideChevronDown, LucideChevronsLeft, LucideChevronsRight } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
@@ -30,9 +30,16 @@ interface FlyState {
   left: number;
 }
 
+// Debe coincidir con el breakpoint `md` de Tailwind (768px).
+const MOBILE_QUERY = '(max-width: 767px)';
+
 /**
  * Sidebar propio de UN sistema (IAM, ERP, ...), no un árbol cruzado de todos los sistemas.
  * Cada módulo de la app monta el suyo con [systemCode]="'IAM'" (o el que corresponda).
+ *
+ * Responsive: en desktop (md+) empuja el contenido (ancho w-12/w-52 según collapsed/hidden).
+ * En mobile arranca oculto y se abre como drawer flotante sobre el contenido con backdrop,
+ * ignorando el modo "collapsed" (en un drawer temporal no tiene sentido el riel de solo iconos).
  */
 @Component({
   selector: 'app-module-sidebar',
@@ -41,7 +48,7 @@ interface FlyState {
   templateUrl: './module-sidebar.html',
   styleUrl: './module-sidebar.css',
   host: {
-    class: 'flex h-full',
+    class: 'contents',
   },
 })
 export class ModuleSidebar {
@@ -56,32 +63,52 @@ export class ModuleSidebar {
   protected readonly fly = signal<FlyState | null>(null);
   private closeTimer: ReturnType<typeof setTimeout> | null = null;
 
+  protected readonly isMobile = signal(false);
+
   constructor() {
     firstValueFrom(this.menuService.getMenu())
       .then((sections) => this.sections.set(sections))
       .catch(() => this.sections.set([]));
+
+    if (typeof window !== 'undefined') {
+      const mql = window.matchMedia(MOBILE_QUERY);
+      this.isMobile.set(mql.matches);
+      const onChange = (e: MediaQueryListEvent) => this.isMobile.set(e.matches);
+      mql.addEventListener('change', onChange);
+      inject(DestroyRef).onDestroy(() => mql.removeEventListener('change', onChange));
+    }
   }
 
   protected readonly systemIcon = computed(() => SYSTEM_ICON_KEYS[this.systemCode()] ?? 'shield-check');
 
-  // Clases de ancho como string computado (no [class.w-14]/[class.w-48] sueltos): Tailwind v4
-  // no siempre detecta bindings de clase dinámicos armados por Angular, esto es más confiable.
+  // Clases como string computado (no [class.w-14]/[class.w-48] sueltos): Tailwind v4 no siempre
+  // detecta bien bindings de clase dinámicos armados por Angular, esto es más confiable.
   protected readonly asideClass = computed(() => {
+    const hidden = this.sidebarState.hidden();
+    const collapsed = this.sidebarState.collapsed();
+
     const base =
-      'flex h-full shrink-0 flex-col overflow-hidden bg-[#0b4c8c] text-slate-100 transition-all duration-300 ease-in-out';
-    if (this.sidebarState.hidden()) return `${base} w-0`;
-    return this.sidebarState.collapsed() ? `${base} w-12` : `${base} w-52`;
+      'fixed inset-y-0 left-0 z-50 flex h-full w-64 flex-col overflow-hidden bg-[#0b4c8c] text-slate-100 ' +
+      'transition-transform duration-300 ease-in-out ' +
+      'md:static md:z-auto md:translate-x-0 md:transition-[width] md:duration-300 md:ease-in-out';
+
+    const mobileTransform = hidden ? '-translate-x-full' : 'translate-x-0';
+    const desktopWidth = hidden ? 'md:w-0' : collapsed ? 'md:w-12' : 'md:w-52';
+
+    return `${base} ${mobileTransform} ${desktopWidth}`;
   });
+
+  protected readonly showCollapsedRail = computed(() => this.sidebarState.collapsed() && !this.isMobile());
 
   protected readonly headerRowClass = computed(() => {
     const base = 'flex h-14 items-center gap-2 border-b border-white/10 px-3.5';
-    return this.sidebarState.collapsed() ? `${base} justify-center px-0` : base;
+    return this.showCollapsedRail() ? `${base} justify-center px-0` : base;
   });
 
   protected readonly toggleButtonClass = computed(() => {
     const base =
       'flex w-full items-center gap-2 rounded-md px-2 py-2 text-sm text-slate-300 transition-colors hover:bg-white/10 hover:text-white';
-    return this.sidebarState.collapsed() ? `${base} justify-center px-0` : base;
+    return this.showCollapsedRail() ? `${base} justify-center px-0` : base;
   });
 
   protected readonly section = computed<MenuSection | null>(() => {
@@ -127,6 +154,15 @@ export class ModuleSidebar {
 
   protected moduleIcon(code: string): SidebarIconKey {
     return MODULE_ICON_KEYS[code] ?? 'folder';
+  }
+
+  /** En mobile, navegar cierra el drawer (si no, tapa el contenido después de navegar). */
+  protected closeOnMobileNavigate(): void {
+    if (this.isMobile() && !this.sidebarState.hidden()) this.sidebarState.toggleHidden();
+  }
+
+  protected closeDrawer(): void {
+    if (!this.sidebarState.hidden()) this.sidebarState.toggleHidden();
   }
 
   protected cancelClose(): void {

@@ -23,7 +23,7 @@
         <span class="inline-flex size-8 items-center justify-center rounded-lg bg-white p-1">
           <img src="/bravic-logo.png" alt="BRAVIC SYSTEMS" class="size-full object-contain" />
         </span>
-        <span class="text-xs font-semibold tracking-wide">BRAVIC SYSTEMS</span>
+        <span class="hidden text-xs font-semibold tracking-wide sm:inline">BRAVIC SYSTEMS</span>
       </div>
 
       <div class="flex items-center gap-2">
@@ -67,7 +67,7 @@
       @if (systemsMenuOpen()) {
         <div class="fixed inset-0 z-40" (click)="closeSystemsMenu()"></div>
         <div
-          class="absolute right-4 top-full z-50 mt-2 w-96 rounded-xl border border-border bg-card p-3 text-foreground shadow-xl"
+          class="absolute right-4 top-full z-50 mt-2 w-[min(24rem,calc(100vw-2rem))] rounded-xl border border-border bg-card p-3 text-foreground shadow-xl"
         >
           <p class="mb-2 px-1 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Acceso rápido a sistemas

@@ -31,9 +31,12 @@ export class Dialog {
 
   private readonly dialogEl = viewChild.required<ElementRef<HTMLDialogElement>>('dialogEl');
 
+  // mx-4 + w-[calc(100%-2rem)] en vez de w-full: dejan el mismo aire (1rem) a cada lado en
+  // cualquier ancho de pantalla, sin depender del auto-centrado del navegador para <dialog>.
   protected readonly dialogClass = computed(
     () =>
-      `w-full ${SIZE_CLASSES[this.size()]} rounded-xl border border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/50`,
+      `mx-4 w-[calc(100%-2rem)] ${SIZE_CLASSES[this.size()]} max-h-[85vh] overflow-y-auto rounded-xl border ` +
+      `border-border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/50`,
   );
 
   constructor() {

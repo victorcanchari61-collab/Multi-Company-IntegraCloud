@@ -32,7 +32,7 @@ const SIZE_CLASSES: Record<ButtonSize, string> = {
   default: 'h-11 px-4 text-sm',
   sm: 'h-8 px-3 text-xs',
   icon: 'size-9',
-  'icon-sm': 'size-7',
+  'icon-sm': 'size-8',
 };
 
 /**

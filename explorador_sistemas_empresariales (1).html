@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -49,31 +48,14 @@ const DATA = {
           {name:"Ventas",subs:["Cotizaciones","Órdenes de venta","Clientes","Listas de precios","Condiciones comerciales","Comisiones de vendedores"]},
           {name:"Compras",subs:["Órdenes de compra","Proveedores","Solicitudes de compra","Evaluación de proveedores","Contratos de compra"]},
           {name:"Inventario (control contable)",subs:[
-            "Almacenes",
-            "Stock actual",
-            "Movimientos de stock",
-            "Kárdex contable",
-            "Costo promedio ponderado",
-            "Valorización de stock",
-            "Transferencias entre almacenes",
-            "Reservas de stock",
-            "Ajustes de inventario",
-            "Niveles de reposición",
-            "Dashboard y reportes"
+            "Almacenes","Stock actual","Movimientos de stock","Kárdex contable",
+            "Costo promedio ponderado","Valorización de stock","Transferencias entre almacenes",
+            "Reservas de stock","Ajustes de inventario","Niveles de reposición","Dashboard y reportes"
           ]},
           {name:"Catálogo de productos",subs:[
-            "Ficha maestra del producto",
-            "Unidades de medida",
-            "Categorías",
-            "Subcategorías",
-            "Marcas",
-            "Submarcas",
-            "Presentaciones de producto",
-            "Monedas",
-            "Listas de precio",
-            "Precio de venta por lista",
-            "Código de barras / SKU",
-            "Costo estándar"
+            "Ficha maestra del producto","Unidades de medida","Categorías","Subcategorías",
+            "Marcas","Submarcas","Presentaciones de producto","Monedas",
+            "Listas de precio","Precio de venta por lista","Código de barras / SKU","Costo estándar"
           ]},
           {name:"Facturación",subs:["Emisión de facturas","Notas de crédito / débito","Cuentas por cobrar","Seguimiento de pagos","Factura electrónica"]},
           {name:"Contabilidad",subs:["Plan de cuentas","Asientos contables","Libro mayor","Balance general","Estado de resultados","Cierre contable"]},
@@ -81,29 +63,54 @@ const DATA = {
           {name:"Clientes (CRM)",subs:["Ficha de cliente","Historial de compras","Crédito asignado","Contactos","Segmentación"]},
           {name:"Proveedores",subs:["Ficha de proveedor","RUC / datos fiscales","Condiciones de pago","Historial de compras","Líneas de crédito"]},
           {name:"Reportes y BI",subs:["Ventas por período","Margen por producto","Rotación de inventario","Cuentas por cobrar aging","KPIs financieros"]},
+          {name:"Activo Fijo",subs:[
+            "Registro de activos","Altas y bajas","Depreciación (lineal / acelerada)",
+            "Revaluación de activos","Transferencias y bajas","Conciliación contable"
+          ]},
+          {name:"Costos",subs:[
+            "Centros de costo","Costeo por órdenes de producción","Costeo por proceso",
+            "Costeo estándar vs real","Análisis de variaciones","Margen por producto / línea"
+          ]},
+          {name:"Gestión de Proyectos",subs:[
+            "WBS / Estructura de desglose de trabajo","Presupuesto de proyecto",
+            "Avance de obra / % completado","Facturación por hitos","Timesheets / recursos"
+          ]},
+          {name:"Viajes y Gastos",subs:[
+            "Solicitudes de viaje","Liquidación de gastos","Políticas de gastos",
+            "Aprobaciones automáticas","Integración contable"
+          ]},
+          {name:"Presupuesto",subs:[
+            "Presupuesto por centro de costo","Control presupuestal",
+            "Modificaciones y ampliaciones","Ejecución vs presupuesto"
+          ]},
+          {name:"Tesorería avanzada",subs:[
+            "Posiciones de tesorería","Inversiones temporales","Líneas de crédito",
+            "Proyecciones de liquidez","Gestión de riesgos cambiarios"
+          ]},
+          {name:"Declaraciones fiscales",subs:[
+            "ISR / Impuesto a la renta","IVA / VAT","DIOT","Contabilidad electrónica",
+            "CFDI de nómina","Declaraciones mensuales y anuales"
+          ]},
         ]},
         {id:"CRM",full:"Customer Relationship Management",desc:"Gestiona las relaciones con clientes a lo largo de todo el ciclo de vida.",modules:[
           {name:"Ventas",subs:["Gestión de leads","Pipeline de ventas","Oportunidades","Pronóstico de ventas","Cuotas y metas","Propuestas comerciales"]},
           {name:"Marketing",subs:["Campañas de marketing","Email marketing","Segmentación de clientes","Automatización de marketing","Landing pages","Métricas de campaña"]},
           {name:"Servicio al cliente",subs:["Gestión de tickets","Base de conocimiento","Chat en vivo","Encuestas de satisfacción","SLA y escalamiento","Portal de autoservicio"]},
           {name:"Análisis",subs:["Reportes de ventas","Análisis de clientes","Dashboards ejecutivos","Predicción de churn","Valor de vida del cliente (CLV)"]},
+          {name:"Social Media",subs:["Monitoreo de redes sociales","Publicación programada","Engagement scoring","Análisis de sentimiento"]},
+          {name:"Contract Management",subs:["Generación de contratos","Renovaciones automáticas","Aprobaciones","Repositorio de contratos"]},
+          {name:"Customer Success",subs:["Health score del cliente","Onboarding","Gestión de renovaciones","Expansión / upsell","NPS y satisfacción"]},
         ]},
         {id:"WMS",full:"Warehouse Management System",desc:"Controla y optimiza las operaciones dentro del almacén.",modules:[
           {name:"Recepción",subs:["Muelle de entrada","Verificación vs orden de compra","Control de calidad","Etiquetado y codificación","Devoluciones de clientes"]},
           {name:"Almacenamiento",subs:[
-            "Ubicaciones (pasillo/estante/nivel)",
-            "Zonas de almacén",
-            "Gestión de lotes (fecha vencimiento)",
-            "Números de serie",
-            "Reglas de ubicación",
-            "Control de temperatura"
+            "Ubicaciones (pasillo/estante/nivel)","Zonas de almacén",
+            "Gestión de lotes (fecha vencimiento)","Números de serie",
+            "Reglas de ubicación","Control de temperatura"
           ]},
           {name:"Inventario físico",subs:[
-            "Conteos físicos (toma de inventario)",
-            "Trazabilidad de movimientos",
-            "Stock por ubicación",
-            "Conteos cíclicos programados",
-            "Diferencias y ajustes físicos"
+            "Conteos físicos (toma de inventario)","Trazabilidad de movimientos",
+            "Stock por ubicación","Conteos cíclicos programados","Diferencias y ajustes físicos"
           ]},
           {name:"Picking",subs:["Órdenes de picking","Asignación de operarios","Rutas de picking optimizadas","Picking por lote / zona","Confirmación con escáner"]},
           {name:"Packing",subs:["Verificación de bultos","Empaque por tipo de producto","Generación de packing list","Peso y dimensiones","Etiquetas de envío"]},
@@ -112,12 +119,19 @@ const DATA = {
           {name:"Transportistas",subs:["Ficha de transportista","Vehículos","Rutas asignadas","Tarifas de flete","Seguimiento de entregas"]},
           {name:"Productos (atributos WMS)",subs:["Dimensiones y peso","Tipo de almacenamiento","Fragilidad / peligrosidad","Cantidad por pallet","Imagen de ubicación"]},
           {name:"Reportes operativos",subs:["Ocupación del almacén","Productividad por operario","Tiempo de ciclo","Tasa de error de picking","Movimientos por período"]},
+          {name:"Cross-docking",subs:["Planificación de cross-dock","Tránsito directo","Consolidación de carga"]},
+          {name:"Wave Planning",subs:["Agrupación de olas por ventana","Priorización de olas","Liberación por capacidad"]},
+          {name:"Slotting / Reubicación",subs:["Optimización de ubicaciones ABC","Re-slotting automático","Análisis de rotación por ubicación"]},
+          {name:"Labor Management",subs:["Estándares de productividad","Planificación de mano de obra","Tiempos estándar por tarea"]},
         ]},
         {id:"SCM",full:"Supply Chain Management",desc:"Coordina el flujo de bienes, información y finanzas en la cadena de suministro.",modules:[
           {name:"Planificación de demanda",subs:["Pronóstico estadístico","Consenso de demanda","Gestión de temporadas","Segmentación ABC-XYZ"]},
           {name:"Planificación de suministro",subs:["Plan maestro de producción (MPS)","Política de inventarios","Gestión de restricciones","Colaboración con proveedores"]},
           {name:"Aprovisionamiento",subs:["Selección de proveedores","Negociación de contratos","Monitoreo de entregas","Scorecard de proveedor"]},
           {name:"Logística",subs:["Gestión de transporte","Freight management","Aduana e importaciones","Reverse logistics"]},
+          {name:"S&OP",subs:["Reuniones S&OP","Conciliación demanda-suministro","Escenarios de planificación","Indicadores de la cadena"]},
+          {name:"Supply Chain Visibility",subs:["Seguimiento multimodal","Dashboard de cadena","Alertas de disrupción","Mapa de red logística"]},
+          {name:"Supplier Collaboration",subs:["Portal de colaboración","VMI (proveedor gestiona inventario)","EDI/API con proveedores","Intercambio de pronósticos"]},
         ]},
         {id:"MRP",full:"Material Requirements Planning",desc:"Calcula los materiales necesarios para la producción basándose en la demanda.",modules:[
           {name:"Planificación",subs:["Explosión de BOM","Cálculo de necesidades netas","Órdenes planificadas","Mensajes de acción"]},
@@ -135,6 +149,10 @@ const DATA = {
           {name:"Desempeño",subs:["Evaluación 360°","Objetivos y OKRs","Plan de desarrollo","Retroalimentación continua"]},
           {name:"Capacitación",subs:["Planes de formación","LMS integrado","Certificaciones","Historial de capacitación"]},
           {name:"Asistencia",subs:["Control de asistencia","Gestión de turnos","Vacaciones y permisos","Ausentismo"]},
+          {name:"Compensación total",subs:["Estructura salarial","Encuestas de compensación","Bonos e incentivos","Beneficios flexibles"]},
+          {name:"Sucesión y Talento",subs:["Planes de sucesión","Identificación de alto potencial (HiPo)","Retención de talento","Movilidad interna"]},
+          {name:"Employee Experience",subs:["Encuestas de clima","Pulso organizacional","Reconocimientos","eNPS"]},
+          {name:"HR Analytics",subs:["Headcount planning","Tasa de rotación","Costo por contratación","Tiempo de cobertura"]},
         ]},
         {id:"POS",full:"Point of Sale",desc:"Gestiona las transacciones de venta en el punto de contacto con el cliente.",modules:[
           {name:"Ventas",subs:["Facturación rápida","Descuentos y cupones","Múltiples métodos de pago","Devoluciones y cambios"]},
@@ -147,18 +165,73 @@ const DATA = {
           {name:"Manufactura",subs:["BOM de manufactura (MBOM)","Instrucciones de trabajo","Calificación de procesos"]},
           {name:"Compliance",subs:["Regulaciones ambientales","Gestión de sustancias peligrosas (RoHS)","Documentación regulatoria"]},
           {name:"Fin de vida",subs:["Planificación de descontinuación","Soporte posventa","Retiro del mercado","Reciclaje y disposición"]},
+          {name:"Requirements Management",subs:["Captura de requerimientos","Trazabilidad de requerimientos","Validación y aprobación","Gestión de cambios"]},
+          {name:"NPI (New Product Introduction)",subs:["Gate review","Roadmap de lanzamiento","Puesta en marcha","Cross-functional team coordination"]},
         ]},
         {id:"QMS",full:"Quality Management System",desc:"Asegura que los productos y procesos cumplan con los estándares de calidad.",modules:[
           {name:"Control de calidad",subs:["Inspección de entrada","Control en proceso (IPQC)","Inspección de producto final","Muestreo estadístico (AQL)"]},
           {name:"No conformidades",subs:["Registro de defectos","Análisis de causa raíz (RCA)","Acciones correctivas (CAPA)","8D Report"]},
           {name:"Auditorías",subs:["Auditorías internas","Auditorías a proveedores","Preparación ISO 9001","Plan de auditoría"]},
           {name:"Documentación",subs:["Control de documentos","SOPs y procedimientos","Registros de calidad","Trazabilidad de lotes"]},
+          {name:"Calibration Management",subs:["Equipos de medición","Programación de calibración","Certificados de calibración","Historial de calibración"]},
+          {name:"Customer Complaints",subs:["Registro de quejas","Investigación de causa","Respuesta al cliente","Acciones correctivas"]},
         ]},
         {id:"EAM",full:"Enterprise Asset Management",desc:"Gestiona el ciclo de vida de los activos físicos de la empresa.",modules:[
           {name:"Mantenimiento preventivo",subs:["Planes de mantenimiento","Órdenes de trabajo","Historial de equipos","Mantenimiento predictivo"]},
           {name:"Gestión de activos",subs:["Registro de activos","Depreciación","Localización de activos","Gestión de garantías"]},
           {name:"Repuestos",subs:["Inventario de repuestos","Criticidad de partes","Órdenes de compra MRO"]},
           {name:"Confiabilidad",subs:["FMEA","Análisis de modos de falla","Indicadores OEE","MTBF / MTTR"]},
+        ]},
+        {id:"MES",full:"Manufacturing Execution System",desc:"Controla, monitorea y documenta la producción en tiempo real en el piso de fábrica.",modules:[
+          {name:"Ejecución de producción",subs:["Órdenes de producción","Liberación de lotes","Pantallas de operación (SCADA/OPC)","Registro de producción"]},
+          {name:"Trazabilidad",subs:["Registro de lotes por equipo/operador","Genealogía del producto","Contrapunto de materiales","Números de serie"]},
+          {name:"Calidad en línea",subs:["Pruebas en proceso (IPQC)","SPC (Statistical Process Control)","Firmas electrónicas","Control estadístico de calidad"]},
+          {name:"Rendimiento",subs:["OEE (Overall Equipment Effectiveness)","Tiempos de ciclo","Tasa de scrap / retrabajo","Velocidad de producción"]},
+          {name:"Mano de obra directa",subs:["Registro de tiempos","Asignación de operarios","Hojas de ruta","Matriz de habilidades"]},
+          {name:"Integración",subs:["Recepción de órdenes desde ERP","Devolución de consumos","Reporte de producción a ERP","Integración con PLC/SCADA"]},
+        ]},
+        {id:"EHS",full:"Environmental, Health & Safety",desc:"Gestiona la seguridad laboral, salud ocupacional y medio ambiente en la organización.",modules:[
+          {name:"Seguridad laboral",subs:["Registro de incidentes / accidentes","Investigación de causas","Matriz de riesgos","Permisos de trabajo"]},
+          {name:"Salud ocupacional",subs:["Exámenes médicos","Vigilancia epidemiológica","Ergonomía","Ausentismo por salud"]},
+          {name:"Medio ambiente",subs:["Monitoreo de emisiones","Gestión de residuos","Permisos ambientales","Huella de carbono"]},
+          {name:"Capacitación EHS",subs:["Inducción de seguridad","Matriz de capacitación","Certificaciones obligatorias","Simulacros"]},
+          {name:"Reportes regulatorios",subs:["Indicadores de frecuencia y gravedad","Reportes a autoridad","Auditorías EHS","Plan de emergencia"]},
+        ]},
+        {id:"FSM",full:"Field Service Management",desc:"Programa, ejecuta y da seguimiento a servicios en campo con técnicos móviles.",modules:[
+          {name:"Órdenes de servicio",subs:["Programación de técnicos","Asignación por skill / ubicación","Priorización","Ventanas de servicio"]},
+          {name:"Gestión de técnicos",subs:["Disponibilidad en tiempo real","Certificaciones y skills","Rutas optimizadas","Geolocalización"]},
+          {name:"Ejecución en campo",subs:["App móvil","Checklist de servicio","Fotos y firmas digitales","Tiempo y materiales"]},
+          {name:"Repuestos en campo",subs:["Inventario en vehículo","Reabastecimiento","Devoluciones","Pedidos urgentes"]},
+          {name:"Facturación",subs:["Work order a factura","Precios por servicio vs contrato","Integración ERP","Cobro en campo"]},
+          {name:"Reportes",subs:["Tasa de primera visita (FTFR)","MTTR","Satisfacción del cliente","Productividad por técnico"]},
+        ]},
+        {id:"RPA",full:"Robotic Process Automation",desc:"Automatiza tareas repetitivas y basadas en reglas mediante bots de software.",modules:[
+          {name:"Bot Builder",subs:["Grabador de procesos","Editor visual de workflows","Control de errores","Depuración"]},
+          {name:"Gestión de bots",subs:["Orquestador / Control Room","Programación de ejecución","Colas de trabajo","Escalamiento"]},
+          {name:"Tipos de bots",subs:["Bots atendidos (asistente de escritorio)","Bots no atendidos (back-office)","Bots híbridos","Bots de IA / procesamiento documento"]},
+          {name:"Seguridad y gobierno",subs:["Credenciales cifradas","Auditoría de ejecuciones","Roles de acceso","Segregación de funciones"]},
+          {name:"Monitoreo",subs:["Dashboard de bots","KPIs (tasa de éxito, tiempo ahorrado)","Alertas de falla","ROI de automatización"]},
+        ]},
+        {id:"CPQ",full:"Configure, Price, Quote",desc:"Genera cotizaciones precisas configurando productos, precios y condiciones comerciales.",modules:[
+          {name:"Configuración de producto",subs:["Reglas de configuración (if-then / constraint)","Árbol de opciones","Guía visual de selección","Compatibilidad de componentes"]},
+          {name:"Pricing",subs:["Precios base y dinámicos","Reglas de descuento","Bundles / paquetes","Pricing por volumen"]},
+          {name:"Cotizaciones",subs:["Generación de propuestas","Flujos de aprobación","Versiones de cotización","Renovaciones"]},
+          {name:"Documentos",subs:["Propuesta comercial (PDF)","Especificaciones técnicas","Contratos","Términos y condiciones"]},
+          {name:"Integración",subs:["Sincronización CRM (oportunidades)","Sincronización ERP (precios/stock)","Catálogo de productos","Validación de crédito"]},
+        ]},
+        {id:"PPM",full:"Project Portfolio Management",desc:"Gestiona el portafolio de proyectos, recursos, tiempos y finanzas.",modules:[
+          {name:"Gestión de portafolio",subs:["Evaluación de proyectos","Scoring y priorización","Roadmap de capacidad","Análisis de dependencias"]},
+          {name:"Gestión de proyectos",subs:["WBS","Cronograma (Gantt)","Asignación de recursos","Gestión de riesgos"]},
+          {name:"Gestión de recursos",subs:["Disponibilidad y reservas","Timesheets","Perfiles de competencias","Planificación de capacidad"]},
+          {name:"Finanzas de proyecto",subs:["Presupuesto vs real","Costos y horas","Facturación a cliente","ROI de proyecto"]},
+          {name:"Reportes",subs:["Dashboard de portafolio","Estado RAG (Verde/Ámbar/Rojo)","Valor entregado","KPIs de proyectos"]},
+        ]},
+        {id:"MDM",full:"Master Data Management",desc:"Gestiona y gobierna los datos maestros críticos del negocio.",modules:[
+          {name:"Modelo de datos maestros",subs:["Dominios (cliente, producto, proveedor)","Atributos y jerarquías","Esquema canónico","Golden record"]},
+          {name:"Calidad de datos",subs:["Reglas de estandarización","Deduplicación / matching","Data profiling","Corrección y enriquecimiento"]},
+          {name:"Gobierno",subs:["Stewards por dominio","Flujos de aprobación","Políticas de creación","Data ownership"]},
+          {name:"Integración",subs:["Hub de datos maestros (MDM Hub)","Sincronización multidireccional","Publicación de golden records","APIs de consumo"]},
+          {name:"Monitoreo",subs:["Scorecards de calidad","Reportes de cumplimiento","Data lineage","Alertas de anomalías"]},
         ]},
       ]
     },
@@ -173,6 +246,10 @@ const DATA = {
           {name:"Reportes",subs:["Reportes estáticos","Reportes ad hoc","Programación de envíos","Formatos: PDF, Excel, CSV"]},
           {name:"Dashboards",subs:["Dashboards ejecutivos","KPIs en tiempo real","Mapas geográficos","Drilldown interactivo"]},
           {name:"Self-service analytics",subs:["Exploración de datos","Filtros y segmentación","Exportación de datos","Creación de visualizaciones"]},
+          {name:"Data Catalog",subs:["Inventario de activos de datos","Business glossary","Lineage de datos","Búsqueda y descubrimiento"]},
+          {name:"Data Governance",subs:["Políticas de datos","Roles y responsabilidades","Stewardship","Certificación de datos"]},
+          {name:"Data Quality",subs:["Reglas de calidad","Perfilamiento de datos","Monitoreo continuo","Reportes de calidad"]},
+          {name:"Advanced Analytics / ML",subs:["Modelos predictivos","Segmentación automática","Forecasting avanzado","Detección de anomalías"]},
         ]},
         {id:"DSS",full:"Decision Support System",desc:"Apoya decisiones complejas combinando modelos analíticos y datos.",modules:[
           {name:"Modelado",subs:["Modelos de simulación","Análisis de escenarios","Optimización matemática","Análisis de sensibilidad"]},
@@ -183,6 +260,20 @@ const DATA = {
           {name:"Monitoreo estratégico",subs:["Balanced Scorecard (BSC)","KPIs estratégicos","Semáforos de desempeño","Tendencias ejecutivas"]},
           {name:"Análisis financiero",subs:["P&L ejecutivo","Flujo de caja","Comparativo vs presupuesto","Análisis de rentabilidad"]},
           {name:"Alertas ejecutivas",subs:["Umbrales de alerta","Notificaciones automáticas","Resúmenes diarios/semanales","Excepciones críticas"]},
+        ]},
+        {id:"EPM",full:"Enterprise Performance Management (EPM/CPM)",desc:"Planifica, consolida y reporta el desempeño financiero y estratégico de la organización.",modules:[
+          {name:"Planificación financiera",subs:["Presupuesto base cero","Rolling forecast","Planificación de escenarios","Planificación a largo plazo"]},
+          {name:"Consolidación",subs:["Consolidación contable","Eliminaciones intercompañía","Ajustes de conversión","Minoritarios"]},
+          {name:"Reporting corporativo",subs:["P&L consolidado","Balance consolidado","Cash flow consolidado","Segment reporting"]},
+          {name:"Modelado financiero",subs:["ROI de proyectos","Modelos what-if","Valuación","Análisis de sensibilidad financiera"]},
+          {name:"Profitability & Costing",subs:["Rentabilidad por unidad de negocio","Costeo ABC","Margen por cliente/producto","Driver-based planning"]},
+        ]},
+        {id:"DGOV",full:"Data Governance Platform",desc:"Gobierna la calidad, seguridad y uso de los datos en toda la organización.",modules:[
+          {name:"Data Catalog",subs:["Inventario de activos","Business glossary","Lineage de datos","Búsqueda y descubrimiento"]},
+          {name:"Data Quality",subs:["Profiles de datos","Reglas de calidad","Dashboard de calidad","Corrección y enriquecimiento"]},
+          {name:"Stewardship",subs:["Roles y responsabilidades","Workflows de aprobación","Comunidades de datos","Certificación"]},
+          {name:"Policy Management",subs:["Políticas de acceso","Clasificación de datos","Retención y archivado","Controles de uso"]},
+          {name:"Privacidad",subs:["Gestión de consentimientos","Derechos ARCO","Data mapping","Breach notification"]},
         ]},
       ]
     },
@@ -212,8 +303,330 @@ const DATA = {
           {name:"Gestión de acuerdos",subs:["Contratos de distribución","Metas y cuotas de canal","Fondos de desarrollo de mercado (MDF)","Registro de oportunidades"]},
           {name:"Desempeño de canal",subs:["Scorecard de partners","Comisiones y rebates","Análisis de pipeline de canal","Comparativa entre partners"]},
         ]},
+        {id:"LMS",full:"Learning Management System",desc:"Gestiona la capacitación, formación y desarrollo del talento en la organización.",modules:[
+          {name:"Gestión de contenido",subs:["Cursos SCORM / xAPI","Bibliotecas de contenido","Evaluaciones y quizzes","Catálogo multimedia"]},
+          {name:"Administración",subs:["Catálogo de cursos","Calendario de capacitación","Inscripciones y permisos","Certificaciones"]},
+          {name:"Seguimiento",subs:["Progreso del alumno","Competencias adquiridas","Transcript","Rutas de aprendizaje"]},
+          {name:"Social learning",subs:["Foros de discusión","Mentorías","Gamificación","Badges y reconocimientos"]},
+          {name:"Reportes",subs:["Cumplimiento regulatorio","Horas de capacitación","ROI de formación","Evaluación de efectividad"]},
+        ]},
+        {id:"BPM",full:"Business Process Management",desc:"Modela, automatiza, monitorea y optimiza los procesos de negocio.",modules:[
+          {name:"Modelado",subs:["BPMN 2.0","Diseñador de procesos","Simulación de procesos","Repositorio de procesos"]},
+          {name:"Automatización",subs:["Motor de workflow","Formularios dinámicos","Reglas de negocio (DMN)","Integración de sistemas"]},
+          {name:"Monitoreo",subs:["Process analytics","KPIs de proceso","Detección de cuellos de botella","Alertas de proceso"]},
+          {name:"Optimización",subs:["Análisis de variantes","Process Mining","Rediseño de procesos","Benchmarking"]},
+        ]},
+        {id:"DAM",full:"Digital Asset Management",desc:"Centraliza, organiza y distribuye activos digitales de la organización.",modules:[
+          {name:"Repositorio",subs:["Imágenes","Videos","Documentos","Brand guidelines","Metadatos y tags"]},
+          {name:"Workflows",subs:["Aprobación de assets","Versionado","Expiración y archivado","Revisión y proofing"]},
+          {name:"Distribución",subs:["Portales de marca","Integración con CMS / e-commerce","Transformación automática","Canales de salida"]},
+          {name:"Colaboración",subs:["Anotaciones y comentarios","Colecciones y lightboxes","Compartir enlaces","Roles y permisos"]},
+        ]},
+        {id:"CDP",full:"Customer Data Platform",desc:"Unifica perfiles de clientes en una vista 360° para activación omnicanal.",modules:[
+          {name:"Unificación de perfiles",subs:["Identity resolution","Perfil 360°","Merge / unmerge","Vista única del cliente"]},
+          {name:"Datos",subs:["Fuentes online y offline","Eventos en tiempo real","Enriquecimiento de datos","Conductual vs demográfico"]},
+          {name:"Segmentación",subs:["Atributos y comportamientos","Audiencias","Predictive scoring","Segmentos dinámicos"]},
+          {name:"Activación",subs:["Exportación a CRM / ESP / Ads","Orquestación de journeys","Personalización en tiempo real","Canales omnicanal"]},
+          {name:"Privacidad",subs:["Gestión de consentimientos","Preferencias de comunicación","DSR (Data Subject Requests)","Cumplimiento GDPR / CCPA"]},
+        ]},
       ]
-    }
+    },
+    {
+      id:"int", label:"Integración", sub:"Conectan sistemas",
+      bg:"bg-orange-600", light:"bg-orange-50", border:"border-orange-500", text:"text-orange-700", badge:"bg-orange-100 text-orange-800",
+      modbg:"bg-orange-50", modtext:"text-orange-800", modborder:"border-orange-200",
+      systems:[
+        {id:"ESB",full:"Enterprise Service Bus / iPaaS",desc:"Integra aplicaciones y servicios mediante una plataforma de orquestación y mensajería.",modules:[
+          {name:"Conectividad",subs:[
+            "Conectores preconstruidos (ERP, CRM, SaaS)",
+            "Protocolos (HTTP, JMS, FTP, SFTP)",
+            "Transformación de mensajes (XML, JSON, CSV)",
+            "Adaptadores de aplicaciones"
+          ]},
+          {name:"Orquestación",subs:[
+            "Coreografía de servicios",
+            "Enrutamiento dinámico",
+            "Gestión de errores y retry",
+            "Transacciones distribuidas"
+          ]},
+          {name:"Gobierno",subs:[
+            "Catálogo de servicios / APIs",
+            "Monitoreo de endpoints",
+            "SLAs de integración",
+            "Versionado de interfaces"
+          ]},
+          {name:"Eventos",subs:[
+            "Event-driven architecture",
+            "Pub/Sub",
+            "Stream processing (Kafka, Kinesis)",
+            "Change Data Capture (CDC)"
+          ]},
+        ]},
+        {id:"APIGW",full:"API Gateway & Management",desc:"Gestiona, asegura y monitorea el ciclo de vida completo de las APIs.",modules:[
+          {name:"Seguridad",subs:[
+            "OAuth 2.0 / OpenID Connect",
+            "Rate limiting y throttling",
+            "Validación de tokens y API keys",
+            "Protección contra OWASP Top 10"
+          ]},
+          {name:"Ciclo de vida de API",subs:[
+            "Diseño y documentación (OpenAPI/Swagger)",
+            "Versionado de APIs",
+            "Publicación / Retiro",
+            "Deprecación controlada"
+          ]},
+          {name:"Developer Portal",subs:[
+            "Marketplace de APIs",
+            "Suscripciones y API keys",
+            "Documentación interactiva",
+            "Sandbox / testing"
+          ]},
+          {name:"Monitoreo",subs:[
+            "Latencia por endpoint",
+            "Cuotas de uso",
+            "Alertas de disponibilidad",
+            "Análisis de tráfico"
+          ]},
+        ]},
+        {id:"EDI",full:"EDI Platform",desc:"Intercambio electrónico de documentos comerciales con socios de negocio.",modules:[
+          {name:"Formatos y mapeo",subs:["ANSI X12","EDIFACT","XML/JSON EDI","Mapeo visual de campos"]},
+          {name:"Transacciones B2B",subs:[
+            "Purchase orders (850 / ORDERS)",
+            "Invoices (810 / INVOIC)",
+            "Ship notices (856 / DESADV)",
+            "Payment (820 / PAYMULT)"
+          ]},
+          {name:"Partner onboarding",subs:[
+            "Perfiles de socio (AS2, SFTP)",
+            "Reglas de validación",
+            "Certificación",
+            "Pruebas en ambiente controlado"
+          ]},
+          {name:"Operaciones",subs:[
+            "Monitoreo de transmisiones",
+            "Reintentos y alertas",
+            "Dashboard de estado",
+            "Archivo histórico"
+          ]},
+        ]},
+      ]
+    },
+    {
+      id:"inf", label:"Infraestructura & IT", sub:"Soportan tecnología",
+      bg:"bg-slate-600", light:"bg-slate-50", border:"border-slate-500", text:"text-slate-700", badge:"bg-slate-100 text-slate-800",
+      modbg:"bg-slate-50", modtext:"text-slate-800", modborder:"border-slate-200",
+      systems:[
+        {id:"ITSM",full:"IT Service Management",desc:"Gestiona los servicios de TI alineados a las necesidades del negocio (ITIL).",modules:[
+          {name:"Service Desk",subs:[
+            "Incidentes (tickets de soporte)",
+            "Solicitudes de servicio",
+            "Base de conocimiento",
+            "Soporte por categoría / SLA"
+          ]},
+          {name:"Gestión de cambios",subs:[
+            "RFC (Request for Change)",
+            "CAB (Change Advisory Board)",
+            "Cambios de emergencia",
+            "Evaluación de impacto"
+          ]},
+          {name:"Gestión de problemas",subs:[
+            "Problemas vs incidentes",
+            "Análisis de causa raíz",
+            "Workarounds",
+            "Errores conocidos"
+          ]},
+          {name:"CMDB",subs:[
+            "CI (Configuration Items)",
+            "Relaciones entre CIs",
+            "Línea base de configuración",
+            "Mapa de dependencias"
+          ]},
+          {name:"Gestión de niveles de servicio",subs:[
+            "SLAs / OLAs / UCs",
+            "Penalizaciones",
+            "Reportes de cumplimiento",
+            "Revisión de servicios"
+          ]},
+        ]},
+        {id:"ITOM",full:"IT Operations Management",desc:"Monitorea, automatiza y gestiona las operaciones de infraestructura TI.",modules:[
+          {name:"Monitoreo de infraestructura",subs:[
+            "Servidores (CPU, RAM, disco)",
+            "Redes (latencia, throughput, errores)",
+            "Bases de datos (consultas, locks)",
+            "Aplicaciones (APM, transacciones)"
+          ]},
+          {name:"Automatización de operaciones",subs:[
+            "Runbooks automatizados",
+            "Self-healing",
+            "Orquestación de parches",
+            "Despliegue automatizado"
+          ]},
+          {name:"Gestión de capacidad",subs:[
+            "Utilización de recursos",
+            "Planificación de capacidad",
+            "Tendencias y proyecciones",
+            "Optimización de costos"
+          ]},
+          {name:"Discovery",subs:[
+            "Descubrimiento automático de CIs",
+            "Mapa de dependencias",
+            "Inventario de software y hardware",
+            "Licencias"
+          ]},
+        ]},
+        {id:"CMP",full:"Cloud Management Platform",desc:"Orquesta, gobierna y optimiza el uso de infraestructura multi-cloud.",modules:[
+          {name:"Multi-cloud orchestration",subs:[
+            "AWS / Azure / GCP",
+            "Cost management",
+            "Reservas y savings plans",
+            "Tagging y asignación de costos"
+          ]},
+          {name:"Governance",subs:[
+            "Políticas de seguridad",
+            "Compliance tagging",
+            "Budget alerts",
+            "Control de gasto"
+          ]},
+          {name:"Automation",subs:[
+            "Provisioning via IaC (Terraform)",
+            "Auto-scaling",
+            "Backup & DR automation",
+            "Pipeline de infraestructura"
+          ]},
+          {name:"Seguridad cloud",subs:[
+            "CSPM (Cloud Security Posture Management)",
+            "CWPP (Cloud Workload Protection)",
+            "IAM en la nube",
+            "Evaluación de riesgos cloud"
+          ]},
+        ]},
+      ]
+    },
+    {
+      id:"seg", label:"Seguridad", sub:"Protegen activos",
+      bg:"bg-red-600", light:"bg-red-50", border:"border-red-500", text:"text-red-700", badge:"bg-red-100 text-red-800",
+      modbg:"bg-red-50", modtext:"text-red-800", modborder:"border-red-200",
+      systems:[
+        {id:"IAM",full:"Identity & Access Management",desc:"Gestiona identidades, accesos y privilegios en toda la organización.",modules:[
+          {name:"Identidad",subs:[
+            "Directorio de usuarios (AD / LDAP)",
+            "Ciclo de vida (join / move / leave)",
+            "Federación (SSO / SAML)",
+            "Autenticación multifactor (MFA)"
+          ]},
+          {name:"Acceso",subs:[
+            "RBAC (Role-Based Access Control)",
+            "ABAC (Attribute-Based)",
+            "Políticas de acceso condicional",
+            "Acceso just-in-time"
+          ]},
+          {name:"Cuentas privilegiadas",subs:[
+            "Cuentas de servicio",
+            "Rotación de credenciales",
+            "Acceso privilegiado temporal",
+            "Monitoreo de cuentas sensibles"
+          ]},
+          {name:"Auditoría",subs:[
+            "Registro de accesos",
+            "Certificación de accesos",
+            "Segregación de funciones (SoD)",
+            "Reportes de cumplimiento"
+          ]},
+        ]},
+        {id:"SIEM",full:"Security Information & Event Management",desc:"Centraliza, correlaciona y analiza eventos de seguridad en tiempo real.",modules:[
+          {name:"Recolección de logs",subs:[
+            "Agentes y forwarders",
+            "Normalización de eventos",
+            "Correlación de eventos",
+            "Gestión de volúmenes"
+          ]},
+          {name:"Detección",subs:[
+            "Reglas de correlación",
+            "Threat intelligence feeds",
+            "Anomalías basadas en ML",
+            "UEBA (User & Entity Behavior)"
+          ]},
+          {name:"Respuesta",subs:[
+            "Playbooks de respuesta",
+            "Automatización de contención",
+            "Forense digital",
+            "Orquestación SOAR"
+          ]},
+          {name:"Compliance",subs:[
+            "Reportes SOX / PCI-DSS / ISO 27001",
+            "Retención de logs",
+            "Alertas regulatorias",
+            "Cadena de custodia"
+          ]},
+        ]},
+        {id:"PAM",full:"Privileged Access Management",desc:"Protege, controla y monitorea el acceso a cuentas privilegiadas.",modules:[
+          {name:"Bóveda de credenciales",subs:[
+            "Almacenamiento cifrado",
+            "Rotación automática",
+            "Check-out / Check-in",
+            "Políticas de contraseñas"
+          ]},
+          {name:"Sesiones privilegiadas",subs:[
+            "Grabación de sesiones",
+            "Monitoreo en tiempo real",
+            "Aprobación de comandos",
+            "Terminación automática"
+          ]},
+          {name:"Acceso remoto",subs:[
+            "Gateway seguro",
+            "Sin VPN",
+            "Session recording",
+            "MFA en acceso remoto"
+          ]},
+        ]},
+        {id:"DLP",full:"Data Loss Prevention",desc:"Previene la fuga de información sensible en endpoint, red y nube.",modules:[
+          {name:"Clasificación de datos",subs:[
+            "Datos estructurados y no estructurados",
+            "Etiquetado automático",
+            "Descubrimiento de datos sensibles",
+            "Catalogación"
+          ]},
+          {name:"Políticas",subs:[
+            "Reglas de prevención (Endpoint)",
+            "Reglas de prevención (Network)",
+            "Reglas de prevención (Cloud)",
+            "Cuarentena y alertas"
+          ]},
+          {name:"Monitoreo",subs:[
+            "Canales de salida (email, USB, cloud)",
+            "Fingerprinting de documentos",
+            "OCR en imágenes",
+            "Análisis contextual"
+          ]},
+        ]},
+        {id:"GRC",full:"Governance, Risk & Compliance",desc:"Integra gobierno corporativo, gestión de riesgos y cumplimiento normativo.",modules:[
+          {name:"Gestión de riesgos",subs:[
+            "Registro de riesgos",
+            "Evaluación de impacto",
+            "Planes de mitigación",
+            "Riesgos residuales"
+          ]},
+          {name:"Compliance",subs:[
+            "Mapeo de controles",
+            "Evidencias de auditoría",
+            "Calendario regulatorio",
+            "Matriz de cumplimiento"
+          ]},
+          {name:"Auditoría interna",subs:[
+            "Plan anual de auditoría",
+            "Hallazgos y no conformidades",
+            "Seguimiento de acciones",
+            "Reportes a comités"
+          ]},
+          {name:"Políticas corporativas",subs:[
+            "Ciclo de vida de políticas",
+            "Aceptación y entrenamiento",
+            "Controles internos (COSO / COBIT)",
+            "Reportes a la alta dirección"
+          ]},
+        ]},
+      ]
+    },
   ]
 };
 

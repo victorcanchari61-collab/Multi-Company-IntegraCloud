@@ -27,4 +27,9 @@ export const API_ENDPOINTS = {
   companyUserReactivate: (companyId: string, userId: string) => `/companies/${companyId}/users/${userId}/reactivate`,
 
   companyRoles: (companyId: string) => `/companies/${companyId}/roles`,
+  companyRole: (companyId: string, roleId: string) => `/companies/${companyId}/roles/${roleId}`,
+  companyRolePermissions: (companyId: string, roleId: string) =>
+    `/companies/${companyId}/roles/${roleId}/permissions`,
+
+  PERMISSIONS: '/permissions',
 } as const;

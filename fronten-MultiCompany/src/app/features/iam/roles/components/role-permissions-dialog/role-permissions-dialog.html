@@ -1,0 +1,49 @@
+<app-dialog [open]="open()" (openChange)="openChange.emit($event)" size="lg">
+  <h2 class="mb-1 text-lg font-bold text-foreground">Permisos · {{ roleName() }}</h2>
+  <p class="mb-4 text-sm text-muted-foreground">Marca los permisos de este rol. Los heredan todos sus usuarios.</p>
+
+  <div class="max-h-[60vh] space-y-4 overflow-y-auto pr-1">
+    @if (loading() || !ready()) {
+      @for (i of [1, 2, 3, 4, 5]; track i) {
+        <div appSkeleton class="h-9 w-full"></div>
+      }
+    } @else if (groups().length === 0) {
+      <p class="text-sm text-muted-foreground">No hay permisos disponibles para tu empresa.</p>
+    } @else {
+      @for (group of groups(); track group[0]) {
+        <div class="overflow-hidden rounded-lg border border-border">
+          <div class="border-b border-border bg-muted/40 px-3 py-2 text-sm font-semibold capitalize text-foreground">
+            {{ group[0] }}
+          </div>
+          <div class="divide-y divide-border">
+            @for (permission of group[1]; track permission.id) {
+              <label class="flex cursor-pointer items-center gap-3 px-3 py-2 text-sm hover:bg-muted/50">
+                <input
+                  type="checkbox"
+                  appCheckbox
+                  [checked]="isChecked(permission.id)"
+                  (change)="toggle(permission.id, $any($event.target).checked)"
+                />
+                <div class="min-w-0 flex-1">
+                  <p class="font-medium text-foreground">{{ actionLabel(permission.key) }}</p>
+                  <p class="truncate text-xs text-muted-foreground/60">{{ permission.key }}</p>
+                </div>
+              </label>
+            }
+          </div>
+        </div>
+      }
+    }
+  </div>
+
+  @if (errorMessage()) {
+    <p class="mt-4 rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+  }
+
+  <div class="flex justify-end gap-2 pt-4">
+    <button appButton variant="outline" type="button" (click)="openChange.emit(false)">Cancelar</button>
+    <button appButton variant="primary" type="button" [disabled]="saving() || !ready()" (click)="onSave()">
+      {{ saving() ? 'Guardando…' : 'Guardar permisos' }}
+    </button>
+  </div>
+</app-dialog>

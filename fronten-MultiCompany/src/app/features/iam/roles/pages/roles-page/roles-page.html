@@ -1,0 +1,90 @@
+@if (!companyId) {
+  <app-card>
+    <p class="text-sm text-muted-foreground">No hay una empresa activa para gestionar roles.</p>
+  </app-card>
+} @else {
+  <div class="space-y-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-xl font-bold text-foreground">Roles</h1>
+        <p class="text-sm text-muted-foreground">Roles de tu empresa y los permisos que agrupan.</p>
+      </div>
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <input appInput type="search" placeholder="Buscar por nombre o descripción…" [formControl]="search" class="sm:w-64" />
+        <button appButton variant="primary" type="button" *appCan="'iam.roles.create'" (click)="openCreateDialog()">
+          Nuevo rol
+        </button>
+      </div>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+    }
+
+    <app-data-table [columns]="columns" [data]="roles()" [loading]="loading()" emptyMessage="No se encontraron roles.">
+      <ng-template appMobileTitle let-role>{{ role.name }}</ng-template>
+
+      <ng-template appCell="name" let-role>
+        <span class="font-medium text-foreground">{{ role.name }}</span>
+      </ng-template>
+
+      <ng-template appCell="description" let-role>
+        <span class="text-foreground">{{ role.description || '—' }}</span>
+      </ng-template>
+
+      <ng-template appCell="actions" let-role>
+        <div class="flex gap-1">
+          <button
+            appButton
+            variant="ghost-primary"
+            size="icon-sm"
+            type="button"
+            title="Permisos"
+            *appCan="'iam.roles.assign_permissions'"
+            (click)="openPermissionsDialog(role)"
+          >
+            <svg lucideShieldCheck class="size-3.5" [strokeWidth]="2.5"></svg>
+          </button>
+          <button
+            appButton
+            variant="ghost-warning"
+            size="icon-sm"
+            type="button"
+            title="Editar"
+            *appCan="'iam.roles.update'"
+            (click)="openEditDialog(role)"
+          >
+            <svg lucidePencil class="size-3.5" [strokeWidth]="2.5"></svg>
+          </button>
+          <button
+            appButton
+            variant="ghost-destructive"
+            size="icon-sm"
+            type="button"
+            title="Eliminar"
+            *appCan="'iam.roles.delete'"
+            (click)="deleteRole(role)"
+          >
+            <svg lucideTrash2 class="size-3.5" [strokeWidth]="2.5"></svg>
+          </button>
+        </div>
+      </ng-template>
+    </app-data-table>
+  </div>
+
+  <app-role-form-dialog
+    [open]="formDialogOpen()"
+    (openChange)="formDialogOpen.set($event)"
+    [companyId]="companyId"
+    [roleId]="editingRoleId()"
+    (saved)="loadRoles()"
+  />
+
+  <app-role-permissions-dialog
+    [open]="permissionsDialogOpen()"
+    (openChange)="permissionsDialogOpen.set($event)"
+    [companyId]="companyId"
+    [roleId]="permissionsRole()?.id ?? null"
+    [roleName]="permissionsRole()?.name ?? ''"
+  />
+}

@@ -17,10 +17,31 @@ export const ENTITY_STATUS = {
   SUSPENDED: 2,
 } as const;
 
-// Versión mínima: solo lo que necesita el selector de roles en el formulario de usuarios.
-// Se amplía (rolSistema, restrictions, jerarquía) cuando se construya la página de Roles.
 export interface Role {
   id: string;
   name: string;
   description: string | null;
+}
+
+export interface RoleDetail {
+  id: string;
+  name: string;
+  description: string | null;
+  permissions: Permission[];
+}
+
+export interface Permission {
+  id: string;
+  key: string;
+  description: string;
+}
+
+export interface CreateRoleRequest {
+  name: string;
+  description?: string | null;
+}
+
+export interface UpdateRoleRequest {
+  name: string;
+  description?: string | null;
 }

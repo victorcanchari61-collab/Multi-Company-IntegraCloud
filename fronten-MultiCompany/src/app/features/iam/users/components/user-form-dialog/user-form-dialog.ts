@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, input, output, signal } from '@ang
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
+import { AuthState } from '@/app/core/state/auth.state';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { CheckboxDirective } from '@/app/shared/ui/directives/checkbox.directive';
 import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
@@ -30,6 +31,7 @@ export class UserFormDialog {
   private readonly fb = inject(FormBuilder);
   private readonly usersService = inject(UsersService);
   private readonly rolesService = inject(RolesService);
+  private readonly authState = inject(AuthState);
 
   protected readonly isEdit = computed(() => this.userId() !== null);
   protected readonly roles = signal<Role[]>([]);
@@ -97,13 +99,21 @@ export class UserFormDialog {
       return;
     }
 
-    this.errorMessage.set(null);
-    this.saving.set(true);
-
     const companyId = this.companyId();
     const userId = this.userId();
     const { fullName, email, password } = this.form.getRawValue();
     const roleIds = Array.from(this.selectedRoleIds());
+
+    // El backend REEMPLAZA el set completo de roles (lista vacía = usuario sin ningún rol) y no
+    // tiene guarda de "último admin". Bloquear acá evita que un admin se quite sus propios roles
+    // por accidente y deje a toda la empresa sin acceso (ya pasó en pruebas).
+    if (userId !== null && userId === this.authState.user()?.id && roleIds.length === 0) {
+      this.errorMessage.set('No puedes quitarte todos tus propios roles: perderías el acceso a la administración.');
+      return;
+    }
+
+    this.errorMessage.set(null);
+    this.saving.set(true);
 
     try {
       if (userId !== null) {

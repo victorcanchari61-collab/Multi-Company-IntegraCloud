@@ -122,7 +122,7 @@
           } @else {
             @for (row of table.getRowModel().rows; track row.id; let i = $index) {
               <tr
-                class="dt-fade-in flex border-b border-border last:border-0 hover:bg-muted/40"
+                class="dt-fade-in flex hover:bg-muted/40"
                 [style.animation-delay.ms]="i * 15"
                 (click)="onRowActivate(row.original, $event)"
               >

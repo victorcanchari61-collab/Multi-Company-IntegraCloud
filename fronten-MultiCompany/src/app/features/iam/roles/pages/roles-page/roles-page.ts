@@ -12,7 +12,7 @@ import { Card } from '@/app/shared/ui/card/card';
 import { DataTable } from '@/app/shared/ui/data-table/data-table';
 import { DataTableCell, DataTableMobileTitle } from '@/app/shared/ui/data-table/data-table-cell.directive';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
-import { InputDirective } from '@/app/shared/ui/directives/input.directive';
+import { SearchInput } from '@/app/shared/ui/search-input/search-input';
 import type { Role } from '../../../shared/models/iam.model';
 import { activeCompanyId } from '../../../shared/lib/active-company-id';
 import { RolesService } from '../../../shared/services/roles.service';
@@ -36,7 +36,7 @@ const COLUMNS: ColumnDef<Role, unknown>[] = [
     DataTableCell,
     DataTableMobileTitle,
     ButtonDirective,
-    InputDirective,
+    SearchInput,
     RoleFormDialog,
     RolePermissionsDialog,
     LucidePencil,

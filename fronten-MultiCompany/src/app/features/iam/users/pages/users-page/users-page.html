@@ -7,7 +7,19 @@
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <h1 class="text-xl font-bold text-foreground">Usuarios</h1>
       <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <input appInput type="search" placeholder="Buscar por nombre o correo…" [formControl]="search" class="sm:w-64" />
+        <div class="flex items-center gap-2">
+          <app-search-input [formControl]="search" placeholder="Buscar por nombre o correo…" class="flex-1 sm:w-64" />
+          <app-filter-popover [count]="activeFilterCount()" (reset)="resetFilters()" (apply)="applyFilters()">
+            <div>
+              <label appLabel for="statusFilter">Estado</label>
+              <select appInput id="statusFilter" [formControl]="statusDraft">
+                <option [ngValue]="null">Todos</option>
+                <option [ngValue]="ENTITY_STATUS.ACTIVE">Activo</option>
+                <option [ngValue]="ENTITY_STATUS.SUSPENDED">Anulado</option>
+              </select>
+            </div>
+          </app-filter-popover>
+        </div>
         <button appButton variant="primary" type="button" *appCan="'iam.users.create'" (click)="openCreateDialog()">
           Nuevo usuario
         </button>
@@ -18,7 +30,7 @@
       <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
     }
 
-    <app-data-table [columns]="columns" [data]="users()" [loading]="loading()" emptyMessage="No se encontraron usuarios.">
+    <app-data-table [columns]="columns" [data]="filteredUsers()" [loading]="loading()" emptyMessage="No se encontraron usuarios.">
       <ng-template appMobileTitle let-user>{{ user.fullName }}</ng-template>
 
       <ng-template appCell="fullName" let-user>

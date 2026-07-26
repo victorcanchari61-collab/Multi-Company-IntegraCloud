@@ -1,13 +1,17 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { LucideBuilding2, LucideKeyRound, LucidePalette, LucideReceipt, LucideUserCog } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
 import { LookupService } from '@/app/core/services/lookup.service';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { CheckboxDirective } from '@/app/shared/ui/directives/checkbox.directive';
+import { InputDirective } from '@/app/shared/ui/directives/input.directive';
 import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
 import { Dialog } from '@/app/shared/ui/dialog/dialog';
 import { Input } from '@/app/shared/ui/input/input';
+import { TabIcon } from '@/app/shared/ui/tabs/tab-icon.directive';
+import { Tabs } from '@/app/shared/ui/tabs/tabs';
 import { TAXPAYER_TYPE } from '../../models/company.model';
 import { CompaniesService } from '../../services/companies.service';
 
@@ -41,7 +45,22 @@ function emptyToNull(value: string | null | undefined): string | null {
 @Component({
   selector: 'app-company-form-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, Dialog, ButtonDirective, Input, LabelDirective, CheckboxDirective],
+  imports: [
+    ReactiveFormsModule,
+    Dialog,
+    ButtonDirective,
+    Input,
+    InputDirective,
+    LabelDirective,
+    CheckboxDirective,
+    Tabs,
+    TabIcon,
+    LucideBuilding2,
+    LucideReceipt,
+    LucideKeyRound,
+    LucideUserCog,
+    LucidePalette,
+  ],
   templateUrl: './company-form-dialog.html',
 })
 export class CompanyFormDialog {
@@ -56,8 +75,11 @@ export class CompanyFormDialog {
   private readonly lookupService = inject(LookupService);
 
   protected readonly TAXPAYER_TYPE = TAXPAYER_TYPE;
-  protected readonly tabs = TABS;
   protected readonly isEdit = computed(() => this.companyId() !== null);
+  // La pestaña Administrador solo aplica al crear (provisioning del primer usuario).
+  protected readonly visibleTabs = computed(() =>
+    this.isEdit() ? TABS.filter((tab) => tab.key !== 'administrador') : TABS,
+  );
   protected readonly activeTab = signal<CompanyTab>('generales');
   protected readonly saving = signal(false);
   protected readonly rucLoading = signal(false);
@@ -160,8 +182,8 @@ export class CompanyFormDialog {
     }
   }
 
-  protected setTab(tab: CompanyTab): void {
-    this.activeTab.set(tab);
+  protected setTab(tab: string): void {
+    this.activeTab.set(tab as CompanyTab);
   }
 
   protected async onBuscarRuc(): Promise<void> {

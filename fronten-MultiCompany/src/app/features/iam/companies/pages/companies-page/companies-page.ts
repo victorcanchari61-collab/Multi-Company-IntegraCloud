@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
@@ -13,6 +13,9 @@ import { DataTable } from '@/app/shared/ui/data-table/data-table';
 import { DataTableCell, DataTableMobileTitle } from '@/app/shared/ui/data-table/data-table-cell.directive';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { InputDirective } from '@/app/shared/ui/directives/input.directive';
+import { LabelDirective } from '@/app/shared/ui/directives/label.directive';
+import { FilterPopover } from '@/app/shared/ui/filter-popover/filter-popover';
+import { SearchInput } from '@/app/shared/ui/search-input/search-input';
 import { ENTITY_STATUS } from '../../../shared/models/iam.model';
 import { CompanyFormDialog } from '../../components/company-form-dialog/company-form-dialog';
 import type { Company } from '../../models/company.model';
@@ -38,6 +41,9 @@ const COLUMNS: ColumnDef<Company, unknown>[] = [
     DataTableMobileTitle,
     ButtonDirective,
     InputDirective,
+    LabelDirective,
+    FilterPopover,
+    SearchInput,
     CompanyFormDialog,
     LucidePencil,
     LucideBan,
@@ -56,6 +62,17 @@ export class CompaniesPage {
   protected readonly companies = signal<Company[]>([]);
   protected readonly loading = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
+
+  // Filtro de estado: el select edita un borrador y "Aplicar filtros" lo confirma.
+  // Se aplica en cliente sobre la página cargada (el backend no expone ?status aún).
+  protected readonly statusDraft = new FormControl<number | null>(null);
+  private readonly appliedStatus = signal<number | null>(null);
+  protected readonly filteredCompanies = computed(() => {
+    const status = this.appliedStatus();
+    const list = this.companies();
+    return status === null ? list : list.filter((company) => company.status === status);
+  });
+  protected readonly activeFilterCount = computed(() => (this.appliedStatus() === null ? 0 : 1));
 
   protected readonly formDialogOpen = signal(false);
   protected readonly editingCompanyId = signal<string | null>(null);
@@ -81,6 +98,15 @@ export class CompaniesPage {
     } finally {
       this.loading.set(false);
     }
+  }
+
+  protected applyFilters(): void {
+    this.appliedStatus.set(this.statusDraft.value);
+  }
+
+  protected resetFilters(): void {
+    this.statusDraft.setValue(null);
+    this.appliedStatus.set(null);
   }
 
   protected openCreateDialog(): void {

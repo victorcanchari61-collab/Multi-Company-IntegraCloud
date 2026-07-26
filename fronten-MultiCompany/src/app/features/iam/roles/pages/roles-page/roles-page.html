@@ -10,7 +10,7 @@
         <p class="text-sm text-muted-foreground">Roles de tu empresa y los permisos que agrupan.</p>
       </div>
       <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <input appInput type="search" placeholder="Buscar por nombre o descripción…" [formControl]="search" class="sm:w-64" />
+        <app-search-input [formControl]="search" placeholder="Buscar por nombre o descripción…" class="sm:w-64" />
         <button appButton variant="primary" type="button" *appCan="'iam.roles.create'" (click)="openCreateDialog()">
           Nuevo rol
         </button>

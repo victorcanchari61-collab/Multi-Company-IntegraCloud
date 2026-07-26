@@ -1,11 +1,12 @@
 import { Directive } from '@angular/core';
 
 /**
- * Estilo compartido para inputs/textareas nativos (mismo look que login-page).
+ * Estilo compartido para inputs/textareas/selects nativos (mismo look que login-page).
  *   <input appInput type="email" formControlName="email" />
+ *   <select appInput formControlName="estado">...</select>
  */
 @Directive({
-  selector: 'input[appInput], textarea[appInput]',
+  selector: 'input[appInput], textarea[appInput], select[appInput]',
   standalone: true,
   host: {
     class:

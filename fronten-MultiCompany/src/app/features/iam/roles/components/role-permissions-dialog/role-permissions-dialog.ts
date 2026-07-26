@@ -58,12 +58,13 @@ export class RolePermissionsDialog {
   protected readonly saving = signal(false);
   protected readonly errorMessage = signal<string | null>(null);
 
+  // El label legible se resuelve UNA vez acá (no en cada render del template).
   protected readonly groups = computed(() => {
-    const groupsMap = new Map<string, Permission[]>();
+    const groupsMap = new Map<string, (Permission & { label: string })[]>();
     for (const permission of this.allPermissions()) {
       const key = groupKey(permission.key);
       const list = groupsMap.get(key) ?? [];
-      list.push(permission);
+      list.push({ ...permission, label: actionLabel(permission.key) });
       groupsMap.set(key, list);
     }
     return Array.from(groupsMap.entries());
@@ -99,8 +100,6 @@ export class RolePermissionsDialog {
       this.ready.set(true);
     }
   }
-
-  protected actionLabel = actionLabel;
 
   protected isChecked(permissionId: string): boolean {
     return this.selectedIds().has(permissionId);

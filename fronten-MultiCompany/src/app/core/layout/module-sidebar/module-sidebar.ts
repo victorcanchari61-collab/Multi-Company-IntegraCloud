@@ -30,6 +30,16 @@ interface FlyState {
   left: number;
 }
 
+// Módulo del menú enriquecido con su ícono ya resuelto: el lookup se hace UNA vez en el
+// computed section(), no en cada render del template.
+interface SidebarModule extends MenuModule {
+  icon: SidebarIconKey;
+}
+
+interface SidebarSection extends Omit<MenuSection, 'modules'> {
+  modules: SidebarModule[];
+}
+
 // Debe coincidir con el breakpoint `md` de Tailwind (768px).
 const MOBILE_QUERY = '(max-width: 767px)';
 
@@ -112,7 +122,7 @@ export class ModuleSidebar {
     return this.showCollapsedRail() ? `${base} justify-center px-0` : base;
   });
 
-  protected readonly section = computed<MenuSection | null>(() => {
+  protected readonly section = computed<SidebarSection | null>(() => {
     const raw = this.sections().find((s) => s.systemCode === this.systemCode());
     if (!raw) return null;
     return {
@@ -121,6 +131,7 @@ export class ModuleSidebar {
         .filter((m) => !m.requiredPermission || this.permissions.can(m.requiredPermission))
         .map((m) => ({
           ...m,
+          icon: MODULE_ICON_KEYS[m.code] ?? 'folder',
           submodules: m.submodules.filter((s) => !s.requiredPermission || this.permissions.can(s.requiredPermission)),
         })),
     };
@@ -151,10 +162,6 @@ export class ModuleSidebar {
     if (next.has(key)) next.delete(key);
     else next.add(key);
     this.openKeys.set(next);
-  }
-
-  protected moduleIcon(code: string): SidebarIconKey {
-    return MODULE_ICON_KEYS[code] ?? 'folder';
   }
 
   /** En mobile, navegar cierra el drawer (si no, tapa el contenido después de navegar). */

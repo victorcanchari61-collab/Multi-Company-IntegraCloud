@@ -155,3 +155,55 @@ export interface ProductMedia {
   imageUrl: string | null;
   technicalSheetUrl: string | null;
 }
+
+// ── Presentaciones (unidades derivadas de venta: caja, millar, 1/2 millar, ...) ──
+
+export interface ProductPresentation {
+  id: string;
+  productId: string;
+  name: string;
+  unitOfMeasureId: string | null;
+  unitOfMeasureName?: string;
+  factor: number;
+  isBase: boolean;
+  sortOrder: number;
+  isActive: boolean;
+  complementaryProductId: string | null;
+  complementaryProductName?: string | null;
+  complementaryQuantity: number;
+  markupPercentage: number;
+}
+
+export interface ProductPresentationRequest {
+  name: string;
+  unitOfMeasureId?: string | null;
+  factor: number;
+  isBase: boolean;
+  sortOrder: number;
+  complementaryProductId?: string | null;
+  complementaryQuantity?: number;
+  markupPercentage?: number;
+}
+
+// ── Precios de producto (por presentación × lista de precio × moneda) ──
+
+export interface ProductPrice {
+  id: string;
+  productId: string;
+  presentationId: string;
+  presentationName?: string;
+  priceListId: string;
+  priceListName?: string;
+  currencyId: string;
+  currencyCode?: string;
+  purchasePrice: number | null;
+  salePrice: number | null;
+}
+
+export interface ProductPriceEntry {
+  presentationId: string;
+  priceListId: string;
+  currencyId: string;
+  purchasePrice?: number | null;
+  salePrice?: number | null;
+}

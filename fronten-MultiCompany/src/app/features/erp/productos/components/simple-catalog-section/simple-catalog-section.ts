@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { type Observable, firstValueFrom } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import type { ColumnDef } from '@tanstack/angular-table';
 import { LucidePencil } from '@lucide/angular';
-import { input } from '@angular/core';
 import { ApiError } from '@/app/core/http/api-error';
 import { CanDirective } from '@/app/shared/directives/can.directive';
 import { Badge } from '@/app/shared/ui/badge/badge';

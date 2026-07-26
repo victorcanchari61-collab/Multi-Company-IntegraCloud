@@ -27,13 +27,22 @@ import { AuthState } from '@/app/core/state/auth.state';
 import { SidebarState } from '@/app/core/state/sidebar.state';
 import { AuthService } from '@/app/features/iam/auth/services/auth.service';
 
-// Primer segmento de ruta → código de sistema (para saber qué sidebar mostrar).
+// Primer segmento de ruta → código de sistema (para saber qué sidebar mostrar). Cada sistema
+// tiene su propio sidebar; el código debe coincidir con el systemCode que devuelve /menu.
 const ROUTE_SYSTEM_MAP: Record<string, string> = {
   iam: 'IAM',
   erp: 'ERP',
   wms: 'WMS',
   pos: 'POS',
   rrhh: 'RRHH',
+  hrm: 'RRHH', // la tarjeta del dashboard usa "hrm"; el backend lo llama RRHH
+  crm: 'CRM',
+  scm: 'SCM',
+  mrp: 'MRP',
+  tms: 'TMS',
+  plm: 'PLM',
+  qms: 'QMS',
+  eam: 'EAM',
 };
 
 function initials(name?: string | null): string {

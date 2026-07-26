@@ -12,6 +12,7 @@ import {
   LucideWarehouse,
   LucideWrench,
 } from '@lucide/angular';
+import { RouterLink } from '@angular/router';
 import { SYSTEMS } from '@/app/core/constants/systems';
 import { AuthState } from '@/app/core/state/auth.state';
 
@@ -20,6 +21,7 @@ import { AuthState } from '@/app/core/state/auth.state';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    RouterLink,
     LucideLayoutGrid,
     LucideHandshake,
     LucideWarehouse,

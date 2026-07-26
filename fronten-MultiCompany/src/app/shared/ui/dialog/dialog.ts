@@ -1,4 +1,4 @@
-import { Component, ElementRef, computed, effect, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, computed, effect, input, output, viewChild } from '@angular/core';
 
 export type DialogSize = 'sm' | 'md' | 'lg';
 
@@ -22,6 +22,7 @@ const SIZE_CLASSES: Record<DialogSize, string> = {
 @Component({
   selector: 'app-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <dialog #dialogEl (close)="onNativeClose()" (cancel)="onNativeClose()" [class]="dialogClass()">
       <ng-content />

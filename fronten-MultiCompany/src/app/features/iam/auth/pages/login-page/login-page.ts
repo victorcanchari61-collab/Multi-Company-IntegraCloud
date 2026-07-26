@@ -1,4 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LucideRocket, LucideShieldCheck } from '@lucide/angular';
@@ -25,6 +26,7 @@ function rememberedEmail(): string {
 @Component({
   selector: 'app-login-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     LucideRocket,
@@ -64,12 +66,15 @@ export class LoginPage {
 
   constructor() {
     if (this.tenantSlug) {
-      this.brandingService.getBySlug(this.tenantSlug).subscribe({
-        next: (branding) => this.branding.set(branding),
-        error: () => {
-          // Sin branding para ese slug: se mantiene la marca del dueño de la plataforma.
-        },
-      });
+      this.brandingService
+        .getBySlug(this.tenantSlug)
+        .pipe(takeUntilDestroyed())
+        .subscribe({
+          next: (branding) => this.branding.set(branding),
+          error: () => {
+            // Sin branding para ese slug: se mantiene la marca del dueño de la plataforma.
+          },
+        });
     }
   }
 

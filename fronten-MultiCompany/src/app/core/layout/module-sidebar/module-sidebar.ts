@@ -1,4 +1,4 @@
-import { Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { LucideChevronDown, LucideChevronsLeft, LucideChevronsRight } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
@@ -44,6 +44,7 @@ const MOBILE_QUERY = '(max-width: 767px)';
 @Component({
   selector: 'app-module-sidebar',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RouterLink, RouterLinkActive, SidebarIcon, LucideChevronDown, LucideChevronsLeft, LucideChevronsRight],
   templateUrl: './module-sidebar.html',
   styleUrl: './module-sidebar.css',

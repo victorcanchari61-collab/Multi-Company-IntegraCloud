@@ -1,4 +1,4 @@
-import { Component, computed, forwardRef, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, forwardRef, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LucideCheck, LucideX } from '@lucide/angular';
 
@@ -18,6 +18,7 @@ const SIZE_CLASSES: Record<InputSize, string> = {
 @Component({
   selector: 'app-input',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideCheck, LucideX],
   template: `
     <div class="relative">

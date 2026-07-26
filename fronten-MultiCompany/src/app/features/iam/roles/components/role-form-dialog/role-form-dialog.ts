@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
@@ -14,6 +14,7 @@ import { RolesService } from '../../../shared/services/roles.service';
 @Component({
   selector: 'app-role-form-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, Dialog, ButtonDirective, Input, InputDirective, LabelDirective],
   templateUrl: './role-form-dialog.html',
 })

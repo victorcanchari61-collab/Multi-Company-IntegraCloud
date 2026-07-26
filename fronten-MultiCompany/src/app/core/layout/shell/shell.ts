@@ -1,4 +1,4 @@
-import { Component, type Signal, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, type Signal, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from '@angular/router';
 import {
@@ -54,6 +54,7 @@ function systemCodeFromUrl(url: string): string | null {
 @Component({
   selector: 'app-shell',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     RouterOutlet,
     RouterLink,
@@ -83,7 +84,9 @@ export class Shell {
   private readonly menuService = inject(MenuService);
   private readonly router = inject(Router);
 
-  protected readonly initials = initials;
+  // computed en vez de llamar initials() en el template: se recalcula solo cuando cambia el
+  // usuario, no en cada ciclo de detección de cambios.
+  protected readonly userInitials = computed(() => initials(this.authState.user()?.fullName));
   protected readonly systems = SYSTEMS;
   protected readonly systemsMenuOpen = signal(false);
 

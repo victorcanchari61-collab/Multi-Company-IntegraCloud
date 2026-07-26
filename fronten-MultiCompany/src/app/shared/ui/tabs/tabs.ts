@@ -1,5 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common';
-import { Component, computed, contentChildren, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, contentChildren, input, output } from '@angular/core';
 import { TabIcon } from './tab-icon.directive';
 
 export interface TabItem {
@@ -17,6 +17,7 @@ export interface TabItem {
 @Component({
   selector: 'app-tabs',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgTemplateOutlet],
   template: `
     <div class="inline-flex max-w-full flex-wrap items-center gap-1 rounded-full border border-border bg-card p-1 shadow-sm">

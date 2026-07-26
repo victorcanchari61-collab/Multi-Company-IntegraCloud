@@ -1,4 +1,4 @@
-import { Component, TemplateRef, computed, contentChild, contentChildren, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, computed, contentChild, contentChildren, input, output, signal } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import {
   type ColumnDef,
@@ -39,6 +39,7 @@ function resolveUpdater<T>(updater: Updater<T>, old: T): T {
 @Component({
   selector: 'app-data-table',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     NgTemplateOutlet,
     ButtonDirective,

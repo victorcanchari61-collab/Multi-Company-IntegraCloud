@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, afterNextRender, computed, inject, input, signal, viewChild } from '@angular/core';
 import type { RoleTreeDto } from '../../../shared/models/iam.model';
 
 interface ConnectorLine {
@@ -20,6 +20,7 @@ const VERTICAL_GAP = 40;
 @Component({
   selector: 'app-org-tree-node',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div #container class="relative flex flex-col items-center">
       <div>

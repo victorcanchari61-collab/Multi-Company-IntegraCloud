@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { LucidePlus } from '@lucide/angular';
 import { ApiError } from '@/app/core/http/api-error';
@@ -15,6 +15,7 @@ import { OrgTreeNode } from '../../components/org-tree-node/org-tree-node';
 @Component({
   selector: 'app-organigrama-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CanDirective, Card, ButtonDirective, SkeletonDirective, RoleFormDialog, OrgTreeNode, LucidePlus],
   templateUrl: './organigrama-page.html',
 })

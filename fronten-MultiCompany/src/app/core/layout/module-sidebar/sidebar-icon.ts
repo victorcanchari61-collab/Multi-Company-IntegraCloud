@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   LucideBoxes,
   LucideBuilding2,
@@ -27,6 +27,7 @@ export type SidebarIconKey =
 @Component({
   selector: 'app-sidebar-icon',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideLayoutDashboard,
     LucideShieldCheck,

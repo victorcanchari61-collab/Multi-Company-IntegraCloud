@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { LucideBuilding2, LucideKeyRound, LucidePalette, LucideReceipt, LucideUserCog } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
@@ -45,6 +45,7 @@ function emptyToNull(value: string | null | undefined): string | null {
 @Component({
   selector: 'app-company-form-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ReactiveFormsModule,
     Dialog,

@@ -1,4 +1,4 @@
-import { Component, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output, signal } from '@angular/core';
 import { LucideFilter } from '@lucide/angular';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 
@@ -13,6 +13,7 @@ import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 @Component({
   selector: 'app-filter-popover',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ButtonDirective, LucideFilter],
   template: `
     <div class="relative inline-block">

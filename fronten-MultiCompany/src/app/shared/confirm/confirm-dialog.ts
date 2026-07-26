@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
 import { Dialog } from '@/app/shared/ui/dialog/dialog';
 import { ConfirmService } from './confirm.service';
@@ -6,6 +6,7 @@ import { ConfirmService } from './confirm.service';
 @Component({
   selector: 'app-confirm-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Dialog, ButtonDirective],
   template: `
     <app-dialog [open]="!!confirmService.request()" (openChange)="onOpenChange($event)">

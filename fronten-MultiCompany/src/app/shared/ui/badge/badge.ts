@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
 export type BadgeVariant = 'default' | 'success' | 'destructive' | 'outline';
 
@@ -12,6 +12,7 @@ const VARIANT_CLASSES: Record<BadgeVariant, string> = {
 @Component({
   selector: 'app-badge',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<span [class]="classes()"><ng-content /></span>`,
 })
 export class Badge {

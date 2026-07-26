@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, output, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
@@ -21,6 +21,7 @@ function passwordsMatchValidator(): ValidatorFn {
 @Component({
   selector: 'app-change-password-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ReactiveFormsModule, Dialog, ButtonDirective, Input, LabelDirective],
   templateUrl: './change-password-dialog.html',
 })

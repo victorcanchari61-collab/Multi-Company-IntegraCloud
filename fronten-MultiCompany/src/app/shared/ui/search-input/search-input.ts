@@ -1,4 +1,4 @@
-import { Component, forwardRef, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, forwardRef, input, signal } from '@angular/core';
 import { type ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LucideSearch, LucideX } from '@lucide/angular';
 
@@ -10,6 +10,7 @@ import { LucideSearch, LucideX } from '@lucide/angular';
 @Component({
   selector: 'app-search-input',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideSearch, LucideX],
   template: `
     <div class="relative">

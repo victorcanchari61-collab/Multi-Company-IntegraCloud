@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   LucideBadgeCheck,
   LucideClipboardList,
@@ -18,6 +18,7 @@ import { AuthState } from '@/app/core/state/auth.state';
 @Component({
   selector: 'app-dashboard-page',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LucideLayoutGrid,
     LucideHandshake,

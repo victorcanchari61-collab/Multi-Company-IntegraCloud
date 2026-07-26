@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 import { ApiError } from '@/app/core/http/api-error';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
@@ -35,6 +35,7 @@ function groupKey(key: string): string {
 @Component({
   selector: 'app-role-permissions-dialog',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [Dialog, ButtonDirective, CheckboxDirective, SkeletonDirective],
   templateUrl: './role-permissions-dialog.html',
 })

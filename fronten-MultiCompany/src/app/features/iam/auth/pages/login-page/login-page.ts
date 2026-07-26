@@ -5,6 +5,7 @@ import { LucideRocket, LucideShieldCheck } from '@lucide/angular';
 import { firstValueFrom } from 'rxjs';
 import { STORAGE_KEYS } from '@/app/core/constants/storage-keys';
 import { ApiError } from '@/app/core/http/api-error';
+import { MenuService } from '@/app/core/services/menu.service';
 import { AuthState } from '@/app/core/state/auth.state';
 import { zodFieldValidator } from '@/app/shared/forms/zod-validator';
 import { ButtonDirective } from '@/app/shared/ui/directives/button.directive';
@@ -39,6 +40,7 @@ export class LoginPage {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly brandingService = inject(BrandingService);
+  private readonly menuService = inject(MenuService);
   private readonly authState = inject(AuthState);
   private readonly router = inject(Router);
 
@@ -97,6 +99,7 @@ export class LoginPage {
       const tokens = await firstValueFrom(this.authService.login({ email, password, slug: this.tenantSlug }));
       this.authState.setSession(tokens);
       this.authState.setCompanySlug(this.tenantSlug);
+      this.menuService.invalidate(); // el menú es por usuario: nunca servir el del usuario anterior
 
       const [me, permissions] = await Promise.all([
         firstValueFrom(this.authService.getMe()),

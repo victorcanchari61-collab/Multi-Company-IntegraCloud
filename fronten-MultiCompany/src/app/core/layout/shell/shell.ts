@@ -22,6 +22,7 @@ import { firstValueFrom } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { ModuleSidebar } from '@/app/core/layout/module-sidebar/module-sidebar';
 import { SYSTEMS } from '@/app/core/constants/systems';
+import { MenuService } from '@/app/core/services/menu.service';
 import { AuthState } from '@/app/core/state/auth.state';
 import { SidebarState } from '@/app/core/state/sidebar.state';
 import { AuthService } from '@/app/features/iam/auth/services/auth.service';
@@ -79,6 +80,7 @@ export class Shell {
   protected readonly authState = inject(AuthState);
   protected readonly sidebarState = inject(SidebarState);
   private readonly authService = inject(AuthService);
+  private readonly menuService = inject(MenuService);
   private readonly router = inject(Router);
 
   protected readonly initials = initials;
@@ -112,6 +114,7 @@ export class Shell {
       if (refreshToken) await firstValueFrom(this.authService.logout(refreshToken));
     } finally {
       this.authState.clear();
+      this.menuService.invalidate(); // el menú es por usuario: el próximo login debe refetchear
       await this.router.navigateByUrl('/login');
     }
   }

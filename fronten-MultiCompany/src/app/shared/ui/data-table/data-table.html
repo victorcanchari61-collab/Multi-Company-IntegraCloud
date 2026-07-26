@@ -1,20 +1,21 @@
 <div class="space-y-2">
   <!-- Toolbar -->
-  <div class="flex items-center gap-2">
+  <div class="flex items-center justify-end gap-2">
     <div class="relative">
       <button
         appButton
-        variant="outline"
-        size="icon"
+        variant="primary"
+        size="icon-sm"
         type="button"
-        title="Columnas"
+        title="Mostrar/ocultar columnas"
+        class="rounded-full"
         (click)="toggleColumnsMenu()"
       >
-        <svg lucideSlidersHorizontal class="size-3.5"></svg>
+        <svg lucideColumns3 class="size-3.5" [strokeWidth]="2.5"></svg>
       </button>
       @if (columnsMenuOpen()) {
         <div class="fixed inset-0 z-40" (click)="closeColumnsMenu()"></div>
-        <div class="absolute left-0 top-full z-50 mt-2 w-48 rounded-md border border-border bg-popover p-1.5 shadow-lg">
+        <div class="absolute right-0 top-full z-50 mt-2 w-48 rounded-md border border-border bg-popover p-1.5 shadow-lg">
           <p class="px-2 py-1 text-xs font-semibold text-muted-foreground">Mostrar columnas</p>
           <div class="my-1 border-t border-border"></div>
           @for (column of table.getAllLeafColumns(); track column.id) {
@@ -46,8 +47,17 @@
                 <th
                   class="relative flex h-[30px] items-center border-r border-primary-foreground/20 bg-primary px-1.5 py-0 text-xs font-medium text-primary-foreground last:border-r-0"
                   [style.flex]="'1 1 ' + header.getSize() + 'px'"
+                  [class.opacity-50]="draggingColumnId() === header.column.id"
+                  [class.bg-primary-foreground/20]="dropTargetId() === header.column.id && draggingColumnId() !== header.column.id"
+                  (dragover)="onDragOver($event, header.column.id)"
+                  (drop)="onDrop($event, header.column.id)"
                 >
-                  <div class="flex w-full items-center gap-0.5">
+                  <div
+                    class="flex w-full cursor-grab items-center gap-0.5 active:cursor-grabbing"
+                    draggable="true"
+                    (dragstart)="onDragStart($event, header.column.id)"
+                    (dragend)="onDragEnd()"
+                  >
                     @if (header.column.getCanSort()) {
                       <button
                         type="button"

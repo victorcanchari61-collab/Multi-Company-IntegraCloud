@@ -111,6 +111,37 @@ public sealed class IamSeedService
             logger?.LogInformation("Seed: Cleaned {Count} expired refresh tokens", expiredTokens.Count);
         }
 
+        // ── Missing IAM/Organigrama module (jerarquía de roles de la empresa) ──
+        var iamSystem = await context.Systems.FirstOrDefaultAsync(s => s.Code == "IAM", ct);
+        var organigramaModule = await context.Modules
+            .Include(m => m.System)
+            .FirstOrDefaultAsync(m => m.System.Code == "IAM" && m.Code == "organigrama", ct);
+        if (organigramaModule == null && iamSystem != null)
+        {
+            organigramaModule = new Module(Guid.NewGuid(), iamSystem.Id, "organigrama", "Organigrama");
+            context.Modules.Add(organigramaModule);
+            await context.SaveChangesAsync(ct);
+            logger?.LogInformation("Seed: Added IAM/Organigrama module");
+        }
+        if (organigramaModule != null)
+        {
+            var organigramaActions = await context.Actions.ToListAsync(ct);
+            foreach (var action in organigramaActions)
+            {
+                var key = $"iam.organigrama.{action.Code}";
+                var exists = await context.Permissions.AnyAsync(p => p.Key == key, ct);
+                if (!exists)
+                {
+                    context.Permissions.Add(new Permission(
+                        Guid.NewGuid(), key,
+                        moduleId: organigramaModule.Id,
+                        actionCode: action.Code,
+                        description: $"{action.Name} Organigrama"));
+                }
+            }
+            await context.SaveChangesAsync(ct);
+        }
+
         // ── Missing ERP/Compras module ──
         var erpSystem = await context.Systems.FirstOrDefaultAsync(s => s.Code == "ERP", ct);
         var comprasModule = await context.Modules

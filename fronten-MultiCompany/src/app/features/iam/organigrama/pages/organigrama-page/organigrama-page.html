@@ -1,0 +1,68 @@
+@if (!companyId) {
+  <app-card>
+    <p class="text-sm text-muted-foreground">No hay una empresa activa para gestionar el organigrama.</p>
+  </app-card>
+} @else {
+  <div class="space-y-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="flex items-center gap-3">
+        <span class="size-3 rounded-full bg-amber-500"></span>
+        <h1 class="text-xl font-bold tracking-wider text-blue-900">Organigrama empresarial</h1>
+      </div>
+      <button appButton variant="primary" type="button" *appCan="'iam.roles.create'" (click)="formDialogOpen.set(true)">
+        <svg lucidePlus class="size-4"></svg>
+        Nuevo rol
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+    }
+
+    @if (loading()) {
+      <div class="space-y-4 rounded-xl border border-border bg-card p-6">
+        <div class="flex justify-center"><div appSkeleton class="h-12 w-40"></div></div>
+        <div class="flex justify-center gap-8">
+          <div appSkeleton class="h-12 w-36"></div>
+          <div appSkeleton class="h-12 w-36"></div>
+          <div appSkeleton class="h-12 w-36"></div>
+        </div>
+      </div>
+    } @else if (tree().length === 0) {
+      <app-card>
+        <p class="text-center text-sm text-muted-foreground">No hay roles configurados. Crea el primero.</p>
+      </app-card>
+    } @else {
+      <div class="overflow-hidden rounded-xl border border-border bg-card p-6">
+        <div class="flex justify-center gap-12 overflow-x-auto py-8">
+          @for (root of tree(); track root.id) {
+            <app-org-tree-node [role]="root" />
+          }
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6 text-xs text-muted-foreground">
+        <div class="flex items-center gap-2">
+          <span class="inline-block size-3 rounded border border-amber-600/40 bg-card"></span>
+          <span>Rol estándar</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block size-3 rounded bg-amber-500"></span>
+          <span>Rol raíz</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block h-px w-6 bg-amber-500"></span>
+          <span>Relación jerárquica</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <app-role-form-dialog
+    [open]="formDialogOpen()"
+    (openChange)="formDialogOpen.set($event)"
+    [companyId]="companyId"
+    [roleId]="null"
+    (saved)="loadTree()"
+  />
+}

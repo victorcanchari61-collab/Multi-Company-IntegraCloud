@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { environment } from '@/environments/environment';
 import { API_ENDPOINTS } from '@/app/core/constants/api-endpoints';
-import type { CreateRoleRequest, Role, RoleDetail, UpdateRoleRequest } from '../models/iam.model';
+import type { CreateRoleRequest, Role, RoleDetail, RoleTreeDto, UpdateRoleRequest } from '../models/iam.model';
 
 @Injectable({ providedIn: 'root' })
 export class RolesService {
@@ -10,6 +10,10 @@ export class RolesService {
 
   getRoles(companyId: string) {
     return this.http.get<Role[]>(`${environment.apiUrl}${API_ENDPOINTS.companyRoles(companyId)}`);
+  }
+
+  getRoleTree(companyId: string) {
+    return this.http.get<RoleTreeDto[]>(`${environment.apiUrl}${API_ENDPOINTS.companyRoleTree(companyId)}`);
   }
 
   getRoleById(companyId: string, roleId: string) {

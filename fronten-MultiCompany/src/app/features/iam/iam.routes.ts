@@ -15,6 +15,11 @@ export const IAM_ROUTES: Routes = [
     loadComponent: () => import('./roles/pages/roles-page/roles-page').then((m) => m.RolesPage),
   },
   {
+    path: 'organigrama',
+    loadComponent: () =>
+      import('./organigrama/pages/organigrama-page/organigrama-page').then((m) => m.OrganigramaPage),
+  },
+  {
     path: 'companies',
     loadComponent: () => import('./companies/pages/companies-page/companies-page').then((m) => m.CompaniesPage),
   },

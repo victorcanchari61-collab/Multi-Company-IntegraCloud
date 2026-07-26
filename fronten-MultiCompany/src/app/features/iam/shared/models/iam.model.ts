@@ -23,6 +23,16 @@ export interface Role {
   description: string | null;
 }
 
+export interface RoleTreeDto {
+  id: string;
+  name: string;
+  description: string | null;
+  parentRoleId: string | null;
+  parentRoleName: string | null;
+  sortOrder: number;
+  children: RoleTreeDto[];
+}
+
 export interface RoleDetail {
   id: string;
   name: string;

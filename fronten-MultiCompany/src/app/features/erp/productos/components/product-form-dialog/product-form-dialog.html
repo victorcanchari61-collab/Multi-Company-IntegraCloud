@@ -1,0 +1,209 @@
+<app-dialog [open]="open()" (openChange)="openChange.emit($event)" size="lg">
+  <h2 class="mb-4 text-lg font-bold text-foreground">
+    {{ isEdit() ? 'Editar producto' : 'Nuevo producto' }}
+  </h2>
+
+  <app-tabs class="mb-4 block" [items]="tabs" [activeKey]="activeTab()" (activeKeyChange)="setTab($event)">
+    <ng-template appTabIcon="datos"><svg lucideClipboardList class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="precios"><svg lucideCoins class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="info"><svg lucideFileText class="size-4"></svg></ng-template>
+  </app-tabs>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <!-- Datos iniciales -->
+    @if (activeTab() === 'datos') {
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div>
+            <label appLabel for="sku">SKU</label>
+            <app-input id="sku" type="text" formControlName="sku" />
+          </div>
+          <div>
+            <label appLabel for="barcode">Cód. de barra</label>
+            <app-input id="barcode" type="text" formControlName="barcode" />
+          </div>
+          <div>
+            <label appLabel for="isActive">Estado</label>
+            <select appInput id="isActive" formControlName="isActive">
+              <option [ngValue]="true">Activo</option>
+              <option [ngValue]="false">Inactivo</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label appLabel for="productName">Nombre</label>
+          <app-input id="productName" type="text" formControlName="name" [required]="true" />
+          @if (form.controls.name.invalid && form.controls.name.touched) {
+            <p class="mt-1 text-xs text-destructive">El nombre es requerido.</p>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="description">Descripción</label>
+            <textarea appInput id="description" rows="2" formControlName="description"></textarea>
+          </div>
+          <div>
+            <label appLabel for="ticketDescription">Descripción ticket</label>
+            <textarea appInput id="ticketDescription" rows="2" formControlName="ticketDescription"></textarea>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="categoryId">Categoría</label>
+            <select appInput id="categoryId" formControlName="categoryId">
+              <option [ngValue]="null">— Sin categoría —</option>
+              @for (category of categories(); track category.id) {
+                <option [ngValue]="category.id">{{ category.name }}</option>
+              }
+            </select>
+          </div>
+          <div>
+            <label appLabel for="subcategoryId">Subcategoría</label>
+            <select appInput id="subcategoryId" formControlName="subcategoryId" [attr.disabled]="subcategoryOptions().length === 0 ? '' : null">
+              <option [ngValue]="null">— Sin subcategoría —</option>
+              @for (subcategory of subcategoryOptions(); track subcategory.id) {
+                <option [ngValue]="subcategory.id">{{ subcategory.name }}</option>
+              }
+            </select>
+          </div>
+          <div>
+            <label appLabel for="brandId">Marca</label>
+            <select appInput id="brandId" formControlName="brandId">
+              <option [ngValue]="null">— Sin marca —</option>
+              @for (brand of brands(); track brand.id) {
+                <option [ngValue]="brand.id">{{ brand.name }}</option>
+              }
+            </select>
+          </div>
+          <div>
+            <label appLabel for="subbrandId">Submarca</label>
+            <select appInput id="subbrandId" formControlName="subbrandId" [attr.disabled]="subbrandOptions().length === 0 ? '' : null">
+              <option [ngValue]="null">— Sin submarca —</option>
+              @for (subbrand of subbrandOptions(); track subbrand.id) {
+                <option [ngValue]="subbrand.id">{{ subbrand.name }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <div>
+            <label appLabel for="unitOfMeasureId">Unidad de medida</label>
+            <select appInput id="unitOfMeasureId" formControlName="unitOfMeasureId">
+              <option [ngValue]="null">— Selecciona —</option>
+              @for (unit of units(); track unit.id) {
+                <option [ngValue]="unit.id">{{ unit.name }} ({{ unit.abbreviation }})</option>
+              }
+            </select>
+          </div>
+          <div>
+            <label appLabel for="stockMin">Stock mínimo</label>
+            <app-input id="stockMin" type="number" formControlName="stockMin" />
+          </div>
+          <div>
+            <label appLabel for="stockMax">Stock máximo</label>
+            <app-input id="stockMax" type="number" formControlName="stockMax" />
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Lote y precios -->
+    @if (activeTab() === 'precios') {
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div>
+            <label appLabel for="salePrice">Precio de venta</label>
+            <app-input id="salePrice" type="number" formControlName="salePrice" placeholder="0.00" />
+          </div>
+          <div>
+            <label appLabel for="costPrice">Precio de costo</label>
+            <app-input id="costPrice" type="number" formControlName="costPrice" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="rounded-lg border border-border p-4">
+          <p class="mb-3 text-sm font-semibold text-foreground">Lote inicial <span class="font-normal text-muted-foreground">(opcional)</span></p>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-4">
+            <div>
+              <label appLabel for="loteNumber">N° de lote</label>
+              <app-input id="loteNumber" type="text" formControlName="loteNumber" />
+            </div>
+            <div>
+              <label appLabel for="loteExpiry">Vencimiento</label>
+              <app-input id="loteExpiry" type="date" formControlName="loteExpiry" />
+            </div>
+            <div>
+              <label appLabel for="loteStock">Stock entero</label>
+              <app-input id="loteStock" type="number" formControlName="loteStock" />
+            </div>
+            <div>
+              <label appLabel for="loteStockFraction">Stock fracción</label>
+              <app-input id="loteStockFraction" type="number" formControlName="loteStockFraction" />
+            </div>
+          </div>
+        </div>
+
+        <p class="text-xs text-muted-foreground">
+          Las unidades derivadas (presentaciones) y el detalle de precios por lista se agregan en una siguiente etapa.
+        </p>
+      </div>
+    }
+
+    <!-- Información adicional -->
+    @if (activeTab() === 'info') {
+      <div class="space-y-4">
+        <div>
+          <label appLabel>Imagen del producto <span class="text-muted-foreground">(PNG/JPG/WebP, máx. 2 MB)</span></label>
+          <div class="flex items-center gap-4">
+            <span class="flex size-20 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-muted">
+              @if (imagePreview()) {
+                <img [src]="imagePreview()" alt="Producto" class="size-full object-contain" />
+              } @else {
+                <span class="px-1 text-center text-xs text-muted-foreground">Sin imagen</span>
+              }
+            </span>
+            <div class="flex gap-2">
+              <input #imageInput type="file" accept="image/png,image/jpeg,image/webp" class="hidden" (change)="onImageFile($event)" />
+              <button appButton variant="outline" size="sm" type="button" (click)="imageInput.click()">Subir imagen</button>
+              @if (imagePreview()) {
+                <button appButton variant="ghost" size="sm" type="button" (click)="removeImage()">Quitar</button>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label appLabel>Ficha técnica <span class="text-muted-foreground">(PDF, máx. 5 MB)</span></label>
+          <div class="flex items-center gap-3">
+            <input #sheetInput type="file" accept="application/pdf" class="hidden" (change)="onSheetFile($event)" />
+            <button appButton variant="outline" size="sm" type="button" (click)="sheetInput.click()">Subir PDF</button>
+            <span class="truncate text-sm text-muted-foreground">{{ sheetName() || 'Ningún archivo seleccionado' }}</span>
+            @if (sheetName()) {
+              <button appButton variant="ghost" size="sm" type="button" (click)="removeSheet()">Quitar</button>
+            }
+          </div>
+        </div>
+
+        <div>
+          <label appLabel for="technicalAction">Acción técnica</label>
+          <textarea appInput id="technicalAction" rows="3" formControlName="technicalAction"></textarea>
+        </div>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+    }
+
+    <div class="flex justify-end gap-2 border-t border-border pt-4">
+      <button appButton variant="outline" type="button" (click)="openChange.emit(false)">Cancelar</button>
+      <button appButton variant="primary" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+</app-dialog>

@@ -28,6 +28,11 @@ export const routes: Routes = [
         path: 'iam',
         loadChildren: () => import('./features/iam/iam.routes').then((m) => m.IAM_ROUTES),
       },
+      {
+        path: 'erp/productos',
+        loadComponent: () =>
+          import('./features/erp/productos/pages/productos-page/productos-page').then((m) => m.ProductosPage),
+      },
       // Aterrizaje genérico por sistema (ERP, CRM, WMS, ...): el Shell monta el sidebar del
       // sistema detectado por la URL. Los sistemas con páginas reales (como /iam) se registran
       // ANTES de esta ruta para ganarle el match.

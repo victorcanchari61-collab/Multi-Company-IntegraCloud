@@ -1,0 +1,157 @@
+// Tipos del catálogo de productos ERP (espejo de los DTOs del backend; ver
+// Backend-API/Controllers/ERP/Productos y el erp.ts del frontend React de referencia).
+
+export interface Category {
+  id: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+}
+
+export interface CategoryRequest {
+  name: string;
+  description?: string | null;
+}
+
+export interface Subcategory {
+  id: string;
+  categoryId: string;
+  categoryName?: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+}
+
+export interface SubcategoryRequest {
+  categoryId: string;
+  name: string;
+  description?: string | null;
+}
+
+export interface Brand {
+  id: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+}
+
+export interface BrandRequest {
+  name: string;
+  description?: string | null;
+}
+
+export interface Subbrand {
+  id: string;
+  brandId: string;
+  brandName?: string;
+  name: string;
+  description: string | null;
+  isActive: boolean;
+}
+
+export interface SubbrandRequest {
+  brandId: string;
+  name: string;
+  description?: string | null;
+}
+
+export interface UnitOfMeasure {
+  id: string;
+  name: string;
+  abbreviation: string;
+  isActive: boolean;
+}
+
+export interface UnitOfMeasureRequest {
+  name: string;
+  abbreviation: string;
+}
+
+export interface PriceList {
+  id: string;
+  name: string;
+  description: string | null;
+  type: string; // "purchase" | "sale" | "both"
+  isActive: boolean;
+}
+
+export interface PriceListRequest {
+  name: string;
+  description?: string | null;
+  type: string;
+}
+
+export interface Currency {
+  id: string;
+  code: string; // PEN, USD, EUR
+  name: string;
+  symbol: string | null;
+  isActive: boolean;
+}
+
+export interface CurrencyRequest {
+  code: string;
+  name: string;
+  symbol?: string | null;
+}
+
+export interface Product {
+  id: string;
+  name: string;
+  description: string | null;
+  ticketDescription?: string | null;
+  sku: string | null;
+  barcode: string | null;
+  categoryId: string | null;
+  categoryName?: string;
+  subcategoryId: string | null;
+  subcategoryName?: string;
+  brandId: string | null;
+  brandName?: string;
+  subbrandId: string | null;
+  subbrandName?: string;
+  unitOfMeasureId: string | null;
+  unitOfMeasureName?: string;
+  salePrice: number | null;
+  costPrice: number | null;
+  stockMin?: number | null;
+  stockMax?: number | null;
+  loteNumber?: string | null;
+  loteExpiry?: string | null;
+  loteStock?: number | null;
+  loteStockFraction?: number | null;
+  technicalAction?: string | null;
+  isActive: boolean;
+}
+
+export interface ProductRequest {
+  name: string;
+  description?: string | null;
+  ticketDescription?: string | null;
+  sku?: string | null;
+  barcode?: string | null;
+  categoryId?: string | null;
+  subcategoryId?: string | null;
+  brandId?: string | null;
+  subbrandId?: string | null;
+  unitOfMeasureId?: string | null;
+  salePrice?: number | null;
+  costPrice?: number | null;
+  stockMin?: number | null;
+  stockMax?: number | null;
+  loteNumber?: string | null;
+  loteExpiry?: string | null;
+  loteStock?: number | null;
+  loteStockFraction?: number | null;
+  technicalAction?: string | null;
+  imageUrl?: string | null;
+  technicalSheetUrl?: string | null;
+  isActive?: boolean;
+}
+
+/** Imagen y ficha técnica (data-URL). Se obtienen aparte del listado (endpoint /media). */
+export interface ProductMedia {
+  id: string;
+  imageUrl: string | null;
+  technicalSheetUrl: string | null;
+}

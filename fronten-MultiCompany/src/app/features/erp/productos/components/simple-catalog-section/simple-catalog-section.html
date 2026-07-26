@@ -1,0 +1,99 @@
+<div class="space-y-4">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-muted-foreground">
+      Total <span class="font-semibold text-foreground">{{ stats().total }}</span> · Activos
+      <span class="font-semibold text-success">{{ stats().active }}</span> · Inactivos
+      <span class="font-semibold text-destructive">{{ stats().inactive }}</span>
+    </p>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <app-search-input [formControl]="search" placeholder="Buscar por nombre…" class="sm:w-64" />
+      <button appButton variant="primary" type="button" *appCan="config().createPermission" (click)="openCreate()">
+        {{ config().createLabel }}
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+  }
+
+  <app-data-table [columns]="columns()" [data]="filtered()" [loading]="loading()" emptyMessage="No hay registros.">
+    <ng-template appMobileTitle let-item>{{ item.name }}</ng-template>
+
+    <ng-template appCell="parentName" let-item>
+      <span class="text-foreground">{{ item.parentName || '—' }}</span>
+    </ng-template>
+
+    <ng-template appCell="name" let-item>
+      <span class="font-medium text-foreground">{{ item.name }}</span>
+    </ng-template>
+
+    <ng-template appCell="description" let-item>
+      <span class="text-foreground">{{ item.description || '—' }}</span>
+    </ng-template>
+
+    <ng-template appCell="status" let-item>
+      <app-badge [variant]="item.isActive ? 'success' : 'destructive'">
+        {{ item.isActive ? 'Activo' : 'Inactivo' }}
+      </app-badge>
+    </ng-template>
+
+    <ng-template appCell="actions" let-item>
+      <button
+        appButton
+        variant="ghost-warning"
+        size="icon-sm"
+        type="button"
+        title="Editar"
+        *appCan="config().updatePermission"
+        (click)="openEdit(item)"
+      >
+        <svg lucidePencil class="size-3.5" [strokeWidth]="2.5"></svg>
+      </button>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-dialog [open]="dialogOpen()" (openChange)="dialogOpen.set($event)">
+  <h2 class="mb-4 text-lg font-bold text-foreground">
+    {{ editing() ? 'Editar' : 'Crear' }} — {{ config().entityName }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    @if (config().parent; as parent) {
+      <div>
+        <label appLabel for="parentId">{{ parent.label }}</label>
+        <select appInput id="parentId" formControlName="parentId">
+          <option [ngValue]="null">— Selecciona —</option>
+          @for (option of parentOptions(); track option.id) {
+            <option [ngValue]="option.id">{{ option.name }}</option>
+          }
+        </select>
+      </div>
+    }
+
+    <div>
+      <label appLabel for="name">Nombre</label>
+      <app-input id="name" type="text" formControlName="name" [required]="true" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <p class="mt-1 text-xs text-destructive">El nombre es requerido (máx. 100 caracteres).</p>
+      }
+    </div>
+
+    <div>
+      <label appLabel for="description">Descripción <span class="text-muted-foreground">(opcional)</span></label>
+      <textarea appInput id="description" rows="3" formControlName="description"></textarea>
+    </div>
+
+    @if (dialogError()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ dialogError() }}</p>
+    }
+
+    <div class="flex justify-end gap-2 pt-2">
+      <button appButton variant="outline" type="button" (click)="dialogOpen.set(false)">Cancelar</button>
+      <button appButton variant="primary" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+</app-dialog>

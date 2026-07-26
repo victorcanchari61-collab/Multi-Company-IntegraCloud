@@ -1,0 +1,103 @@
+<div class="space-y-4">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-muted-foreground">
+      Total <span class="font-semibold text-foreground">{{ stats().total }}</span> · Activas
+      <span class="font-semibold text-success">{{ stats().active }}</span> · Inactivas
+      <span class="font-semibold text-destructive">{{ stats().inactive }}</span>
+    </p>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <app-search-input [formControl]="search" placeholder="Buscar unidad…" class="sm:w-64" />
+      <button appButton variant="primary" type="button" *appCan="'erp.productos.create'" (click)="openCreate()">
+        Nueva unidad
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+  }
+
+  <app-data-table [columns]="columns" [data]="filtered()" [loading]="loading()" emptyMessage="No hay unidades de medida.">
+    <ng-template appMobileTitle let-unit>{{ unit.name }}</ng-template>
+
+    <ng-template appCell="name" let-unit>
+      <span class="font-medium text-foreground">{{ unit.name }}</span>
+    </ng-template>
+
+    <ng-template appCell="abbreviation" let-unit>
+      <span class="text-foreground">{{ unit.abbreviation }}</span>
+    </ng-template>
+
+    <ng-template appCell="status" let-unit>
+      <app-badge [variant]="unit.isActive ? 'success' : 'destructive'">
+        {{ unit.isActive ? 'Activa' : 'Inactiva' }}
+      </app-badge>
+    </ng-template>
+
+    <ng-template appCell="actions" let-unit>
+      <div class="flex gap-1">
+        <button
+          appButton
+          variant="ghost-warning"
+          size="icon-sm"
+          type="button"
+          title="Editar"
+          *appCan="'erp.productos.update'"
+          (click)="openEdit(unit)"
+        >
+          <svg lucidePencil class="size-3.5" [strokeWidth]="2.5"></svg>
+        </button>
+        <button
+          appButton
+          [variant]="unit.isActive ? 'ghost-destructive' : 'ghost-success'"
+          size="icon-sm"
+          type="button"
+          [title]="unit.isActive ? 'Desactivar' : 'Activar'"
+          *appCan="'erp.productos.update'"
+          (click)="toggleStatus(unit)"
+        >
+          @if (unit.isActive) {
+            <svg lucideBan class="size-3.5" [strokeWidth]="2.5"></svg>
+          } @else {
+            <svg lucidePower class="size-3.5" [strokeWidth]="2.5"></svg>
+          }
+        </button>
+      </div>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-dialog [open]="dialogOpen()" (openChange)="dialogOpen.set($event)">
+  <h2 class="mb-4 text-lg font-bold text-foreground">
+    {{ editing() ? 'Editar unidad' : 'Nueva unidad de medida' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+    <div>
+      <label appLabel for="unitName">Nombre</label>
+      <app-input id="unitName" type="text" formControlName="name" placeholder="Kilogramo" [required]="true" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <p class="mt-1 text-xs text-destructive">El nombre es requerido (máx. 60 caracteres).</p>
+      }
+    </div>
+
+    <div>
+      <label appLabel for="unitAbbreviation">Abreviatura</label>
+      <app-input id="unitAbbreviation" type="text" formControlName="abbreviation" placeholder="kg" [required]="true" [maxLength]="10" />
+      @if (form.controls.abbreviation.invalid && form.controls.abbreviation.touched) {
+        <p class="mt-1 text-xs text-destructive">La abreviatura es requerida (máx. 10 caracteres).</p>
+      }
+    </div>
+
+    @if (dialogError()) {
+      <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ dialogError() }}</p>
+    }
+
+    <div class="flex justify-end gap-2 pt-2">
+      <button appButton variant="outline" type="button" (click)="dialogOpen.set(false)">Cancelar</button>
+      <button appButton variant="primary" type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
+</app-dialog>

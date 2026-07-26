@@ -1,0 +1,76 @@
+<div class="space-y-4">
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm text-muted-foreground">
+      Total <span class="font-semibold text-foreground">{{ stats().total }}</span> · Activos
+      <span class="font-semibold text-success">{{ stats().active }}</span> · Inactivos
+      <span class="font-semibold text-destructive">{{ stats().inactive }}</span>
+    </p>
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+      <app-search-input [formControl]="search" placeholder="Buscar por nombre, SKU o código…" class="sm:w-72" />
+      <button appButton variant="primary" type="button" *appCan="'erp.productos.create'" (click)="openCreate()">
+        Nuevo producto
+      </button>
+    </div>
+  </div>
+
+  @if (errorMessage()) {
+    <p class="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{{ errorMessage() }}</p>
+  }
+
+  <app-data-table [columns]="columns" [data]="filtered()" [loading]="loading()" emptyMessage="No hay productos. Crea el primero.">
+    <ng-template appMobileTitle let-product>{{ product.name }}</ng-template>
+
+    <ng-template appCell="name" let-product>
+      <span class="font-medium text-foreground">{{ product.name }}</span>
+    </ng-template>
+
+    <ng-template appCell="sku" let-product>
+      <span class="text-foreground">{{ product.sku || '—' }}</span>
+    </ng-template>
+
+    <ng-template appCell="categoryName" let-product>
+      <span class="text-foreground">{{ product.categoryName || '—' }}</span>
+    </ng-template>
+
+    <ng-template appCell="brandName" let-product>
+      <span class="text-foreground">{{ product.brandName || '—' }}</span>
+    </ng-template>
+
+    <ng-template appCell="salePrice" let-product>
+      <span class="text-foreground">
+        @if (product.salePrice != null) {
+          S/ {{ product.salePrice | number: '1.2-2' }}
+        } @else {
+          —
+        }
+      </span>
+    </ng-template>
+
+    <ng-template appCell="status" let-product>
+      <app-badge [variant]="product.isActive ? 'success' : 'destructive'">
+        {{ product.isActive ? 'Activo' : 'Inactivo' }}
+      </app-badge>
+    </ng-template>
+
+    <ng-template appCell="actions" let-product>
+      <button
+        appButton
+        variant="ghost-warning"
+        size="icon-sm"
+        type="button"
+        title="Editar"
+        *appCan="'erp.productos.update'"
+        (click)="openEdit(product)"
+      >
+        <svg lucidePencil class="size-3.5" [strokeWidth]="2.5"></svg>
+      </button>
+    </ng-template>
+  </app-data-table>
+</div>
+
+<app-product-form-dialog
+  [open]="dialogOpen()"
+  (openChange)="dialogOpen.set($event)"
+  [product]="editingProduct()"
+  (saved)="loadProducts()"
+/>

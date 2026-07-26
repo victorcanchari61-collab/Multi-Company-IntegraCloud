@@ -22,6 +22,7 @@ const MODULE_ICON_KEYS: Record<string, SidebarIconKey> = {
   permissions: 'key-round',
   organigrama: 'building2',
   companies: 'building2',
+  productos: 'package',
 };
 
 interface FlyState {

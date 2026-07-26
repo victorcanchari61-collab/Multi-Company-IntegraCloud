@@ -1,0 +1,44 @@
+<div class="space-y-4">
+  <div>
+    <h1 class="text-xl font-bold text-foreground">Catálogo de productos</h1>
+    <p class="text-sm text-muted-foreground">Productos y maestros del catálogo de tu empresa.</p>
+  </div>
+
+  <app-tabs [items]="tabs" [activeKey]="activeTab()" (activeKeyChange)="setTab($event)">
+    <ng-template appTabIcon="productos"><svg lucideBox class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="categorias"><svg lucideTag class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="marcas"><svg lucideBookmark class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="subcategorias"><svg lucideListTree class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="submarcas"><svg lucideLayers class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="unidades"><svg lucideRuler class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="precios"><svg lucideBanknote class="size-4"></svg></ng-template>
+    <ng-template appTabIcon="monedas"><svg lucideCoins class="size-4"></svg></ng-template>
+  </app-tabs>
+
+  @switch (activeTab()) {
+    @case ('productos') {
+      <app-products-section />
+    }
+    @case ('categorias') {
+      <app-simple-catalog-section [config]="categoriesConfig" />
+    }
+    @case ('marcas') {
+      <app-simple-catalog-section [config]="brandsConfig" />
+    }
+    @case ('subcategorias') {
+      <app-simple-catalog-section [config]="subcategoriesConfig" />
+    }
+    @case ('submarcas') {
+      <app-simple-catalog-section [config]="subbrandsConfig" />
+    }
+    @case ('unidades') {
+      <app-units-section />
+    }
+    @case ('precios') {
+      <app-price-lists-section />
+    }
+    @case ('monedas') {
+      <app-currencies-section />
+    }
+  }
+</div>
